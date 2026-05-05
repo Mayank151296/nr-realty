@@ -1,0 +1,184 @@
+
+var _cp = 'home';
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+  _cp = name;
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.classList.toggle('active', a.dataset.page === name);
+  });
+}
+
+function ss(id) {
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({behavior: 'smooth'});
+  }, 60);
+}
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const tc = document.getElementById('tab-' + id);
+  if (tc) tc.classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// Ostwal floor plan switchers
+function switchBldg(proj, bldg, btn) {
+  const section = btn.closest('.proj-section');
+  section.querySelectorAll('.fp-building').forEach(b => b.classList.remove('active'));
+  section.querySelectorAll('.fp-tab').forEach(t => t.classList.remove('active'));
+  const el = document.getElementById(proj + '-' + bldg);
+  if (el) el.classList.add('active');
+  btn.classList.add('active');
+}
+
+function switchPlan(proj, bldg, num, btn) {
+  const bldgEl = document.getElementById(proj + '-' + bldg);
+  if (!bldgEl) return;
+  bldgEl.querySelectorAll('.fp-plan-display').forEach(p => p.classList.remove('active'));
+  bldgEl.querySelectorAll('.fp-config-btn').forEach(b => b.classList.remove('active'));
+  const plan = document.getElementById(proj + '-' + bldg + '-' + num);
+  if (plan) plan.classList.add('active');
+  btn.classList.add('active');
+}
+
+// Balaji floor plan switcher
+function switchBalajiPlan(type, btn) {
+  document.getElementById('bp-1bhk').style.display = type === '1bhk' ? 'block' : 'none';
+  document.getElementById('bp-2bhk').style.display = type === '2bhk' ? 'block' : 'none';
+  btn.closest('.fp-tabs').querySelectorAll('.fp-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// Shiv Shrushti view switcher
+function switchShivView(view, btn) {
+  ['shiv-unit','shiv-b1fp','shiv-b2fp'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  const el = document.getElementById('shiv-' + view);
+  if (el) el.style.display = 'block';
+  btn.closest('.fp-tabs').querySelectorAll('.fp-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function switchShivUnit(n) {
+  document.getElementById('shiv-plan-1').style.display = n === '1' ? 'block' : 'none';
+  document.getElementById('shiv-plan-2').style.display = n === '2' ? 'block' : 'none';
+  document.getElementById('shiv-btn-1').classList.toggle('active', n === '1');
+  document.getElementById('shiv-btn-2').classList.toggle('active', n === '2');
+}
+
+// Generic enquiry — sends to WhatsApp
+function sendEnquiry(prefix) {
+  const name  = (document.getElementById(prefix + '-name')  || {}).value || '';
+  const phone = (document.getElementById(prefix + '-phone') || {}).value || '';
+  const conf  = (document.getElementById(prefix + '-config')|| {}).value || '';
+  const msg   = (document.getElementById(prefix + '-msg')   || {}).value || '';
+  if (!name.trim() || !phone.trim()) { alert('Please enter your name and phone number.'); return; }
+  const projects = {oi:'Ostwal Imperial', bp:'Shree Balaji Pride', ss:'Shiv Shrushti Complex'};
+  const pname = projects[prefix] || 'a project';
+  const text = encodeURIComponent(
+    'Hello NR Realty,\n\nI am interested in ' + pname + '.\n\n' +
+    'Name: ' + name.trim() + '\nPhone: ' + phone.trim() +
+    (conf ? '\nConfiguration: ' + conf : '') +
+    (msg.trim() ? '\nMessage: ' + msg.trim() : '')
+  );
+  window.open('https://wa.me/918551801919?text=' + text, '_blank');
+}
+
+// Home contact form
+function handleHomeEnquiry() {
+  const name  = (document.getElementById('f-name')  || {}).value || '';
+  const phone = (document.getElementById('f-phone') || {}).value || '';
+  const proj  = (document.getElementById('f-project')|| {}).value || '';
+  const msg   = (document.getElementById('f-msg')   || {}).value || '';
+  if (!name.trim() || !phone.trim()) { alert('Please enter your name and phone number.'); return; }
+  const text = encodeURIComponent(
+    'Hello NR Realty,\n\nI would like to enquire.\n\n' +
+    'Name: ' + name.trim() + '\nPhone: ' + phone.trim() +
+    (proj ? '\nProject Interest: ' + proj : '') +
+    (msg.trim() ? '\nMessage: ' + msg.trim() : '')
+  );
+  window.open('https://wa.me/918551801919?text=' + text, '_blank');
+}
+
+// Nav scroll effect
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('navbar');
+  if (!nav) return;
+  if (window.scrollY > 60) {
+    nav.style.height = '60px';
+    nav.style.background = 'rgba(10,8,6,0.98)';
+  } else {
+    nav.style.height = '72px';
+    nav.style.background = 'rgba(14,12,10,0.93)';
+  }
+});
+
+// Scroll reveal
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.06 });
+
+document.querySelectorAll(
+  '.project-card,.vision-card,.strength-item,.completed-card,.about-pillar,' +
+  '.contact-item,.partner-card,.founder-feature,.amenity-item,.nearby-item,.config-card'
+).forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(18px)';
+  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+  obs.observe(el);
+});
+
+function oiGalleryPause() {
+  const t = document.getElementById('oi-track');
+  if (t) t.style.animationPlayState = 'paused';
+  document.getElementById('oi-pause-btn').style.display = 'none';
+  document.getElementById('oi-play-btn').style.display = 'inline-block';
+}
+function oiGalleryPlay() {
+  const t = document.getElementById('oi-track');
+  if (t) t.style.animationPlayState = 'running';
+  document.getElementById('oi-play-btn').style.display = 'none';
+  document.getElementById('oi-pause-btn').style.display = 'inline-block';
+}
+
+
+function shivGalleryPause() {
+  const t = document.getElementById('shiv-track');
+  if (t) t.style.animationPlayState = 'paused';
+  document.getElementById('shiv-pause-btn').style.display = 'none';
+  document.getElementById('shiv-play-btn').style.display = 'inline-block';
+}
+function shivGalleryPlay() {
+  const t = document.getElementById('shiv-track');
+  if (t) t.style.animationPlayState = 'running';
+  document.getElementById('shiv-play-btn').style.display = 'none';
+  document.getElementById('shiv-pause-btn').style.display = 'inline-block';
+}
+
+
+function balajiGalleryPause() {
+  const t = document.getElementById('balaji-track');
+  if (t) t.style.animationPlayState = 'paused';
+  document.getElementById('balaji-pause-btn').style.display = 'none';
+  document.getElementById('balaji-play-btn').style.display = 'inline-block';
+}
+function balajiGalleryPlay() {
+  const t = document.getElementById('balaji-track');
+  if (t) t.style.animationPlayState = 'running';
+  document.getElementById('balaji-play-btn').style.display = 'none';
+  document.getElementById('balaji-pause-btn').style.display = 'inline-block';
+}
+
