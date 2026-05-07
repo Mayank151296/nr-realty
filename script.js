@@ -1,14 +1,44 @@
 
 var _cp = 'home';
+var _pageHistory = [];
+
+function updateBackButton() {
+  const back = document.getElementById('nav-back');
+  if (!back) return;
+  back.style.display = _cp !== 'home' ? 'inline-flex' : 'none';
+}
 
 function showPage(name) {
+  if (name === _cp) {
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      a.classList.toggle('active', a.dataset.page === name);
+    });
+    updateBackButton();
+    return;
+  }
+  if (_cp) {
+    _pageHistory.push(_cp);
+  }
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
-  window.scrollTo({top: 0, behavior: 'smooth'});
+  const target = document.getElementById('page-' + name);
+  if (target) {
+    target.classList.add('active');
+  }
   _cp = name;
+  window.scrollTo({top: 0, behavior: 'smooth'});
   document.querySelectorAll('.nav-links a').forEach(a => {
     a.classList.toggle('active', a.dataset.page === name);
   });
+  updateBackButton();
+}
+
+function goBack() {
+  const previous = _pageHistory.pop();
+  if (previous && previous !== _cp) {
+    showPage(previous);
+  } else {
+    showPage('home');
+  }
 }
 
 function ss(id) {

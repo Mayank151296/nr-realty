@@ -1,4 +1,4 @@
-# 📋 Quick Reference Guide
+# 📋 Om Shanti N R Construction - Quick Reference Guide
 
 ## Folder Structure & File Purposes
 

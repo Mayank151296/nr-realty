@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# Image backups (created during photo replacement)
+images/*.bak
+
+# Python build artifacts
+__pycache__/
+*.pyc

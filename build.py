@@ -110,18 +110,30 @@ class BuildOptimizer:
         print(f"✓ HTML copied and updated (v{version})")
     
     def copy_images(self):
-        """Copy images to dist"""
+        """Copy images to dist (overwriting individual files, not the dir)"""
         dist_images = self.dist_dir / 'images'
-        if dist_images.exists():
-            shutil.rmtree(dist_images)
-        
-        shutil.copytree(self.images_dir, dist_images)
-        
-        image_count = len(list(dist_images.glob('*')))
+        dist_images.mkdir(exist_ok=True)
+        # Copy each file individually — overwrites in place, doesn't require dir delete perms
+        for src in self.images_dir.iterdir():
+            if src.is_file() and not src.name.endswith('.bak'):
+                shutil.copy2(src, dist_images / src.name)
+        image_count = len([f for f in dist_images.iterdir() if f.is_file()])
         total_size = sum(f.stat().st_size for f in dist_images.rglob('*') if f.is_file())
-        
         print(f"✓ {image_count} images copied ({total_size / (1024*1024):.1f} MB)")
     
+    def copy_qr(self):
+        """Copy QR code images (referenced by project detail pages)"""
+        qr_src = self.project_dir / 'qr'
+        if not qr_src.exists():
+            return
+        qr_dst = self.dist_dir / 'qr'
+        qr_dst.mkdir(exist_ok=True)
+        for src in qr_src.iterdir():
+            if src.is_file():
+                shutil.copy2(src, qr_dst / src.name)
+        qr_count = len([f for f in qr_dst.iterdir() if f.is_file()])
+        print(f"✓ {qr_count} QR codes copied")
+
     def copy_config(self):
         """Copy configuration files"""
         htaccess = self.project_dir / '.htaccess'
@@ -171,6 +183,7 @@ class BuildOptimizer:
         self.minify_js()
         self.copy_html()
         self.copy_images()
+        self.copy_qr()
         self.copy_config()
         self.generate_report()
         
@@ -178,5 +191,6 @@ class BuildOptimizer:
         print(f"📦 Ready to deploy from: {self.dist_dir}\n")
 
 if __name__ == '__main__':
-    builder = BuildOptimizer('/Users/mayankjoshi/Desktop/nr_realty_optimized')
+    # Use the directory containing this script — portable across environments
+    builder = BuildOptimizer(Path(__file__).resolve().parent)
     builder.build()

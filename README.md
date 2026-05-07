@@ -1,4 +1,4 @@
-# NR Realty - Optimized Website
+# Om Shanti N R Construction - Optimized Website
 
 ## 📋 Quick Start
 

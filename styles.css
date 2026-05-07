@@ -10,7 +10,7 @@ a{text-decoration:none;color:inherit}
 ::-webkit-scrollbar-thumb{background:var(--gold-dark);border-radius:2px}
 
 /* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 4rem;height:72px;background:rgba(14,12,10,0.93);backdrop-filter:blur(12px);border-bottom:.5px solid var(--border);transition:all .3s}
+nav{position:fixed;top:0;left:0;right:0;width:100%;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:0 4rem;height:72px;background:rgba(14,12,10,0.93);backdrop-filter:blur(12px);border-bottom:.5px solid var(--border);transition:all .3s;box-shadow:0 12px 40px rgba(0,0,0,.18)}
 .nav-logo{display:flex;align-items:center;gap:12px;cursor:pointer}
 .nav-logo-text .brand{font-family:"Cormorant Garamond",serif;font-size:20px;font-weight:700;color:var(--gold);letter-spacing:2px;display:block}
 .nav-logo-text .sub{font-size:10px;color:var(--text-muted);letter-spacing:3px;text-transform:uppercase;display:block}
@@ -19,8 +19,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .nav-links a::after{content:"";position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gold);transition:width .3s}
 .nav-links a:hover,.nav-links a.active{color:var(--gold)}
 .nav-links a:hover::after,.nav-links a.active::after{width:100%}
-.nav-cta{background:transparent;border:1px solid var(--gold-dark);color:var(--gold);padding:9px 22px;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;font-family:"Jost",sans-serif}
-.nav-cta:hover{background:var(--gold);color:var(--bg-dark)}
+.nav-back,.nav-cta{background:transparent;border:1px solid var(--gold-dark);color:var(--gold);padding:9px 22px;font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;font-family:"Jost",sans-serif}
+.nav-back{margin-left:1rem;display:none}
+.nav-back:hover,.nav-cta:hover{background:var(--gold);color:var(--bg-dark)}
 
 /* PAGES */
 .page{display:none}.page.active{display:block}

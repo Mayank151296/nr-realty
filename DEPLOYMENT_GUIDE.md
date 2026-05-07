@@ -1,4 +1,4 @@
-# NR Realty Website - Optimization & Deployment Guide
+# Om Shanti N R Construction - Optimization & Deployment Guide
 
 ## 📊 Optimization Summary
 

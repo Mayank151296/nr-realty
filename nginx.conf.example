@@ -6,7 +6,7 @@ server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
     server_name yourdomain.com www.yourdomain.com;
-    root /var/www/html/nr-realty/dist;
+    root /var/www/html/om-shanti-construction/dist;
     index index.html;
 
     # SSL Configuration (replace with your certificate paths)
