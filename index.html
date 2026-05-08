@@ -774,6 +774,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
     <a onclick="showPage('home');ss('projects')" data-page="home">Projects</a>
     <a onclick="showPage('home');ss('vision')" data-page="home">Vision</a>
     <a onclick="showPage('leadership')" data-page="leadership">Leadership</a>
+    <a onclick="showPage('partners')" data-page="partners">Channel Partners</a>
     <a onclick="showPage('home');ss('contact')" data-page="home">Contact</a>
   </div>
   <button class="nav-cta" onclick="showPage('home');setTimeout(()=>ss('contact'),80)">Enquire Now</button>
@@ -789,6 +790,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
     <a onclick="mobileNav('projects')" data-page="home">Projects</a>
     <a onclick="mobileNav('vision')" data-page="home">Vision</a>
     <a onclick="mobileNavPage('leadership')" data-page="leadership">Leadership</a>
+    <a onclick="mobileNavPage('partners')" data-page="partners">Channel Partners</a>
     <a onclick="mobileNav('contact')" data-page="home">Contact</a>
     <button class="mobile-menu-cta" onclick="mobileNav('contact')">Enquire Now</button>
   </div>
@@ -2089,8 +2091,8 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 var _cp = 'home';
 
 // ── URL hash <-> page mapping (for browser back/forward, swipe-back, deep links) ──
-var PAGE_HASH = {home: '', leadership: '#/leadership', ostwal: '#/projects/ostwal', balaji: '#/projects/balaji', shiv: '#/projects/shiv', aastha: '#/projects/aastha'};
-var HASH_PAGE = {'': 'home', '#': 'home', '#/': 'home', '#/leadership': 'leadership', '#/projects/ostwal': 'ostwal', '#/projects/balaji': 'balaji', '#/projects/shiv': 'shiv', '#/projects/aastha': 'aastha'};
+var PAGE_HASH = {home: '', leadership: '#/leadership', partners: '#/partners', ostwal: '#/projects/ostwal', balaji: '#/projects/balaji', shiv: '#/projects/shiv', aastha: '#/projects/aastha'};
+var HASH_PAGE = {'': 'home', '#': 'home', '#/': 'home', '#/leadership': 'leadership', '#/partners': 'partners', '#/projects/ostwal': 'ostwal', '#/projects/balaji': 'balaji', '#/projects/shiv': 'shiv', '#/projects/aastha': 'aastha'};
 
 function showPage(name, fromHistory) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -2226,6 +2228,46 @@ function handleHomeEnquiry() {
     (proj ? '\nProject Interest: ' + proj : '') +
     (msg.trim() ? '\nMessage: ' + msg.trim() : '')
   );
+  window.open('https://wa.me/918262885023?text=' + text, '_blank');
+}
+
+// Channel Partner registration form
+function submitPartnerForm() {
+  const name = (document.getElementById('cp-name') || {}).value || '';
+  const phone = (document.getElementById('cp-phone') || {}).value || '';
+  const email = (document.getElementById('cp-email') || {}).value || '';
+  const city = (document.getElementById('cp-city') || {}).value || '';
+  const type = (document.getElementById('cp-type') || {}).value || '';
+  const rera = (document.getElementById('cp-rera') || {}).value || '';
+  const hear = (document.getElementById('cp-hear') || {}).value || '';
+  const msg = (document.getElementById('cp-msg') || {}).value || '';
+
+  // Validate required fields
+  if (!name.trim() || !phone.trim() || !email.trim() || !city.trim() || !type.trim()) {
+    alert('Please fill in all required fields: Name, Phone, Email, City/Area, and Partner Type.');
+    return;
+  }
+
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    alert('Please enter a valid email address.');
+    return;
+  }
+
+  // Construct WhatsApp message
+  const text = encodeURIComponent(
+    'Hello Om Shanti N R Realty,\n\nI am interested in joining as a Channel Partner.\n\n' +
+    'Name: ' + name.trim() + '\n' +
+    'Phone: ' + phone.trim() + '\n' +
+    'Email: ' + email.trim() + '\n' +
+    'City/Area of Operation: ' + city.trim() + '\n' +
+    'Partner Type: ' + type.trim() +
+    (rera.trim() ? '\nRERA Registration No: ' + rera.trim() : '') +
+    (hear.trim() ? '\nHow did you hear about us: ' + hear.trim() : '') +
+    (msg.trim() ? '\nMessage: ' + msg.trim() : '')
+  );
+
   window.open('https://wa.me/918262885023?text=' + text, '_blank');
 }
 

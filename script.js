@@ -137,6 +137,46 @@ function handleHomeEnquiry() {
   window.open('https://wa.me/918551801919?text=' + text, '_blank');
 }
 
+// Channel Partner registration form
+function submitPartnerForm() {
+  const name = (document.getElementById('cp-name') || {}).value || '';
+  const phone = (document.getElementById('cp-phone') || {}).value || '';
+  const email = (document.getElementById('cp-email') || {}).value || '';
+  const city = (document.getElementById('cp-city') || {}).value || '';
+  const type = (document.getElementById('cp-type') || {}).value || '';
+  const rera = (document.getElementById('cp-rera') || {}).value || '';
+  const hear = (document.getElementById('cp-hear') || {}).value || '';
+  const msg = (document.getElementById('cp-msg') || {}).value || '';
+
+  // Validate required fields
+  if (!name.trim() || !phone.trim() || !email.trim() || !city.trim() || !type.trim()) {
+    alert('Please fill in all required fields: Name, Phone, Email, City/Area, and Partner Type.');
+    return;
+  }
+
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    alert('Please enter a valid email address.');
+    return;
+  }
+
+  // Construct WhatsApp message
+  const text = encodeURIComponent(
+    'Hello Om Shanti N R Realty,\n\nI am interested in joining as a Channel Partner.\n\n' +
+    'Name: ' + name.trim() + '\n' +
+    'Phone: ' + phone.trim() + '\n' +
+    'Email: ' + email.trim() + '\n' +
+    'City/Area of Operation: ' + city.trim() + '\n' +
+    'Partner Type: ' + type.trim() +
+    (rera.trim() ? '\nRERA Registration No: ' + rera.trim() : '') +
+    (hear.trim() ? '\nHow did you hear about us: ' + hear.trim() : '') +
+    (msg.trim() ? '\nMessage: ' + msg.trim() : '')
+  );
+
+  window.open('https://wa.me/918262885023?text=' + text, '_blank');
+}
+
 // Nav scroll effect
 window.addEventListener('scroll', () => {
   const nav = document.getElementById('navbar');
