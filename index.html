@@ -16,9 +16,9 @@ a{text-decoration:none;color:inherit}
 ::-webkit-scrollbar-thumb{background:var(--gold-dark);border-radius:2px}
 
 /* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 4rem;height:72px;background:rgba(14,12,10,0.93);backdrop-filter:blur(12px);border-bottom:.5px solid var(--border);transition:all .3s}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 4rem;height:88px;background:rgba(14,12,10,0.93);backdrop-filter:blur(12px);border-bottom:.5px solid var(--border);transition:all .3s}
 .nav-logo{display:flex;align-items:center;cursor:pointer}
-.nav-logo img{display:block;height:48px;width:auto}
+.nav-logo img{display:block;height:70px;width:auto}
 .nav-links{display:flex;align-items:center;gap:2.5rem}
 .nav-links a{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text-secondary);transition:color .2s;position:relative;cursor:pointer}
 .nav-links a::after{content:"";position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gold);transition:width .3s}
@@ -200,7 +200,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 .firm-note strong{color:var(--text-secondary);font-weight:500}
 
 /* PROJECT PAGES */
-.hero-proj{margin-top:72px;position:relative;height:500px;overflow:hidden;border-bottom:.5px solid var(--border)}
+.hero-proj{margin-top:88px;position:relative;height:500px;overflow:hidden;border-bottom:.5px solid var(--border)}
 .hero-proj .hero-img{width:100%;height:100%;object-fit:cover;object-position:center top;filter:brightness(.55)}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(14,12,10,.85) 40%,rgba(14,12,10,.2) 100%),linear-gradient(to top,rgba(14,12,10,.7) 0%,transparent 50%)}
 .hero-content-proj{position:absolute;bottom:0;left:0;right:0;padding:2.5rem 4rem}
@@ -295,7 +295,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 .nearby-icon{width:30px;height:30px;background:rgba(200,169,110,.08);border:.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
 .nearby-label{font-size:12px;color:var(--text-secondary)}
 .nearby-dist{font-size:10px;color:var(--gold);font-weight:500;margin-top:1px}
-.sidebar-col{display:flex;flex-direction:column;gap:6px;position:sticky;top:84px}
+.sidebar-col{display:flex;flex-direction:column;gap:6px;position:sticky;top:100px}
 .enquiry-card{background:var(--bg-mid);border:.5px solid var(--border-strong);padding:1.4rem}
 .enq-title{font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:600;margin-bottom:.3rem}
 .enq-sub{font-size:12px;color:var(--text-muted);margin-bottom:1rem}
@@ -346,12 +346,12 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 /* ── Phone (≤768px) ── */
 @media(max-width:768px){
   /* Nav */
-  nav{padding:0 1.1rem;height:64px}
+  nav{padding:0 1.1rem;height:80px}
   .nav-links{display:none}
   .nav-cta{display:none}
   .nav-hamburger{display:flex}
-  .nav-logo img{height:42px}
-  .mobile-menu{top:64px}
+  .nav-logo img{height:64px}
+  .mobile-menu{top:80px}
 
   /* Sections */
   section{padding:55px 1.25rem}
@@ -359,7 +359,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
   .section-eyebrow{font-size:10px;letter-spacing:2.5px}
 
   /* Hero */
-  .hero{padding:90px 1.25rem 3rem;min-height:auto}
+  .hero{padding:105px 1.25rem 3rem;min-height:auto}
   .hero h1{font-size:clamp(40px,9vw,62px)}
   .hero-sub{font-size:14px;margin-bottom:1.8rem}
   .hero-actions{gap:.7rem;width:100%}
@@ -408,7 +408,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 
   /* Leadership page */
   .leadership-body{padding:50px 1.25rem 60px}
-  .page-hero{padding:110px 1.25rem 2.5rem;min-height:30vh}
+  .page-hero{padding:125px 1.25rem 2.5rem;min-height:30vh}
   .founder-feature{grid-template-columns:1fr}
   .founder-photo{height:320px}
   .founder-body{padding:1.8rem}
@@ -424,7 +424,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
   .firm-note{padding:1.4rem 1.5rem;font-size:12px}
 
   /* Project detail pages */
-  .hero-proj{height:380px;margin-top:64px}
+  .hero-proj{height:380px;margin-top:80px}
   .hero-content-proj{padding:1.6rem 1.25rem;right:0;left:0}
   .hero-title{font-size:clamp(28px,8vw,46px)}
   .hero-tag{font-size:9px;padding:3px 10px}
@@ -479,7 +479,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
   .hero-stat-num{font-size:26px}
   .completed-grid{grid-template-columns:1fr}
   .strengths-grid{grid-template-columns:1fr}
-  .nav-logo img{height:36px}
+  .nav-logo img{height:54px}
   .tab-btn{font-size:9.5px;padding:8px 8px}
   .partner-photo,.founder-photo{height:300px}
 }
@@ -531,7 +531,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
   .nav-hamburger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
 
   /* ── Mobile Menu Overlay ── */
-  .mobile-menu{position:fixed;top:72px;left:0;right:0;bottom:0;background:rgba(10,8,6,0.97);backdrop-filter:blur(16px);z-index:99;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+  .mobile-menu{position:fixed;top:88px;left:0;right:0;bottom:0;background:rgba(10,8,6,0.97);backdrop-filter:blur(16px);z-index:99;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
   .mobile-menu.open{opacity:1;pointer-events:all}
   .mobile-menu-inner{display:flex;flex-direction:column;align-items:center;gap:2rem;text-align:center}
   .mobile-menu-inner a{font-size:22px;letter-spacing:3px;text-transform:uppercase;color:var(--text-secondary);cursor:pointer;transition:color .2s;font-family:'Jost',sans-serif;font-weight:300}
@@ -1029,7 +1029,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 
 <footer>
   <div style="display:flex;flex-wrap:wrap;gap:3rem;margin-bottom:2rem">
-    <div style="flex:2;min-width:200px"><img src="images/logo.png" alt="Om Shanti N R Construction" style="height:60px;width:auto;display:block"><div class="footer-brand-desc">Om Shanti N R Realty &#8212; the business brand of Om Shanti N R Construction (Partnership Firm). Building homes with trust, quality and compliance in Palghar since 2005.</div></div>
+    <div style="flex:2;min-width:200px"><img src="images/logo.png" alt="Om Shanti N R Construction" style="height:76px;width:auto;display:block"><div class="footer-brand-desc">Om Shanti N R Realty &#8212; the business brand of Om Shanti N R Construction (Partnership Firm). Building homes with trust, quality and compliance in Palghar since 2005.</div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Navigation</div><div class="footer-links"><a onclick="showPage('home');window.scrollTo(0,0)">Home</a><a onclick="showPage('home');ss('about')">About Us</a><a onclick="showPage('home');ss('projects')">Projects</a><a onclick="showPage('leadership')">Leadership</a><a onclick="showPage('home');ss('contact')">Contact Us</a></div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Reach Us</div><div class="footer-links"><a href="tel:+918262885023">+91 82628 85023</a><a href="mailto:vedant.mishra@omnr.com">vedant.mishra@omnr.com</a><a>Palghar West, 401404<br/>Maharashtra, India</a><a href="https://wa.me/918262885023" target="_blank" style="color:var(--gold)">WhatsApp Us &#8599;</a></div></div>
   </div>
@@ -1093,7 +1093,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 </div>
 <footer>
   <div style="display:flex;flex-wrap:wrap;gap:3rem;margin-bottom:2rem">
-    <div style="flex:2;min-width:200px"><img src="images/logo.png" alt="Om Shanti N R Construction" style="height:60px;width:auto;display:block"><div class="footer-brand-desc">Om Shanti N R Realty &#8212; the business brand of Om Shanti N R Construction (Partnership Firm). Building homes with trust, quality and compliance in Palghar since 2005.</div></div>
+    <div style="flex:2;min-width:200px"><img src="images/logo.png" alt="Om Shanti N R Construction" style="height:76px;width:auto;display:block"><div class="footer-brand-desc">Om Shanti N R Realty &#8212; the business brand of Om Shanti N R Construction (Partnership Firm). Building homes with trust, quality and compliance in Palghar since 2005.</div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Navigation</div><div class="footer-links"><a onclick="showPage('home');window.scrollTo(0,0)">Home</a><a onclick="showPage('home');ss('about')">About Us</a><a onclick="showPage('home');ss('projects')">Projects</a><a onclick="showPage('leadership')">Leadership</a><a onclick="showPage('home');ss('contact')">Contact Us</a></div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Reach Us</div><div class="footer-links"><a href="tel:+918262885023">+91 82628 85023</a><a href="mailto:vedant.mishra@omnr.com">vedant.mishra@omnr.com</a><a>Palghar West, 401404<br/>Maharashtra, India</a><a href="https://wa.me/918262885023" target="_blank" style="color:var(--gold)">WhatsApp Us &#8599;</a></div></div>
   </div>
@@ -1332,7 +1332,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 
 <footer>
   <div style="display:flex;flex-wrap:wrap;gap:3rem;margin-bottom:2rem">
-    <div style="flex:2;min-width:200px"><img src="images/logo.png" alt="Om Shanti N R Construction" style="height:60px;width:auto;display:block"><div class="footer-brand-desc">Om Shanti N R Realty &#8212; the business brand of Om Shanti N R Construction (Partnership Firm). Building homes with trust, quality and compliance in Palghar since 2005.</div></div>
+    <div style="flex:2;min-width:200px"><img src="images/logo.png" alt="Om Shanti N R Construction" style="height:76px;width:auto;display:block"><div class="footer-brand-desc">Om Shanti N R Realty &#8212; the business brand of Om Shanti N R Construction (Partnership Firm). Building homes with trust, quality and compliance in Palghar since 2005.</div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Navigation</div><div class="footer-links"><a onclick="showPage('home');window.scrollTo(0,0)">Home</a><a onclick="showPage('home');ss('about')">About Us</a><a onclick="showPage('home');ss('projects')">Projects</a><a onclick="showPage('leadership')">Leadership</a><a onclick="showPage('partners')">Channel Partners</a><a onclick="showPage('home');ss('contact')">Contact Us</a></div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Reach Us</div><div class="footer-links"><a href="tel:+918262885023">+91 82628 85023</a><a href="mailto:vedant.mishra@omnr.com">vedant.mishra@omnr.com</a><a>Palghar West, 401404<br/>Maharashtra, India</a><a href="https://wa.me/918262885023" target="_blank" style="color:var(--gold)">WhatsApp Us &#8599;</a></div></div>
   </div>
@@ -1570,7 +1570,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 
 <footer>
   <div style="display:flex;flex-wrap:wrap;gap:3rem;margin-bottom:2rem">
-    <div style="flex:2;min-width:200px"><img src="images/logo.png" alt="Om Shanti N R Construction" style="height:60px;width:auto;display:block"><div class="footer-brand-desc">Om Shanti N R Realty &#8212; the business brand of Om Shanti N R Construction (Partnership Firm). Building homes with trust, quality and compliance in Palghar since 2005.</div></div>
+    <div style="flex:2;min-width:200px"><img src="images/logo.png" alt="Om Shanti N R Construction" style="height:76px;width:auto;display:block"><div class="footer-brand-desc">Om Shanti N R Realty &#8212; the business brand of Om Shanti N R Construction (Partnership Firm). Building homes with trust, quality and compliance in Palghar since 2005.</div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Navigation</div><div class="footer-links"><a onclick="showPage('home');window.scrollTo(0,0)">Home</a><a onclick="showPage('home');ss('about')">About Us</a><a onclick="showPage('home');ss('projects')">Projects</a><a onclick="showPage('leadership')">Leadership</a><a onclick="showPage('home');ss('contact')">Contact Us</a></div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Reach Us</div><div class="footer-links"><a href="tel:+918262885023">+91 82628 85023</a><a href="mailto:vedant.mishra@omnr.com">vedant.mishra@omnr.com</a><a>Palghar West, 401404<br/>Maharashtra, India</a><a href="https://wa.me/918262885023" target="_blank" style="color:var(--gold)">WhatsApp Us &#8599;</a></div></div>
   </div>
@@ -1759,7 +1759,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 <div class="disclaimer">Partners of Om Shanti N R Construction hold residential inventory in Ostwal Imperial in their personal capacity as Land Partners. This listing is not a project of Om Shanti N R Construction. All information is indicative &#8212; verify MahaRERA details before purchase.</div>
 <footer>
   <div style="display:flex;flex-wrap:wrap;gap:3rem;margin-bottom:2rem">
-    <div style="flex:2;min-width:200px"><img src="images/logo.png" alt="Om Shanti N R Construction" style="height:60px;width:auto;display:block"><div class="footer-brand-desc">Om Shanti N R Realty &#8212; the business brand of Om Shanti N R Construction (Partnership Firm). Building homes with trust, quality and compliance in Palghar since 2005.</div></div>
+    <div style="flex:2;min-width:200px"><img src="images/logo.png" alt="Om Shanti N R Construction" style="height:76px;width:auto;display:block"><div class="footer-brand-desc">Om Shanti N R Realty &#8212; the business brand of Om Shanti N R Construction (Partnership Firm). Building homes with trust, quality and compliance in Palghar since 2005.</div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Navigation</div><div class="footer-links"><a onclick="showPage('home');window.scrollTo(0,0)">Home</a><a onclick="showPage('home');ss('about')">About Us</a><a onclick="showPage('home');ss('projects')">Projects</a><a onclick="showPage('leadership')">Leadership</a><a onclick="showPage('home');ss('contact')">Contact Us</a></div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Reach Us</div><div class="footer-links"><a href="tel:+918262885023">+91 82628 85023</a><a href="mailto:vedant.mishra@omnr.com">vedant.mishra@omnr.com</a><a>Palghar West, 401404<br/>Maharashtra, India</a><a href="https://wa.me/918262885023" target="_blank" style="color:var(--gold)">WhatsApp Us &#8599;</a></div></div>
   </div>
@@ -1901,7 +1901,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 <div class="disclaimer">A partner of Om Shanti N R Construction holds residential inventory in Shree Balaji Pride in their personal capacity as Land Partner. This listing is not a project of Om Shanti N R Construction. All information is indicative &#8212; verify MahaRERA details before purchase.</div>
 <footer>
   <div style="display:flex;flex-wrap:wrap;gap:3rem;margin-bottom:2rem">
-    <div style="flex:2;min-width:200px"><img src="images/logo.png" alt="Om Shanti N R Construction" style="height:60px;width:auto;display:block"><div class="footer-brand-desc">Om Shanti N R Realty &#8212; the business brand of Om Shanti N R Construction (Partnership Firm). Building homes with trust, quality and compliance in Palghar since 2005.</div></div>
+    <div style="flex:2;min-width:200px"><img src="images/logo.png" alt="Om Shanti N R Construction" style="height:76px;width:auto;display:block"><div class="footer-brand-desc">Om Shanti N R Realty &#8212; the business brand of Om Shanti N R Construction (Partnership Firm). Building homes with trust, quality and compliance in Palghar since 2005.</div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Navigation</div><div class="footer-links"><a onclick="showPage('home');window.scrollTo(0,0)">Home</a><a onclick="showPage('home');ss('about')">About Us</a><a onclick="showPage('home');ss('projects')">Projects</a><a onclick="showPage('leadership')">Leadership</a><a onclick="showPage('home');ss('contact')">Contact Us</a></div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Reach Us</div><div class="footer-links"><a href="tel:+918262885023">+91 82628 85023</a><a href="mailto:vedant.mishra@omnr.com">vedant.mishra@omnr.com</a><a>Palghar West, 401404<br/>Maharashtra, India</a><a href="https://wa.me/918262885023" target="_blank" style="color:var(--gold)">WhatsApp Us &#8599;</a></div></div>
   </div>
@@ -2074,7 +2074,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 <div class="disclaimer">A partner of Om Shanti N R Construction holds residential inventory in Shiv Shrushti Complex in their personal capacity as Land Partner. Both buildings have received OC. All information is indicative &#8212; verify MahaRERA details before purchase. Govt taxes extra.</div>
 <footer>
   <div style="display:flex;flex-wrap:wrap;gap:3rem;margin-bottom:2rem">
-    <div style="flex:2;min-width:200px"><img src="images/logo.png" alt="Om Shanti N R Construction" style="height:60px;width:auto;display:block"><div class="footer-brand-desc">Om Shanti N R Realty &#8212; the business brand of Om Shanti N R Construction (Partnership Firm). Building homes with trust, quality and compliance in Palghar since 2005.</div></div>
+    <div style="flex:2;min-width:200px"><img src="images/logo.png" alt="Om Shanti N R Construction" style="height:76px;width:auto;display:block"><div class="footer-brand-desc">Om Shanti N R Realty &#8212; the business brand of Om Shanti N R Construction (Partnership Firm). Building homes with trust, quality and compliance in Palghar since 2005.</div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Navigation</div><div class="footer-links"><a onclick="showPage('home');window.scrollTo(0,0)">Home</a><a onclick="showPage('home');ss('about')">About Us</a><a onclick="showPage('home');ss('projects')">Projects</a><a onclick="showPage('leadership')">Leadership</a><a onclick="showPage('home');ss('contact')">Contact Us</a></div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Reach Us</div><div class="footer-links"><a href="tel:+918262885023">+91 82628 85023</a><a href="mailto:vedant.mishra@omnr.com">vedant.mishra@omnr.com</a><a>Palghar West, 401404<br/>Maharashtra, India</a><a href="https://wa.me/918262885023" target="_blank" style="color:var(--gold)">WhatsApp Us &#8599;</a></div></div>
   </div>
@@ -2270,10 +2270,10 @@ window.addEventListener('scroll', () => {
   const nav = document.getElementById('navbar');
   if (!nav) return;
   if (window.scrollY > 60) {
-    nav.style.height = '60px';
+    nav.style.height = '72px';
     nav.style.background = 'rgba(10,8,6,0.98)';
   } else {
-    nav.style.height = '72px';
+    nav.style.height = '88px';
     nav.style.background = 'rgba(14,12,10,0.93)';
   }
 });
