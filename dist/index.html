@@ -564,6 +564,51 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
   /* ── Active nav link indicator ── */
   .nav-links a.active{color:var(--gold)}
   .nav-links a.active::after{width:100%}
+
+/* ── AASTHA / plotted project specifics ── */
+.as-layout-pane{background:#f5f3ee;border:.5px solid var(--border);overflow:hidden}
+.as-layout-pane img{width:100%;height:auto;display:block;max-height:640px;object-fit:contain;background:#f5f3ee}
+.as-layout-cap{padding:8px 14px;font-size:10px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;border-top:.5px solid var(--border);background:var(--bg-card2)}
+.docs-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:.4rem}
+.doc-card{background:#f5f3ee;border:.5px solid var(--border);overflow:hidden}
+.doc-card img{width:100%;height:auto;display:block;max-height:380px;object-fit:contain;background:#f5f3ee}
+.doc-card-cap{padding:7px 12px;font-size:10px;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;border-top:.5px solid var(--border);background:var(--bg-card2)}
+.faq-list{display:flex;flex-direction:column;gap:6px}
+.faq-item{border:.5px solid var(--border);background:var(--bg-card2);transition:border-color .2s}
+.faq-item[open]{border-color:var(--border-strong)}
+.faq-item summary{padding:14px 18px;font-size:13.5px;color:var(--text-primary);cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:14px;font-weight:400;line-height:1.5}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-icon{width:22px;height:22px;border:.5px solid var(--border-strong);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;transition:transform .25s;border-radius:2px}
+.faq-item[open] .faq-icon{transform:rotate(45deg);background:rgba(200,169,110,.08)}
+.faq-a{padding:2px 18px 14px;font-size:13px;color:var(--text-secondary);line-height:1.8;font-weight:300}
+.status-card{background:rgba(200,169,110,.05);border:.5px solid rgba(200,169,110,.2);padding:1rem 1.2rem}
+.status-card-title{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem}
+.status-line{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;font-size:12px;padding:6px 0;border-bottom:.5px dashed var(--border)}
+.status-line:last-child{border-bottom:none}
+.status-line-l{color:var(--text-muted);letter-spacing:.5px}
+.status-line-r{color:var(--text-primary);font-weight:500;text-align:right}
+.status-line-r.ok{color:#5DCAA5}.status-line-r.pending{color:#E8A882}
+.architect-card{background:var(--bg-card);border:.5px solid var(--border);padding:1.1rem 1.3rem}
+.architect-card-head{display:flex;gap:.9rem;align-items:flex-start;margin-bottom:.7rem}
+.architect-icon{width:42px;height:42px;background:rgba(200,169,110,.08);border:.5px solid rgba(200,169,110,.25);display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:18px;flex-shrink:0}
+.architect-firm{font-family:"Cormorant Garamond",serif;font-size:18px;font-weight:600;color:var(--text-primary);line-height:1.2}
+.architect-name{font-size:11px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-top:3px}
+.architect-meta{font-size:11px;color:var(--text-muted);line-height:1.8;padding-top:.7rem;border-top:.5px dashed var(--border)}
+.architect-meta a{color:var(--text-secondary)}.architect-meta a:hover{color:var(--gold)}
+.sticky-actions{position:fixed;bottom:0;left:0;right:0;z-index:190;display:none;background:rgba(10,8,6,0.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:.5px solid var(--border-strong);padding:.6rem .8rem;gap:6px}
+.sa-btn{flex:1;padding:11px 8px;text-align:center;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-family:"Jost",sans-serif;font-weight:500;border:.5px solid var(--border-strong);transition:all .2s;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;background:transparent;color:var(--text-primary)}
+.sa-call{color:var(--gold);border-color:rgba(200,169,110,.4)}
+.sa-wa{background:#25D366;color:#fff;border-color:#25D366}
+.sa-enq{background:var(--gold);color:var(--bg-dark);border-color:var(--gold)}
+.aastha-gallery .oi-slide{width:340px}
+.aastha-gallery .oi-slide img{height:230px;object-fit:cover}
+@media(max-width:768px){
+  .page.active .sticky-actions{display:flex}
+  .page.active .sticky-actions ~ .wa-fab{bottom:5rem}
+  .docs-grid{grid-template-columns:1fr}
+  .architect-card-head{flex-direction:row;align-items:center}
+  .as-layout-pane img{max-height:420px}
+}
 </style>
 </head>
 <body>
@@ -611,7 +656,8 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
     <h1 class="anim-2">Building<br/><em>Trust,</em><br/>Delivering<br/>Homes.</h1>
     <p class="hero-sub anim-3">Om Shanti N R Construction has been shaping Palghar&#39;s residential landscape since 2005 &#8212; with over three decades of founding experience and an unwavering commitment to quality, compliance, and lasting value.</p>
     <div class="hero-actions anim-4">
-      <a class="btn-primary" onclick="ss('projects')">View Projects</a>
+      <a class="btn-primary" onclick="showPage('aastha')">View Aastha &#8212; Tembhode</a>
+      <a class="btn-outline" onclick="ss('projects')">All Projects</a>
       <a class="btn-outline" onclick="ss('about')">Our Story</a>
     </div>
   </div>
@@ -660,19 +706,22 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
   <!-- ONGOING -->
   <div class="tab-content" id="tab-ongoing">
     <div class="ongoing-grid">
-      <div class="project-card">
-        <div class="project-card-badge">Upcoming</div>
-        <div class="project-card-img" style="background:linear-gradient(135deg,var(--bg-card2),rgba(139,58,42,.15))">
-          <svg viewBox="0 0 120 80" style="opacity:.12;width:100px"><rect x="20" y="30" width="10" height="40" fill="#C8A96E"/><rect x="90" y="30" width="10" height="40" fill="#C8A96E"/><path d="M20 35 L20 10 A40 40 0 0 1 100 10 L100 35" fill="none" stroke="#C8A96E" stroke-width="2"/><text x="60" y="42" text-anchor="middle" font-family="serif" font-size="28" fill="#C8A96E">&#2384;</text></svg>
-        </div>
+
+      <!-- AASTHA — featured ongoing -->
+      <div class="project-card" style="cursor:pointer" onclick="showPage('aastha')">
+        <div class="project-card-badge" style="background:var(--gold);color:var(--bg-dark)">New &middot; Featured</div>
+        <div class="project-card-img"><img src="images/aastha/aastha-hero.jpeg" alt="Aastha &#8212; Tembhode, Palghar"/></div>
         <div class="project-card-body">
-          <div class="project-location">Palghar West, Maharashtra</div>
-          <div class="project-name">New Project &#8212; Coming Soon</div>
-          <div style="font-size:13px;color:var(--text-secondary);font-weight:300;line-height:1.7;margin-bottom:1rem">Our next residential development is currently in the planning and approval phase. Register your interest to receive first access.</div>
-          <div class="project-tags"><span class="project-tag">Residential</span><span class="project-tag">Palghar West</span></div>
-          <button class="project-cta" onclick="ss('contact')" style="margin-top:1rem">Register Interest &#8594;</button>
+          <div class="project-location">Tembhode, Palghar &#8212; Maharashtra</div>
+          <div class="project-name">Aastha</div>
+          <div class="project-role">Om Shanti N R Realty &#8212; Promoter &nbsp;&middot;&nbsp; Layout: Vastu Shilp Associates</div>
+          <div style="font-size:13px;color:var(--text-secondary);font-weight:300;line-height:1.7;margin-bottom:.8rem">A fully gated NA plotted community with 9M &amp; 12M RCC internal roads, RCC stormwater gutters, perimeter fencing, street lighting and direct Manor-Mahim State Highway access.</div>
+          <div class="project-tags"><span class="project-tag">NA Plotted</span><span class="project-tag">Gated</span><span class="project-tag">Tembhode</span></div>
+          <div class="project-rera" style="color:var(--gold-dark)">RERA registration in process</div>
+          <button class="project-cta">View Project &#8594;</button>
         </div>
       </div>
+
     </div>
     <div class="disclaimer-box">All real estate projects displayed are developed and promoted by Om Shanti N R Construction (Partnership Firm). RERA registration details will be displayed as and when applicable. All project information is indicative and subject to statutory approvals.</div>
   </div>
@@ -790,7 +839,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
         <div class="form-group"><label class="form-label">Project Interest</label>
           <select class="form-input" id="f-project" style="appearance:none;cursor:pointer">
             <option value="" disabled selected>Select a project or topic</option>
-            <option>Upcoming Residential Project &#8212; Palghar West</option>
+            <option>Aastha &#8212; Tembhode, Palghar (Plotted)</option>
             <option>Ostwal Imperial</option><option>Shree Balaji Pride</option><option>Shiv Shrushti Complex</option>
             <option>General Enquiry</option><option>Site Visit Request</option>
           </select>
@@ -878,6 +927,243 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
   <div class="footer-bottom"><div class="footer-copy">&#169; 2025 Om Shanti N R Construction (Partnership Firm). All rights reserved. Om Shanti N R Realty is a business brand &#8212; not a separate legal entity.</div><div class="footer-disclaimer">All projects and information displayed are subject to statutory approvals. All layouts and specifications are indicative. Verify RERA details before purchase.</div></div>
 </footer>
 </div><!-- end page-leadership -->
+<!-- ══ AASTHA ══ -->
+<div class="page" id="page-aastha">
+<div class="hero-proj">
+  <img class="hero-img" src="images/aastha/aastha-hero.jpeg" alt="Aastha — Tembhode, Palghar"/>
+  <div class="hero-overlay"></div>
+  <div class="hero-content-proj">
+    <div class="hero-tag">New &middot; Plotted Community</div>
+    <h1 class="hero-title">Aastha</h1>
+    <div class="hero-location">Tembhode, Palghar &#8212; Maharashtra, 401404</div>
+    <div class="hero-role-badge"><span class="hero-role-text">Om Shanti N R Realty &#8212; Promoter</span><span class="hero-role-div"></span><span class="hero-role-dev">Layout by Vastu Shilp Associates &middot; Ar. Nishant Patil</span></div>
+  </div>
+</div>
+<div class="hero-meta-strip">
+  <div class="hero-meta-item"><div class="hero-meta-label">Type</div><div class="hero-meta-value">NA Plotted Layout (Gated)</div></div>
+  <div class="hero-meta-item"><div class="hero-meta-label">Internal Roads</div><div class="hero-meta-value">9M &amp; 12M RCC</div></div>
+  <div class="hero-meta-item"><div class="hero-meta-label">Highway</div><div class="hero-meta-value">Manor &#8211; Mahim State Highway</div></div>
+  <div class="hero-meta-item"><div class="hero-meta-label">Plot Sizes</div><div class="hero-meta-value">On Request</div></div>
+  <div class="hero-meta-item"><div class="hero-meta-label">Status</div><div class="hero-meta-value hero-meta-rera">Bookings Opening Soon</div></div>
+</div>
+<div class="proj-body">
+  <div class="proj-main">
+
+    <div class="proj-section"><div class="sec-title">Overview</div>
+      <p class="overview-text"><strong>Aastha</strong> is a fully gated NA plotted layout at Tembhode, Palghar. Fully leveled and serviced with 9M and 12M internal RCC roads, RCC stormwater gutters, perimeter fencing and street lighting throughout, the site has direct connectivity to the Manor-Mahim State Highway in one of Palghar&#39;s fastest-growing corridors.</p>
+      <p class="overview-text" style="margin-top:.7rem">Aastha is a venture involving partners of <strong>Om Shanti N R Construction</strong>. The land is being released for sale under a single-owner gated layout, with NA title, all possession certificates and statutory documentation in place, to individual plot owners as well as to builders and developers acquiring larger parcels. Every transaction is backed by transparent, title-clear paperwork and a Vastu-aligned road grid.</p>
+      <p class="overview-text" style="margin-top:.7rem">Whether you are an individual buyer planning a private home or weekend residence, or a developer looking for cleared, infrastructure-ready land in a high-growth Palghar pocket, Aastha is positioned as a transparent, compliance-first plotted opportunity, backed by 30+ years of construction and land experience from the partners of Om Shanti N R Construction.</p>
+    </div>
+
+    <div class="proj-section"><div class="sec-title">Plot Configurations</div>
+      <p class="overview-text" style="margin-bottom:1rem">Aastha is laid out as a phased plotted layout with multiple plot tiers. Final pricing and site-plan allocation are confirmed at booking. Speak to our sales team for the live availability sheet.</p>
+      <div class="config-grid-proj">
+        <div class="config-card"><div class="config-type">Compact</div><div class="config-area">Entry-tier plots</div><div class="config-price">Price on Request</div></div>
+        <div class="config-card"><div class="config-type">Standard</div><div class="config-area">Family-home plots</div><div class="config-price">Price on Request</div></div>
+        <div class="config-card"><div class="config-type">Premium</div><div class="config-area">Corner / road-front plots</div><div class="config-price">Price on Request</div></div>
+      </div>
+      <div class="fp-dl-row" style="margin-top:1.2rem"><div class="fp-dl-note">All plot dimensions and prices are confirmed at booking, post site visit. Inventory is released in phases.</div><a class="fp-dl-btn" href="https://wa.me/918262885023?text=Hi%2C%20please%20share%20the%20Aastha%20plot%20availability%20%26%20price%20list." target="_blank">&#8595; &nbsp;Request Plot &amp; Price List</a></div>
+    </div>
+
+    <div class="proj-section"><div class="sec-title">Master &amp; Plotting Layouts</div>
+      <p class="overview-text" style="margin-bottom:1rem">The plotting layouts below are taken from the architect&#39;s submission set. Click each tab to view the full plotting plan.</p>
+      <div class="fp-tabs">
+        <button class="fp-tab active" onclick="switchAasthaLayout('p1',this)">Plotting Layout &#8212; 1</button>
+        <button class="fp-tab" onclick="switchAasthaLayout('p2',this)">Plotting Layout &#8212; 2</button>
+        <button class="fp-tab" onclick="switchAasthaLayout('tilr',this)">Master &#8212; T.I.L.R</button>
+      </div>
+      <div id="as-layout-p1" class="as-layout-pane">
+        <img src="images/aastha/aastha-master-plan-2.jpeg" alt="Aastha — Plotting Layout 1"/>
+        <div class="as-layout-cap">Plotting Layout &middot; Sheet 1</div>
+      </div>
+      <div id="as-layout-p2" class="as-layout-pane" style="display:none">
+        <img src="images/aastha/aastha-master-plan-1.jpeg" alt="Aastha — Plotting Layout 2"/>
+        <div class="as-layout-cap">Plotting Layout &middot; Sheet 2</div>
+      </div>
+      <div id="as-layout-tilr" class="as-layout-pane" style="display:none">
+        <img src="images/aastha/aastha-tilr-clean.jpeg" alt="Aastha — Master TILR Plotting"/>
+        <div class="as-layout-cap">Master Plotting &middot; Tentative Internal Layout Reference (TILR)</div>
+      </div>
+      <div class="fp-dl-row" style="margin-top:1.2rem"><div class="fp-dl-note">Plot numbering, dimensions and final boundary are subject to architect &amp; statutory approvals.</div><a class="fp-dl-btn" href="https://wa.me/918262885023?text=Hi%2C%20please%20share%20the%20Aastha%20full%20brochure%20%2B%20layout%20PDF." target="_blank">&#8595; &nbsp;Request Full Brochure</a></div>
+    </div>
+
+    <div class="proj-section"><div class="sec-title">Salient Features</div>
+      <div class="amenity-grid">
+        <div class="amenity-item"><span class="amenity-dot"></span>Gated Community</div>
+        <div class="amenity-item"><span class="amenity-dot"></span>9M &amp; 12M RCC Internal Roads</div>
+        <div class="amenity-item"><span class="amenity-dot"></span>RCC Stormwater Gutters</div>
+        <div class="amenity-item"><span class="amenity-dot"></span>Street Lighting Throughout</div>
+        <div class="amenity-item"><span class="amenity-dot"></span>Outer Perimeter Fencing</div>
+        <div class="amenity-item"><span class="amenity-dot"></span>Leveled, Build-Ready Plots</div>
+        <div class="amenity-item"><span class="amenity-dot"></span>Manor &#8211; Mahim Highway Access</div>
+        <div class="amenity-item"><span class="amenity-dot"></span>Vastu-Aligned Road Grid</div>
+        <div class="amenity-item"><span class="amenity-dot"></span>Underground Utility Provisions</div>
+        <div class="amenity-item"><span class="amenity-dot"></span>Single-Owner NA Title</div>
+        <div class="amenity-item"><span class="amenity-dot"></span>Concrete Footpaths</div>
+        <div class="amenity-item"><span class="amenity-dot"></span>Tree Plantation Zones</div>
+      </div>
+    </div>
+
+    <div class="proj-section"><div class="sec-title">Infrastructure Specifications</div>
+      <div class="specs-grid">
+        <div><div class="spec-group-title">Roads &amp; Drainage</div><div class="spec-item"><span class="spec-dot"></span>9-metre &amp; 12-metre internal RCC roads</div><div class="spec-item"><span class="spec-dot"></span>RCC stormwater gutters along every road</div><div class="spec-item"><span class="spec-dot"></span>Concrete footpaths on main spines</div></div>
+        <div><div class="spec-group-title">Boundary &amp; Security</div><div class="spec-item"><span class="spec-dot"></span>Continuous outer perimeter fencing</div><div class="spec-item"><span class="spec-dot"></span>Single controlled entry gate</div><div class="spec-item"><span class="spec-dot"></span>Provision for security cabin &amp; CCTV</div></div>
+        <div><div class="spec-group-title">Lighting &amp; Utilities</div><div class="spec-item"><span class="spec-dot"></span>Street lighting on every internal road</div><div class="spec-item"><span class="spec-dot"></span>Underground utility ducts &amp; provisions</div><div class="spec-item"><span class="spec-dot"></span>Power &amp; water connection points planned per plot</div></div>
+        <div><div class="spec-group-title">Site &amp; Layout</div><div class="spec-item"><span class="spec-dot"></span>Fully leveled, build-ready plots</div><div class="spec-item"><span class="spec-dot"></span>Vastu-aligned road grid</div><div class="spec-item"><span class="spec-dot"></span>Tree plantation zones along boundary</div></div>
+      </div>
+    </div>
+
+    <div class="proj-section"><div class="sec-title">Location &amp; Connectivity</div>
+      <p class="overview-text" style="margin-bottom:1rem">Tembhode is one of the fastest-growing residential pockets of Palghar &#8212; well-connected to the Manor-Mahim State Highway, Palghar Station, and the Mumbai-Ahmedabad National Highway corridor. Below are key conveniences in the immediate neighbourhood.</p>
+      <div class="nearby-grid">
+        <div class="nearby-item"><div class="nearby-icon">&#128722;</div><div><div class="nearby-label">Shopping Centre</div><div class="nearby-dist">Within neighbourhood</div></div></div>
+        <div class="nearby-item"><div class="nearby-icon">&#127973;</div><div><div class="nearby-label">Hospital</div><div class="nearby-dist">Short drive</div></div></div>
+        <div class="nearby-item"><div class="nearby-icon">&#127979;</div><div><div class="nearby-label">School</div><div class="nearby-dist">Short drive</div></div></div>
+        <div class="nearby-item"><div class="nearby-icon">&#127947;</div><div><div class="nearby-label">Gymnasium</div><div class="nearby-dist">Nearby</div></div></div>
+        <div class="nearby-item"><div class="nearby-icon">&#127795;</div><div><div class="nearby-label">Parks &amp; Garden</div><div class="nearby-dist">Nearby</div></div></div>
+        <div class="nearby-item"><div class="nearby-icon">&#127869;</div><div><div class="nearby-label">Cafes &amp; Restaurants</div><div class="nearby-dist">Nearby</div></div></div>
+        <div class="nearby-item"><div class="nearby-icon">&#127916;</div><div><div class="nearby-label">Theatre</div><div class="nearby-dist">Short drive</div></div></div>
+        <div class="nearby-item"><div class="nearby-icon">&#128722;</div><div><div class="nearby-label">Supermarket</div><div class="nearby-dist">Short drive</div></div></div>
+        <div class="nearby-item"><div class="nearby-icon">&#127974;</div><div><div class="nearby-label">ATM &amp; Banking</div><div class="nearby-dist">Nearby</div></div></div>
+      </div>
+      <iframe class="map-frame" src="https://www.google.com/maps?q=Tembhode%2C+Palghar%2C+Maharashtra&output=embed" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <div style="margin-top:.9rem"><a href="https://maps.app.goo.gl/yDinGFXRTTs87XDdA" target="_blank" rel="noopener" class="fp-dl-btn" style="display:inline-flex">&#8599; &nbsp;Open Site Location in Google Maps</a></div>
+    </div>
+
+    <div class="proj-section" style="padding:0;overflow:hidden">
+      <div style="padding:1.5rem 1.8rem .8rem"><div class="sec-title" style="margin-bottom:0">Layout &amp; Site Gallery</div></div>
+      <div class="oi-gallery-wrap aastha-gallery">
+        <div class="oi-gallery-track" id="aastha-track">
+<div class="oi-slide"><img src="images/aastha/aastha-google-location.jpeg" alt="Site &mdash; Google Satellite View"/><div class="oi-slide-label">Site &middot; Satellite</div></div>
+<div class="oi-slide"><img src="images/aastha/aastha-dp-plan.jpeg" alt="Development Plan"/><div class="oi-slide-label">Development Plan</div></div>
+<div class="oi-slide"><img src="images/aastha/aastha-tilr-clean.jpeg" alt="Master TILR"/><div class="oi-slide-label">Master TILR</div></div>
+<div class="oi-slide"><img src="images/aastha/aastha-master-plan-2.jpeg" alt="Plotting Layout 1"/><div class="oi-slide-label">Plotting Layout 1</div></div>
+<div class="oi-slide"><img src="images/aastha/aastha-master-plan-1.jpeg" alt="Plotting Layout 2"/><div class="oi-slide-label">Plotting Layout 2</div></div>
+<div class="oi-slide"><img src="images/aastha/aastha-google-location.jpeg" alt="Site &mdash; Google Satellite View"/><div class="oi-slide-label">Site &middot; Satellite</div></div>
+<div class="oi-slide"><img src="images/aastha/aastha-dp-plan.jpeg" alt="Development Plan"/><div class="oi-slide-label">Development Plan</div></div>
+<div class="oi-slide"><img src="images/aastha/aastha-tilr-clean.jpeg" alt="Master TILR"/><div class="oi-slide-label">Master TILR</div></div>
+<div class="oi-slide"><img src="images/aastha/aastha-master-plan-2.jpeg" alt="Plotting Layout 1"/><div class="oi-slide-label">Plotting Layout 1</div></div>
+<div class="oi-slide"><img src="images/aastha/aastha-master-plan-1.jpeg" alt="Plotting Layout 2"/><div class="oi-slide-label">Plotting Layout 2</div></div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:1rem;padding:1rem 1.8rem">
+        <button class="oi-gallery-btn" onclick="aasthaGalleryPause()" id="aastha-pause-btn">&#9646;&#9646; Pause</button>
+        <button class="oi-gallery-btn" onclick="aasthaGalleryPlay()" id="aastha-play-btn" style="display:none">&#9654; Play</button>
+      </div>
+    </div>
+
+    <div class="proj-section"><div class="sec-title">Frequently Asked Questions</div>
+      <div class="faq-list">
+        <details class="faq-item"><summary class="faq-q">Are the Aastha plots NA-converted? <span class="faq-icon">+</span></summary>
+          <div class="faq-a">Yes. Aastha is laid out as a Non-Agricultural (NA) plotted development. The order &amp; documentation are part of the buyer kit shared during site visit. We strongly recommend personally verifying the latest 7/12 extract, NA order and architect&#39;s sanctioned plan before booking.</div>
+        </details>
+        <details class="faq-item"><summary class="faq-q">What approvals are in place at the time of launch? <span class="faq-icon">+</span></summary>
+          <div class="faq-a">The architect&#39;s plotting layout (T.I.L.R) is in place. Statutory approvals (Collector NA, Talathi mutation entries, Town Planning sanction) and MahaRERA registration where applicable are progressed in parallel and shared transparently with each interested buyer.</div>
+        </details>
+        <details class="faq-item"><summary class="faq-q">When can I start construction on my plot? <span class="faq-icon">+</span></summary>
+          <div class="faq-a">Construction can be initiated after final possession is handed over and the buyer obtains the appropriate building permissions on their plot. Aastha&#39;s gated infrastructure (roads, lighting, gutters, fencing) is delivered to plot edge so construction starts smoothly.</div>
+        </details>
+        <details class="faq-item"><summary class="faq-q">Are home/plot loans available? <span class="faq-icon">+</span></summary>
+          <div class="faq-a">Yes. Most leading public-sector and private banks finance NA-converted plotted layouts with clear title. We will share the pre-approved bank list during your enquiry call. Final loan eligibility is determined by the bank based on individual profile.</div>
+        </details>
+        <details class="faq-item"><summary class="faq-q">What is the typical payment plan? <span class="faq-icon">+</span></summary>
+          <div class="faq-a">Aastha uses a milestone-linked payment schedule &#8212; with a booking amount, agreement-stage payment and milestone-linked instalments tied to layout-level infrastructure progress (roads, gutters, lighting, fencing). The full schedule is shared in writing along with the price sheet.</div>
+        </details>
+        <details class="faq-item"><summary class="faq-q">What is included in the plot price? <span class="faq-icon">+</span></summary>
+          <div class="faq-a">The plot price includes the NA-converted land parcel, share in the gated layout&#39;s common infrastructure (RCC roads, RCC gutters, street lighting, outer fencing, boundary), and applicable layout-level approvals. GST, registration, stamp duty and individual building-construction costs are over and above the plot price.</div>
+        </details>
+        <details class="faq-item"><summary class="faq-q">Can I visit the site before booking? <span class="faq-icon">+</span></summary>
+          <div class="faq-a">Absolutely &#8212; site visits are encouraged and accompanied by our team. WhatsApp us on +91 82628 85023 to schedule a slot, share your preferred time and we&#39;ll arrange a convenient visit including a walk-through of the layout boundary, sample plot positions and infrastructure works.</div>
+        </details>
+        <details class="faq-item"><summary class="faq-q">What is the possession timeline? <span class="faq-icon">+</span></summary>
+          <div class="faq-a">Plotted possession depends on phase release and statutory milestones. Indicative timelines are shared in writing at the time of booking, along with infrastructure-completion milestones. Aastha follows a phased delivery to ensure each plot is handed over with completed road, lighting, gutter and fencing works at the boundary.</div>
+        </details>
+      </div>
+    </div>
+
+    <div class="proj-section"><div class="sec-title">Architect &amp; Layout Credits</div>
+      <div class="architect-card">
+        <div class="architect-card-head">
+          <div class="architect-icon">&#9670;</div>
+          <div>
+            <div class="architect-firm">Vastu Shilp Associates</div>
+            <div class="architect-name">Ar. Nishant Patil</div>
+          </div>
+        </div>
+        <div class="architect-meta">
+          103-204, &quot;Decent Delite&quot;, Opp. Gold Digital Theatre, Mahim Road, Palghar (W) &#8212; Dist. Palghar<br/>
+          Phone: <a href="tel:+917875412777">+91 78754 12777</a> &nbsp;&middot;&nbsp; Email: <a href="mailto:vastushilp01@gmail.com">vastushilp01@gmail.com</a>
+        </div>
+      </div>
+      <p class="overview-text" style="margin-top:1rem;font-size:13px">Layout, plotting plan and T.I.L.R for Aastha have been prepared by Vastu Shilp Associates under Ar. Nishant Patil. Construction-stage architectural &amp; structural design (for buyer-built homes) is undertaken in coordination with empanelled architects on request.</p>
+    </div>
+
+  </div>
+  <div class="sidebar-col">
+    <div class="enquiry-card" id="as-enquiry">
+      <div class="enq-title">Enquire about Aastha</div>
+      <div class="enq-sub">We&#39;ll reply within 24 hours</div>
+      <div class="enq-field"><div class="enq-label">Full Name</div><input class="enq-input" id="as-name" type="text" placeholder="Your name"/></div>
+      <div class="enq-field"><div class="enq-label">Phone</div><input class="enq-input" id="as-phone" type="tel" placeholder="+91 XXXXX XXXXX"/></div>
+      <div class="enq-field"><div class="enq-label">Plot Preference</div>
+        <select class="enq-input" id="as-config" style="appearance:none;cursor:pointer">
+          <option value="" disabled selected>Select plot tier</option>
+          <option>Compact</option>
+          <option>Standard</option>
+          <option>Premium / Corner</option>
+          <option>Will Discuss On Call</option>
+        </select>
+      </div>
+      <div class="enq-field"><div class="enq-label">Message</div><textarea class="enq-input" id="as-msg" style="resize:vertical;min-height:70px" placeholder="Site visit, pricing, payment plan&#8230;"></textarea></div>
+      <button class="enq-btn" onclick="sendEnquiry('as')">Submit Enquiry</button>
+      <p class="enq-note">By submitting you agree to be contacted on the number provided. Overrides DNC/NDNC.</p>
+    </div>
+    <div class="contact-card"><div class="contact-card-title">Direct Contact</div>
+      <div class="contact-row"><div class="contact-icon">&#9742;</div><div><div class="contact-label">Phone / WhatsApp</div><div class="contact-value"><a href="tel:+918262885023">+91 82628 85023</a></div><div class="contact-sub">Sales &#8212; Om Shanti N R Construction</div></div></div>
+      <div class="contact-row"><div class="contact-icon">&#9993;</div><div><div class="contact-label">Email</div><div class="contact-value"><a href="mailto:vedant.mishra@omnr.com">vedant.mishra@omnr.com</a></div></div></div>
+    </div>
+    <div class="status-card">
+      <div class="status-card-title">Approvals &amp; Status</div>
+      <div class="status-line"><span class="status-line-l">NA Order</span><span class="status-line-r ok">In Place</span></div>
+      <div class="status-line"><span class="status-line-l">Architect Layout (T.I.L.R)</span><span class="status-line-r ok">Submitted</span></div>
+      <div class="status-line"><span class="status-line-l">MahaRERA</span><span class="status-line-r pending">In Process</span></div>
+      <div class="status-line"><span class="status-line-l">Boundary &amp; Fencing</span><span class="status-line-r pending">In Progress</span></div>
+      <div class="status-line"><span class="status-line-l">Internal RCC Roads</span><span class="status-line-r pending">In Progress</span></div>
+      <div class="status-line"><span class="status-line-l">Bookings</span><span class="status-line-r pending">Opening Soon</span></div>
+    </div>
+    <div class="gallery-card"><img class="gallery-img" src="images/aastha/aastha-google-location.jpeg" alt="Aastha &middot; Site Satellite View"/><div class="gallery-caption">Aastha &middot; Site location, Tembhode, Palghar</div></div>
+    <div class="architect-card">
+      <div class="architect-card-head">
+        <div class="architect-icon">&#9670;</div>
+        <div>
+          <div class="architect-firm" style="font-size:16px">Vastu Shilp Associates</div>
+          <div class="architect-name">Ar. Nishant Patil</div>
+        </div>
+      </div>
+      <div class="architect-meta">
+        <a href="tel:+917875412777">+91 78754 12777</a> &middot; <a href="mailto:vastushilp01@gmail.com">vastushilp01@gmail.com</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="disclaimer">Aastha is a plotted development promoted by Om Shanti N R Construction (Partnership Firm). All information &#8212; including plot dimensions, pricing, infrastructure works, approvals and timelines &#8212; is indicative and subject to architectural finalisation, statutory approvals and MahaRERA registration. Verify all approvals and on-site conditions before booking. Images on this page are taken from the architect&#39;s submission set; the on-ground site is under active development.</div>
+
+<!-- Mobile sticky action bar (visible only on AASTHA page on mobile) -->
+<div class="sticky-actions">
+  <a class="sa-btn sa-call" href="tel:+918262885023">Call</a>
+  <a class="sa-btn sa-wa" href="https://wa.me/918262885023?text=Hi%2C%20I%27m%20interested%20in%20Aastha%20%E2%80%94%20Tembhode%2C%20Palghar." target="_blank" rel="noopener">WhatsApp</a>
+  <button class="sa-btn sa-enq" onclick="ss('as-enquiry')">Enquire</button>
+</div>
+
+<footer>
+  <div style="display:flex;flex-wrap:wrap;gap:3rem;margin-bottom:2rem">
+    <div style="flex:2;min-width:200px"><svg style="height:52px;width:auto" viewBox="0 0 600 360" xmlns="http://www.w3.org/2000/svg"><rect x="228" y="175" width="14" height="68" fill="#C8A96E"/><rect x="358" y="175" width="14" height="68" fill="#C8A96E"/><rect x="221" y="170" width="28" height="8" rx="1" fill="#C8A96E"/><rect x="351" y="170" width="28" height="8" rx="1" fill="#C8A96E"/><path d="M228 178 L228 128 A72 72 0 0 1 372 128 L372 178" fill="none" stroke="#C8A96E" stroke-width="3"/><rect x="293" y="52" width="16" height="22" rx="2" fill="#C8A96E"/><text x="300" y="170" text-anchor="middle" font-family="serif" font-size="82" font-weight="700" fill="#C8A96E">&#2384;</text><rect x="216" y="244" width="168" height="3" rx="1.5" fill="#C8A96E" opacity="0.5"/><text x="300" y="282" text-anchor="middle" font-family="Georgia,serif" font-size="26" font-weight="700" fill="#E2C98A" letter-spacing="5">OM SHANTI NR</text><line x1="80" y1="291" x2="520" y2="291" stroke="#C8A96E" stroke-width="0.7"/><line x1="80" y1="316" x2="520" y2="316" stroke="#C8A96E" stroke-width="1.4"/></svg><div class="footer-brand-desc">Om Shanti N R Realty &#8212; the business brand of Om Shanti N R Construction (Partnership Firm). Building homes with trust, quality and compliance in Palghar since 2005.</div></div>
+    <div style="flex:1;min-width:140px"><div class="footer-col-title">Navigation</div><div class="footer-links"><a onclick="showPage('home');window.scrollTo(0,0)">Home</a><a onclick="showPage('home');ss('about')">About Us</a><a onclick="showPage('home');ss('projects')">Projects</a><a onclick="showPage('leadership')">Leadership</a><a onclick="showPage('home');ss('contact')">Contact Us</a></div></div>
+    <div style="flex:1;min-width:140px"><div class="footer-col-title">Reach Us</div><div class="footer-links"><a href="tel:+918262885023">+91 82628 85023</a><a href="mailto:vedant.mishra@omnr.com">vedant.mishra@omnr.com</a><a>Palghar West, 401404<br/>Maharashtra, India</a><a href="https://wa.me/918262885023" target="_blank" style="color:var(--gold)">WhatsApp Us &#8599;</a></div></div>
+  </div>
+  <div class="footer-bottom"><div class="footer-copy">&#169; 2025 Om Shanti N R Construction (Partnership Firm). All rights reserved. Om Shanti N R Realty is a business brand &#8212; not a separate legal entity.</div><div class="footer-disclaimer">All projects and information displayed are subject to statutory approvals. Verify RERA details before purchase.</div></div>
+</footer>
+</div><!-- end page-aastha -->
 <!-- ══ OSTWAL IMPERIAL ══ -->
 <div class="page" id="page-ostwal">
 <div class="hero-proj">
@@ -969,7 +1255,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
         </div>
         
       </div>
-      <div class="fp-dl-row"><div class="fp-dl-note">All dimensions are indicative. Verify RERA carpet areas before purchase.</div><button class="fp-dl-btn">&#8595; &nbsp;Download Full Brochure</button></div>
+      <div class="fp-dl-row"><div class="fp-dl-note">All dimensions are indicative. Verify RERA carpet areas before purchase.</div><a class="fp-dl-btn" href="brochures/ostwal-imperial.pdf" target="_blank" rel="noopener" download>&#8595; &nbsp;Download Full Brochure (PDF)</a></div>
     </div>
 
 
@@ -1121,7 +1407,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
         <div class="fp-plan-img-area" style="height:360px"><img src="images/image_028.jpeg" alt="2 BHK Floor Plan"/></div>
         <div class="fp-plan-rooms"><div class="fp-room"><div class="fp-room-name">Living</div><div class="fp-room-size">14&#39;6&#34; &times; 10&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Master Bed</div><div class="fp-room-size">9&#39;6&#34; &times; 10&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Bed 2</div><div class="fp-room-size">9&#39;6&#34; &times; 10&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Kitchen</div><div class="fp-room-size">8&#39;6&#34; &times; 8&#39;6&#34;</div></div></div></div>
       </div>
-      <div class="fp-dl-row"><div class="fp-dl-note">All dimensions are indicative. Verify RERA carpet areas before purchase.</div><button class="fp-dl-btn">&#8595; &nbsp;Download Full Brochure</button></div>
+      <div class="fp-dl-row"><div class="fp-dl-note">All dimensions are indicative. Verify RERA carpet areas before purchase.</div><a class="fp-dl-btn" href="brochures/shree-balaji-pride.pdf" target="_blank" rel="noopener" download>&#8595; &nbsp;Download Full Brochure (PDF)</a></div>
     </div>
 
 
@@ -1300,7 +1586,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
         <div class="fp-plan-card"><div class="fp-plan-header"><div class="fp-plan-header-title">Building No. 2 &#8212; 1st to 7th Floor Plan (Type B)</div><div class="fp-plan-header-area">MahaRERA: P99000077209</div></div>
         <div class="fp-plan-img-area" style="height:480px;background:#f0eee8"><img src="images/image_040.jpeg" alt="Building 2 Floor Plan" style="background:#f0eee8"/></div></div>
       </div>
-      <div class="fp-dl-row"><div class="fp-dl-note">All carpet areas are indicative. Verify RERA details before purchase.</div><button class="fp-dl-btn">&#8595; &nbsp;Download Full Brochure</button></div>
+      <div class="fp-dl-row"><div class="fp-dl-note">All carpet areas are indicative. Verify RERA details before purchase.</div><a class="fp-dl-btn" href="brochures/shiv-shrushti.pdf" target="_blank" rel="noopener" download>&#8595; &nbsp;Download Full Brochure (PDF)</a></div>
     </div>
 
 
@@ -1386,8 +1672,8 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 var _cp = 'home';
 
 // ── URL hash <-> page mapping (for browser back/forward, swipe-back, deep links) ──
-var PAGE_HASH = {home: '', leadership: '#/leadership', ostwal: '#/projects/ostwal', balaji: '#/projects/balaji', shiv: '#/projects/shiv'};
-var HASH_PAGE = {'': 'home', '#': 'home', '#/': 'home', '#/leadership': 'leadership', '#/projects/ostwal': 'ostwal', '#/projects/balaji': 'balaji', '#/projects/shiv': 'shiv'};
+var PAGE_HASH = {home: '', leadership: '#/leadership', ostwal: '#/projects/ostwal', balaji: '#/projects/balaji', shiv: '#/projects/shiv', aastha: '#/projects/aastha'};
+var HASH_PAGE = {'': 'home', '#': 'home', '#/': 'home', '#/leadership': 'leadership', '#/projects/ostwal': 'ostwal', '#/projects/balaji': 'balaji', '#/projects/shiv': 'shiv', '#/projects/aastha': 'aastha'};
 
 function showPage(name, fromHistory) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1499,7 +1785,7 @@ function sendEnquiry(prefix) {
   const conf  = (document.getElementById(prefix + '-config')|| {}).value || '';
   const msg   = (document.getElementById(prefix + '-msg')   || {}).value || '';
   if (!name.trim() || !phone.trim()) { alert('Please enter your name and phone number.'); return; }
-  const projects = {oi:'Ostwal Imperial', bp:'Shree Balaji Pride', ss:'Shiv Shrushti Complex'};
+  const projects = {oi:'Ostwal Imperial', bp:'Shree Balaji Pride', ss:'Shiv Shrushti Complex', as:'Aastha — Tembhode, Palghar'};
   const pname = projects[prefix] || 'a project';
   const text = encodeURIComponent(
     'Hello Om Shanti N R Realty,\n\nI am interested in ' + pname + '.\n\n' +
@@ -1599,6 +1885,36 @@ function balajiGalleryPlay() {
   if (t) t.style.animationPlayState = 'running';
   document.getElementById('balaji-play-btn').style.display = 'none';
   document.getElementById('balaji-pause-btn').style.display = 'inline-block';
+}
+
+// Aastha gallery + plotting layout switcher
+function aasthaGalleryPause() {
+  const t = document.getElementById('aastha-track');
+  if (t) t.style.animationPlayState = 'paused';
+  const p = document.getElementById('aastha-pause-btn'); if (p) p.style.display = 'none';
+  const pl = document.getElementById('aastha-play-btn'); if (pl) pl.style.display = 'inline-block';
+}
+function aasthaGalleryPlay() {
+  const t = document.getElementById('aastha-track');
+  if (t) t.style.animationPlayState = 'running';
+  const pl = document.getElementById('aastha-play-btn'); if (pl) pl.style.display = 'none';
+  const p = document.getElementById('aastha-pause-btn'); if (p) p.style.display = 'inline-block';
+}
+function switchAasthaLayout(view, btn) {
+  ['tilr','p1','p2'].forEach(function(id){
+    var el = document.getElementById('as-layout-' + id);
+    if (el) el.style.display = (id === view) ? 'block' : 'none';
+  });
+  if (btn) {
+    btn.closest('.fp-tabs').querySelectorAll('.fp-tab').forEach(function(t){t.classList.remove('active');});
+    btn.classList.add('active');
+  }
+}
+function aasthaWA(){
+  var phone = (document.getElementById('as-phone')||{}).value || '';
+  var name  = (document.getElementById('as-name') ||{}).value || '';
+  var msg = encodeURIComponent('Hello Om Shanti N R Realty,\n\nI would like to know more about Aastha (plotted community at Tembhode, Palghar).' + (name?'\n\nName: '+name.trim():'') + (phone?'\nPhone: '+phone.trim():''));
+  window.open('https://wa.me/918262885023?text=' + msg, '_blank');
 }
 
 

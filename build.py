@@ -113,13 +113,18 @@ class BuildOptimizer:
         """Copy images to dist (overwriting individual files, not the dir)"""
         dist_images = self.dist_dir / 'images'
         dist_images.mkdir(exist_ok=True)
-        # Copy each file individually — overwrites in place, doesn't require dir delete perms
-        for src in self.images_dir.iterdir():
-            if src.is_file() and not src.name.endswith('.bak'):
-                shutil.copy2(src, dist_images / src.name)
-        image_count = len([f for f in dist_images.iterdir() if f.is_file()])
+        # Recurse — preserves subfolder structure (e.g. images/aastha/) so per-project asset folders work.
+        copied = 0
+        for src in self.images_dir.rglob('*'):
+            if not src.is_file() or src.name.endswith('.bak') or src.name == '.DS_Store':
+                continue
+            rel = src.relative_to(self.images_dir)
+            dst = dist_images / rel
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, dst)
+            copied += 1
         total_size = sum(f.stat().st_size for f in dist_images.rglob('*') if f.is_file())
-        print(f"✓ {image_count} images copied ({total_size / (1024*1024):.1f} MB)")
+        print(f"✓ {copied} images copied ({total_size / (1024*1024):.1f} MB)")
     
     def copy_qr(self):
         """Copy QR code images (referenced by project detail pages)"""
@@ -133,6 +138,21 @@ class BuildOptimizer:
                 shutil.copy2(src, qr_dst / src.name)
         qr_count = len([f for f in qr_dst.iterdir() if f.is_file()])
         print(f"✓ {qr_count} QR codes copied")
+
+    def copy_brochures(self):
+        """Copy project brochure PDFs (referenced by 'Download Full Brochure' buttons)"""
+        br_src = self.project_dir / 'brochures'
+        if not br_src.exists():
+            return
+        br_dst = self.dist_dir / 'brochures'
+        br_dst.mkdir(exist_ok=True)
+        total = 0
+        for src in br_src.iterdir():
+            if src.is_file() and not src.name.startswith('.'):
+                shutil.copy2(src, br_dst / src.name)
+                total += src.stat().st_size
+        count = len([f for f in br_dst.iterdir() if f.is_file()])
+        print(f"✓ {count} brochures copied ({total / (1024*1024):.1f} MB)")
 
     def copy_config(self):
         """Copy configuration files"""
@@ -184,6 +204,7 @@ class BuildOptimizer:
         self.copy_html()
         self.copy_images()
         self.copy_qr()
+        self.copy_brochures()
         self.copy_config()
         self.generate_report()
         
