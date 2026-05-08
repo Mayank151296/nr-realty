@@ -682,6 +682,80 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
   .architect-card-head{flex-direction:row;align-items:center}
   .as-layout-pane img{max-height:420px}
 }
+
+/* ── CHANNEL PARTNER page ── */
+.cp-trust{display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg-mid);border-bottom:.5px solid var(--border);border-top:.5px solid var(--border)}
+.cp-trust-item{padding:1.6rem 1.2rem;border-right:.5px solid var(--border);text-align:center}
+.cp-trust-item:last-child{border-right:none}
+.cp-trust-num{font-family:"Cormorant Garamond",serif;font-size:32px;color:var(--gold);font-weight:600;line-height:1}
+.cp-trust-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-top:7px}
+.cp-section{padding:80px 4rem;position:relative}
+.cp-section.alt{background:var(--bg-mid)}
+.cp-section.dark{background:var(--bg-dark)}
+.cp-section-head{max-width:600px;margin-bottom:3rem}
+.cp-types-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:6px}
+.cp-type-card{background:var(--bg-card);border:.5px solid var(--border);padding:1.6rem 1.5rem;transition:border-color .25s ease,transform .25s ease;border-left:2px solid var(--gold-dark)}
+.cp-type-card:hover{border-color:var(--border-strong);border-left-color:var(--gold);transform:translateY(-3px)}
+.cp-type-icon{width:42px;height:42px;border:.5px solid var(--border-strong);background:rgba(200,169,110,.06);color:var(--gold);display:flex;align-items:center;justify-content:center;font-family:"Cormorant Garamond",serif;font-size:18px;margin-bottom:1rem}
+.cp-type-title{font-family:"Cormorant Garamond",serif;font-size:22px;font-weight:600;color:var(--text-primary);margin-bottom:.45rem;line-height:1.1}
+.cp-type-x{font-size:13px;color:var(--text-secondary);line-height:1.7;font-weight:300}
+.cp-benefits-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:6px}
+.cp-benefit-card{background:var(--bg-card);border:.5px solid var(--border);padding:1.5rem 1.5rem;transition:border-color .25s ease,transform .25s ease;position:relative}
+.cp-benefit-card:hover{border-color:var(--gold);transform:translateY(-3px)}
+.cp-benefit-card::before{content:"";position:absolute;top:0;left:0;width:38px;height:1px;background:var(--gold)}
+.cp-benefit-num{font-family:"Cormorant Garamond",serif;font-size:13px;color:var(--gold);letter-spacing:2px;margin-bottom:.4rem;font-weight:600}
+.cp-benefit-title{font-family:"Cormorant Garamond",serif;font-size:21px;font-weight:600;color:var(--text-primary);margin-bottom:.5rem;line-height:1.15}
+.cp-benefit-x{font-size:13px;color:var(--text-secondary);line-height:1.75;font-weight:300}
+.cp-portfolio{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:6px}
+.cp-port-item{background:var(--bg-card);border:.5px solid var(--border);padding:1.4rem 1.3rem;text-align:center;transition:border-color .25s ease}
+.cp-port-item:hover{border-color:var(--gold)}
+.cp-port-icon{width:38px;height:38px;border:.5px solid var(--border-strong);background:rgba(200,169,110,.06);color:var(--gold);display:flex;align-items:center;justify-content:center;font-family:"Cormorant Garamond",serif;font-size:16px;margin:0 auto 0.9rem}
+.cp-port-title{font-family:"Cormorant Garamond",serif;font-size:17px;font-weight:600;color:var(--text-primary);margin-bottom:.35rem;line-height:1.15}
+.cp-port-x{font-size:11.5px;color:var(--text-muted);line-height:1.6;font-weight:300}
+.cp-steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.cp-step{background:var(--bg-card);border:.5px solid var(--border);padding:2rem 1.6rem;position:relative;overflow:hidden;transition:border-color .25s ease}
+.cp-step:hover{border-color:var(--gold-dark)}
+.cp-step-num{font-family:"Cormorant Garamond",serif;font-size:80px;color:rgba(200,169,110,.18);font-weight:700;position:absolute;top:.4rem;right:1.3rem;line-height:1;pointer-events:none;user-select:none}
+.cp-step-eyebrow{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:.7rem;display:flex;align-items:center;gap:8px;position:relative;z-index:1}
+.cp-step-eyebrow::before{content:"";width:18px;height:1px;background:var(--gold)}
+.cp-step-title{font-family:"Cormorant Garamond",serif;font-size:24px;font-weight:600;color:var(--text-primary);margin-bottom:.55rem;line-height:1.1;position:relative;z-index:1}
+.cp-step-x{font-size:13px;color:var(--text-secondary);line-height:1.75;font-weight:300;position:relative;z-index:1}
+.cp-testimonials{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.cp-testimonial{background:var(--bg-card);border:.5px solid var(--border);padding:2rem 2rem;position:relative;border-left:2px solid var(--gold-dark)}
+.cp-quote-mark{font-family:"Cormorant Garamond",serif;font-size:60px;color:var(--gold);line-height:.6;margin-bottom:.4rem;font-weight:700}
+.cp-quote{font-family:"Cormorant Garamond",serif;font-size:18px;color:var(--text-secondary);font-style:italic;line-height:1.55;margin-bottom:1.2rem}
+.cp-attr{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);font-weight:500}
+.cp-form-wrap{max-width:760px;margin:0 auto;background:var(--bg-card);border:.5px solid var(--border-strong);padding:2.5rem 2.6rem;position:relative}
+.cp-form-wrap::before{content:"";position:absolute;top:-1px;left:-1px;width:42px;height:42px;border-top:2px solid var(--gold);border-left:2px solid var(--gold)}
+.cp-form-wrap::after{content:"";position:absolute;bottom:-1px;right:-1px;width:42px;height:42px;border-bottom:2px solid var(--gold);border-right:2px solid var(--gold)}
+.cp-form-grid{display:flex;flex-direction:column;gap:1rem;margin-top:1.6rem}
+.cp-callout{padding:80px 4rem;text-align:center;background:var(--bg-mid);border-top:.5px solid var(--border);position:relative;overflow:hidden}
+.cp-callout::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(200,169,110,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(200,169,110,.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 40%,transparent 100%);-webkit-mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 40%,transparent 100%);pointer-events:none}
+.cp-callout-inner{position:relative;z-index:1;max-width:620px;margin:0 auto}
+.cp-callout h2{font-family:"Cormorant Garamond",serif;font-size:clamp(34px,4vw,52px);font-weight:600;color:var(--text-primary);line-height:1.1;margin-bottom:1rem}
+.cp-callout h2 em{color:var(--gold);font-style:italic}
+.cp-callout p{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:18px;color:var(--text-secondary);margin-bottom:2rem}
+.cp-callout-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+@media(max-width:1024px){
+  .cp-section{padding:60px 2rem}
+  .cp-callout{padding:60px 2rem}
+  .cp-trust-num{font-size:26px}
+}
+@media(max-width:768px){
+  .cp-section{padding:50px 1.25rem}
+  .cp-callout{padding:50px 1.25rem}
+  .cp-trust{grid-template-columns:repeat(2,1fr)}
+  .cp-trust-item{padding:1.2rem .8rem;border-right:none;border-bottom:.5px solid var(--border)}
+  .cp-trust-item:nth-last-child(-n+2){border-bottom:none}
+  .cp-trust-item:nth-child(odd){border-right:.5px solid var(--border)}
+  .cp-types-grid,.cp-benefits-grid,.cp-portfolio{grid-template-columns:1fr;gap:5px}
+  .cp-steps-grid{grid-template-columns:1fr;gap:5px}
+  .cp-testimonials{grid-template-columns:1fr;gap:5px}
+  .cp-form-wrap{padding:1.6rem 1.4rem}
+  .cp-form-wrap::before,.cp-form-wrap::after{width:30px;height:30px}
+  .cp-step-num{font-size:60px}
+  .cp-quote{font-size:16px}
+}
 </style>
 </head>
 <body>
@@ -725,31 +799,14 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 
 <section class="hero" id="home">
   <div class="hero-bg"></div><div class="hero-grid"></div>
-  <div class="hero-featured-grid">
-    <div class="hero-content">
-      <div class="hero-eyebrow anim-1">Palghar, Maharashtra &middot; Est. 2005</div>
-      <h1 class="anim-2">Building<br/><em>Trust,</em><br/>Delivering<br/>Homes.</h1>
-      <p class="hero-sub anim-3">Om Shanti N R Construction has been shaping Palghar&#39;s residential landscape since 2005 &#8212; with over three decades of founding experience and an unwavering commitment to quality, compliance, and lasting value.</p>
-      <div class="hero-actions anim-4">
-        <a class="btn-outline" onclick="ss('projects')">All Projects</a>
-        <a class="btn-outline" onclick="ss('about')">Our Story</a>
-      </div>
+  <div class="hero-content">
+    <div class="hero-eyebrow anim-1">Palghar, Maharashtra &middot; Est. 2005</div>
+    <h1 class="anim-2">Building<br/><em>Trust,</em><br/>Delivering<br/>Homes.</h1>
+    <p class="hero-sub anim-3">Om Shanti N R Construction has been shaping Palghar&#39;s residential landscape since 2005 &#8212; with over three decades of founding experience and an unwavering commitment to quality, compliance, and lasting value.</p>
+    <div class="hero-actions anim-4">
+      <a class="btn-primary" onclick="ss('projects')">View Projects</a>
+      <a class="btn-outline" onclick="ss('about')">Our Story</a>
     </div>
-    <a class="hero-featured-card anim-5" href="#/projects/aastha" onclick="showPage('aastha');return false;" aria-label="View Aastha — Tembhode, Palghar">
-      <div class="hero-featured-img-wrap">
-        <img src="images/aastha/aastha-hero.jpeg" alt="Aastha &#8212; Tembhode, Palghar"/>
-        <span class="hero-featured-badge"><span class="hero-featured-badge-dot"></span>New Launch</span>
-      </div>
-      <div class="hero-featured-body">
-        <div class="hero-featured-loc">Tembhode, Palghar</div>
-        <div class="hero-featured-name"><em>Aastha</em></div>
-        <p class="hero-featured-desc">A fully gated NA plotted layout &#8212; with 9M &amp; 12M RCC roads, perimeter fencing and title-clear paperwork.</p>
-        <div class="hero-featured-cta">
-          <span>Explore the project</span>
-          <span class="hero-featured-cta-arrow">&#8594;</span>
-        </div>
-      </div>
-    </a>
   </div>
   <div class="hero-stats anim-4">
     <div><div class="hero-stat-num">20+</div><div class="hero-stat-label">Years in Palghar</div></div>
@@ -788,14 +845,14 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
     <h2 class="section-title">Projects by <em>Om Shanti N R Realty</em></h2>
   </div>
   <div class="projects-tabs">
-    <button class="tab-btn active" onclick="switchTab('aastha',this)">Aastha &#8212; Tembhode</button>
-    <button class="tab-btn" onclick="switchTab('select',this)">Select Project</button>
-    <button class="tab-btn" onclick="switchTab('ongoing',this)">Ongoing Projects</button>
+    <button class="tab-btn active" onclick="switchTab('select',this)">Select Project</button>
+    <button class="tab-btn" onclick="switchTab('aastha',this)">Aastha &#8212; Tembhode</button>
+    <button class="tab-btn" onclick="switchTab('upcoming',this)">Upcoming Projects</button>
     <button class="tab-btn" onclick="switchTab('completed',this)">Completed Projects</button>
   </div>
 
   <!-- AASTHA — dedicated featured tab -->
-  <div class="tab-content active" id="tab-aastha">
+  <div class="tab-content" id="tab-aastha">
     <div class="aastha-feature" onclick="showPage('aastha')">
       <div class="aastha-feature-img">
         <img src="images/aastha/aastha-hero.jpeg" alt="Aastha &#8212; Tembhode, Palghar"/>
@@ -826,8 +883,8 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
     <div class="disclaimer-box">Aastha is a plotted development promoted by Om Shanti N R Construction (Partnership Firm). All information &#8212; including plot dimensions, pricing, infrastructure works, approvals and timelines &#8212; is indicative and subject to architectural finalisation, statutory approvals and MahaRERA registration.</div>
   </div>
 
-  <!-- ONGOING (placeholder for future projects) -->
-  <div class="tab-content" id="tab-ongoing">
+  <!-- UPCOMING (placeholder for future projects) -->
+  <div class="tab-content" id="tab-upcoming">
     <div class="ongoing-grid">
       <div class="project-card">
         <div class="project-card-badge">Upcoming</div>
@@ -867,7 +924,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
   </div>
 
   <!-- SELECT PROJECT TAB — cards only, click to open project page -->
-  <div class="tab-content" id="tab-select">
+  <div class="tab-content active" id="tab-select">
     <p style="font-size:14px;color:var(--text-secondary);font-weight:300;line-height:1.8;max-width:600px;margin-bottom:2rem">Partners of Om Shanti N R Construction hold direct ownership interests in select residential developments across Palghar as Land Partners. Click any project to view full details.</p>
     <div class="ongoing-grid">
 
@@ -1047,6 +1104,246 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
   <div class="footer-bottom"><div class="footer-copy">&#169; 2025 Om Shanti N R Construction (Partnership Firm). All rights reserved. Om Shanti N R Realty is a business brand &#8212; not a separate legal entity.</div><div class="footer-disclaimer">All projects and information displayed are subject to statutory approvals. All layouts and specifications are indicative. Verify RERA details before purchase.</div></div>
 </footer>
 </div><!-- end page-leadership -->
+<!-- ══ CHANNEL PARTNERS ══ -->
+<div class="page" id="page-partners">
+
+<div class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-grid"></div>
+  <div class="page-hero-content">
+    <div class="hero-eyebrow">For Brokers, Brokerage Firms &amp; Land Partners</div>
+    <h1 style="font-family:'Cormorant Garamond',serif;font-size:clamp(40px,6vw,76px);line-height:1.05;font-weight:600">Build your business <em style="color:var(--gold);font-style:italic">with us</em>.<br/>Partner in every brick &amp;<br/>every inch of land.</h1>
+    <p style="font-size:15px;color:var(--text-secondary);max-width:620px;margin-top:1.4rem;font-weight:300;line-height:1.85">Join Om Shanti N R Construction&#39;s trusted network of channel partners, brokers and brokerage firms. Earn well, grow together, build long-term relationships rooted in transparent paperwork and timely payouts.</p>
+    <div class="hero-actions" style="margin-top:2rem">
+      <a class="btn-primary" onclick="ss('cp-form')">Register as Channel Partner</a>
+      <a class="btn-outline" onclick="ss('cp-why')">Know More</a>
+    </div>
+  </div>
+</div>
+
+<!-- Trust signals strip -->
+<div class="cp-trust">
+  <div class="cp-trust-item"><div class="cp-trust-num">30+</div><div class="cp-trust-lbl">Years of Experience</div></div>
+  <div class="cp-trust-item"><div class="cp-trust-num">13+</div><div class="cp-trust-lbl">Projects Delivered</div></div>
+  <div class="cp-trust-item"><div class="cp-trust-num">RERA</div><div class="cp-trust-lbl">Compliant</div></div>
+  <div class="cp-trust-item"><div class="cp-trust-num">1992</div><div class="cp-trust-lbl">Founding Experience</div></div>
+</div>
+
+<!-- WHO CAN PARTNER -->
+<section class="cp-section alt">
+  <div class="cp-section-head">
+    <div class="section-eyebrow">Who can partner with us</div>
+    <h2 class="section-title">An ecosystem for every<br/><em>real estate professional</em>.</h2>
+    <div class="divider"></div>
+    <p style="font-size:14px;color:var(--text-secondary);font-weight:300;line-height:1.85">We welcome all real estate professionals into our ecosystem &#8212; whether you operate solo, run a brokerage firm, deal in land, or refer occasional clients.</p>
+  </div>
+  <div class="cp-types-grid">
+    <div class="cp-type-card">
+      <div class="cp-type-icon">&#9670;</div>
+      <div class="cp-type-title">Individual Brokers</div>
+      <div class="cp-type-x">Connect buyers to our residential and commercial projects across Palghar.</div>
+    </div>
+    <div class="cp-type-card">
+      <div class="cp-type-icon">&#9672;</div>
+      <div class="cp-type-title">Brokerage Firms</div>
+      <div class="cp-type-x">Bring bulk clientele and institutional buyers to a portfolio of compliant developments.</div>
+    </div>
+    <div class="cp-type-card">
+      <div class="cp-type-icon">&#9678;</div>
+      <div class="cp-type-title">Land Brokers</div>
+      <div class="cp-type-x">Facilitate land deals, NA-converted plots and agricultural-to-NA conversions.</div>
+    </div>
+    <div class="cp-type-card">
+      <div class="cp-type-icon">&#9650;</div>
+      <div class="cp-type-title">Referral Partners</div>
+      <div class="cp-type-x">Individuals with strong personal networks who refer genuine, high-intent buyers.</div>
+    </div>
+    <div class="cp-type-card">
+      <div class="cp-type-icon">&#9636;</div>
+      <div class="cp-type-title">Local Channel Partners</div>
+      <div class="cp-type-x">Area-specific partners who know their market block-by-block and pincode-by-pincode.</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY PARTNER -->
+<section class="cp-section dark" id="cp-why">
+  <div class="cp-section-head">
+    <div class="section-eyebrow">Why partner with us</div>
+    <h2 class="section-title">More than a commission &mdash;<br/>a partnership built on <em>trust</em>.</h2>
+    <div class="divider"></div>
+  </div>
+  <div class="cp-benefits-grid">
+    <div class="cp-benefit-card">
+      <div class="cp-benefit-num">01</div>
+      <div class="cp-benefit-title">Competitive &amp; timely payouts</div>
+      <div class="cp-benefit-x">Among the most competitive brokerage and referral fees in the market &#8212; with timely disbursement, no delays, no excuses.</div>
+    </div>
+    <div class="cp-benefit-card">
+      <div class="cp-benefit-num">02</div>
+      <div class="cp-benefit-title">Diverse portfolio &mdash; flats to farmland</div>
+      <div class="cp-benefit-x">From ready-to-move residences to premium plots and development land &#8212; one ecosystem, more for your clients, more for you.</div>
+    </div>
+    <div class="cp-benefit-card">
+      <div class="cp-benefit-num">03</div>
+      <div class="cp-benefit-title">Full transparency, always</div>
+      <div class="cp-benefit-x">No hidden clauses. Open project documentation, clear pricing and clear commission structures &#8212; you always know where you stand.</div>
+    </div>
+    <div class="cp-benefit-card">
+      <div class="cp-benefit-num">04</div>
+      <div class="cp-benefit-title">Marketing &amp; sales support</div>
+      <div class="cp-benefit-x">Brochures, digital collateral, dedicated project briefings and site-visit coordination &#8212; everything you need to close faster.</div>
+    </div>
+    <div class="cp-benefit-card">
+      <div class="cp-benefit-num">05</div>
+      <div class="cp-benefit-title">Partner training &amp; orientation</div>
+      <div class="cp-benefit-x">Onboarding sessions covering product knowledge, market briefings and pitch training &#8212; so you sell with confidence and accuracy.</div>
+    </div>
+    <div class="cp-benefit-card">
+      <div class="cp-benefit-num">06</div>
+      <div class="cp-benefit-title">Dedicated relationship manager</div>
+      <div class="cp-benefit-x">Every registered partner gets a single point of contact &#8212; someone who knows your business and ensures smooth deal closures.</div>
+    </div>
+    <div class="cp-benefit-card">
+      <div class="cp-benefit-num">07</div>
+      <div class="cp-benefit-title">Incentive programs &amp; rewards</div>
+      <div class="cp-benefit-x">Quarterly top-performer bonuses, festival gifts, annual partner meets and recognition programs for exceptional partners.</div>
+    </div>
+    <div class="cp-benefit-card">
+      <div class="cp-benefit-num">08</div>
+      <div class="cp-benefit-title">Long-term partnership DNA</div>
+      <div class="cp-benefit-x">We don&#39;t treat you as a transaction. We build long-term associations &#8212; your success is our success, and we invest in making that real.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section class="cp-section alt">
+  <div class="cp-section-head">
+    <div class="section-eyebrow">A portfolio worth partnering for</div>
+    <h2 class="section-title">From flats <em>to farmland</em>.</h2>
+    <div class="divider"></div>
+  </div>
+  <div class="cp-portfolio">
+    <div class="cp-port-item"><div class="cp-port-icon">&#9670;</div><div class="cp-port-title">Residential</div><div class="cp-port-x">Affordable to premium &#8212; 1, 2, 3 &amp; 4 BHK</div></div>
+    <div class="cp-port-item"><div class="cp-port-icon">&#9672;</div><div class="cp-port-title">Commercial</div><div class="cp-port-x">Shops, offices, mixed-use developments</div></div>
+    <div class="cp-port-item"><div class="cp-port-icon">&#9678;</div><div class="cp-port-title">Land &amp; Plots</div><div class="cp-port-x">NA plots, development land, agricultural parcels</div></div>
+    <div class="cp-port-item"><div class="cp-port-icon">&#9650;</div><div class="cp-port-title">Under Construction</div><div class="cp-port-x">Early-mover advantage for your buyers</div></div>
+    <div class="cp-port-item"><div class="cp-port-icon">&#9636;</div><div class="cp-port-title">Ready Possession</div><div class="cp-port-x">For buyers who want to move in immediately</div></div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="cp-section dark">
+  <div class="cp-section-head">
+    <div class="section-eyebrow">How it works</div>
+    <h2 class="section-title">Three steps to <em>start earning</em>.</h2>
+    <div class="divider"></div>
+  </div>
+  <div class="cp-steps-grid">
+    <div class="cp-step">
+      <div class="cp-step-num">01</div>
+      <div class="cp-step-eyebrow">Step one</div>
+      <div class="cp-step-title">Register</div>
+      <div class="cp-step-x">Fill the partner registration form below. Under three minutes.</div>
+    </div>
+    <div class="cp-step">
+      <div class="cp-step-num">02</div>
+      <div class="cp-step-eyebrow">Step two</div>
+      <div class="cp-step-title">Get onboarded</div>
+      <div class="cp-step-x">Our team reaches out within 24 hours with your welcome kit, project briefings and marketing assets.</div>
+    </div>
+    <div class="cp-step">
+      <div class="cp-step-num">03</div>
+      <div class="cp-step-eyebrow">Step three</div>
+      <div class="cp-step-title">Start earning</div>
+      <div class="cp-step-x">Bring leads, close deals, watch commissions hit your account on time, every time.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="cp-section alt">
+  <div class="cp-section-head">
+    <div class="section-eyebrow">In their words</div>
+    <h2 class="section-title">From the <em>partner network</em>.</h2>
+    <div class="divider"></div>
+  </div>
+  <div class="cp-testimonials">
+    <div class="cp-testimonial">
+      <div class="cp-quote-mark">&ldquo;</div>
+      <p class="cp-quote">Om Shanti has been the most reliable developer I&#39;ve partnered with in 12 years of brokerage. Payment on time, no nonsense.</p>
+      <div class="cp-attr">&#8212; Ramesh V. &middot; Independent Broker, Pune</div>
+    </div>
+    <div class="cp-testimonial">
+      <div class="cp-quote-mark">&ldquo;</div>
+      <p class="cp-quote">The land deals alone have given my firm a whole new revenue stream. Their team is always responsive.</p>
+      <div class="cp-attr">&#8212; Priya Mehta &middot; Brokerage Firm, Mumbai</div>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTRATION FORM -->
+<section class="cp-section dark" id="cp-form">
+  <div class="cp-form-wrap">
+    <div class="section-eyebrow">Register</div>
+    <h2 class="section-title" style="font-size:clamp(28px,3vw,40px)">Become a <em>channel partner</em>.</h2>
+    <div class="divider"></div>
+    <p style="font-size:14px;color:var(--text-secondary);font-weight:300;line-height:1.8;margin-bottom:.4rem">Submit the form below and our partner team will reach out within 24 hours.</p>
+    <form class="cp-form-grid" onsubmit="event.preventDefault();submitPartnerForm()">
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Full Name *</label><input class="form-input" id="cp-name" type="text" placeholder="Your full name" required/></div>
+        <div class="form-group"><label class="form-label">Mobile Number *</label><input class="form-input" id="cp-phone" type="tel" placeholder="+91 XXXXX XXXXX" required/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Email Address *</label><input class="form-input" id="cp-email" type="email" placeholder="your@email.com" required/></div>
+        <div class="form-group"><label class="form-label">City / Area Of Operation *</label><input class="form-input" id="cp-city" type="text" placeholder="Palghar, Mumbai, Pune&#8230;" required/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Type Of Partner *</label>
+          <select class="form-input" id="cp-type" style="appearance:none;cursor:pointer" required>
+            <option value="" disabled selected>Select partner type</option>
+            <option>Individual Broker</option>
+            <option>Brokerage Firm</option>
+            <option>Land Broker</option>
+            <option>Referral Partner</option>
+            <option>Local Channel Partner</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">RERA Registration No. (optional)</label><input class="form-input" id="cp-rera" type="text" placeholder="If applicable"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">How did you hear about us? (optional)</label><input class="form-input" id="cp-hear" type="text" placeholder="Referral, social media, search, event&#8230;"/></div>
+      <div class="form-group"><label class="form-label">Message / Note (optional)</label><textarea class="form-input" id="cp-msg" placeholder="Tell us a bit about your business or any specific projects you&#8217;re interested in&#8230;"></textarea></div>
+      <button type="submit" class="form-submit">Submit &amp; Join the Network</button>
+      <p class="form-note">By submitting you agree to be contacted by Om Shanti N R Construction&#39;s partner team. Overrides DNC/NDNC.</p>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER CALLOUT -->
+<div class="cp-callout">
+  <div class="cp-callout-inner">
+    <div class="section-eyebrow" style="justify-content:center;display:inline-flex">Let&#39;s build together</div>
+    <h2>Homes. Land. <em>Opportunities.</em></h2>
+    <p>Let&#39;s build this together.</p>
+    <div class="cp-callout-actions">
+      <a class="btn-primary" onclick="ss('cp-form')">Register Now</a>
+      <a class="btn-outline" href="https://wa.me/918262885023?text=Hi%2C%20I%27m%20interested%20in%20joining%20Om%20Shanti%20N%20R%20Realty%27s%20channel%20partner%20network." target="_blank" rel="noopener">WhatsApp Us</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div style="display:flex;flex-wrap:wrap;gap:3rem;margin-bottom:2rem">
+    <div style="flex:2;min-width:200px"><svg style="height:52px;width:auto" viewBox="0 0 600 360" xmlns="http://www.w3.org/2000/svg"><rect x="228" y="175" width="14" height="68" fill="#C8A96E"/><rect x="358" y="175" width="14" height="68" fill="#C8A96E"/><rect x="221" y="170" width="28" height="8" rx="1" fill="#C8A96E"/><rect x="351" y="170" width="28" height="8" rx="1" fill="#C8A96E"/><path d="M228 178 L228 128 A72 72 0 0 1 372 128 L372 178" fill="none" stroke="#C8A96E" stroke-width="3"/><rect x="293" y="52" width="16" height="22" rx="2" fill="#C8A96E"/><text x="300" y="170" text-anchor="middle" font-family="serif" font-size="82" font-weight="700" fill="#C8A96E">&#2384;</text><rect x="216" y="244" width="168" height="3" rx="1.5" fill="#C8A96E" opacity="0.5"/><text x="300" y="282" text-anchor="middle" font-family="Georgia,serif" font-size="26" font-weight="700" fill="#E2C98A" letter-spacing="5">OM SHANTI NR</text><line x1="80" y1="291" x2="520" y2="291" stroke="#C8A96E" stroke-width="0.7"/><line x1="80" y1="316" x2="520" y2="316" stroke="#C8A96E" stroke-width="1.4"/></svg><div class="footer-brand-desc">Om Shanti N R Realty &#8212; the business brand of Om Shanti N R Construction (Partnership Firm). Building homes with trust, quality and compliance in Palghar since 2005.</div></div>
+    <div style="flex:1;min-width:140px"><div class="footer-col-title">Navigation</div><div class="footer-links"><a onclick="showPage('home');window.scrollTo(0,0)">Home</a><a onclick="showPage('home');ss('about')">About Us</a><a onclick="showPage('home');ss('projects')">Projects</a><a onclick="showPage('leadership')">Leadership</a><a onclick="showPage('partners')">Channel Partners</a><a onclick="showPage('home');ss('contact')">Contact Us</a></div></div>
+    <div style="flex:1;min-width:140px"><div class="footer-col-title">Reach Us</div><div class="footer-links"><a href="tel:+918262885023">+91 82628 85023</a><a href="mailto:vedant.mishra@omnr.com">vedant.mishra@omnr.com</a><a>Palghar West, 401404<br/>Maharashtra, India</a><a href="https://wa.me/918262885023" target="_blank" style="color:var(--gold)">WhatsApp Us &#8599;</a></div></div>
+  </div>
+  <div class="footer-bottom"><div class="footer-copy">&#169; 2025 Om Shanti N R Construction (Partnership Firm). All rights reserved. Om Shanti N R Realty is a business brand &#8212; not a separate legal entity.</div><div class="footer-disclaimer">All projects and information displayed are subject to statutory approvals. Verify RERA details before purchase.</div></div>
+</footer>
+
+</div><!-- end page-partners -->
 <!-- ══ AASTHA ══ -->
 <div class="page" id="page-aastha">
 <div class="hero-proj">
@@ -2110,7 +2407,7 @@ showPage = function(name, fromHistory) {
 document.addEventListener('DOMContentLoaded', function() {
   var tabs = document.querySelectorAll('.tab-content');
   tabs.forEach(function(t) { t.classList.remove('active'); });
-  var defaultTab = document.getElementById('tab-aastha');
+  var defaultTab = document.getElementById('tab-select');
   if (defaultTab) defaultTab.classList.add('active');
   var btns = document.querySelectorAll('.tab-btn');
   btns.forEach(function(b) { b.classList.remove('active'); });
