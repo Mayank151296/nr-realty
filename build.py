@@ -91,8 +91,12 @@ class BuildOptimizer:
             'src="script.min.js"'
         )
         
-        # Add cache busting version
-        import time
+        # Add cache busting version — forces browsers and CDNs (Cloudflare Pages)
+        # to refetch CSS, JS, AND images on every new deploy. Without this,
+        # if an image filename stays the same but contents change, edge
+        # caches and browser caches will continue serving the old version
+        # for hours/days.
+        import time, re
         version = int(time.time())
         html_content = html_content.replace(
             'href="styles.min.css"',
@@ -102,12 +106,15 @@ class BuildOptimizer:
             'src="script.min.js"',
             f'src="script.min.js?v={version}"'
         )
-        
+        # Cache-bust every image and QR reference
+        asset_re = re.compile(r'src="((?:images|qr)/[^"?#]+\.(?:jpe?g|png|gif|webp|svg))"', re.IGNORECASE)
+        html_content, n_assets = asset_re.subn(rf'src="\g<1>?v={version}"', html_content)
+
         dist_html = self.dist_dir / 'index.html'
         with open(dist_html, 'w', encoding='utf-8') as f:
             f.write(html_content)
-        
-        print(f"✓ HTML copied and updated (v{version})")
+
+        print(f"✓ HTML copied and updated (v{version}, {n_assets} image/asset URLs cache-busted)")
     
     def copy_images(self):
         """Copy images to dist (overwriting individual files, not the dir)"""
