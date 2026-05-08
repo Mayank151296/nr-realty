@@ -565,6 +565,54 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
   .nav-links a.active{color:var(--gold)}
   .nav-links a.active::after{width:100%}
 
+/* ── HERO featured project card (Aastha spotlight) ── */
+.hero-featured-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:4rem;align-items:center;width:100%}
+.hero-featured-card{position:relative;display:block;background:var(--bg-card);border:.5px solid var(--border-strong);text-decoration:none;color:inherit;cursor:pointer;overflow:hidden;transition:transform .35s ease, border-color .35s ease, box-shadow .35s ease;animation:fadeUp .7s .6s ease forwards;opacity:0;justify-self:end;width:100%;max-width:340px}
+.hero-featured-card:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 22px 48px rgba(0,0,0,.55)}
+.hero-featured-card::before{content:"";position:absolute;top:-1px;left:-1px;width:36px;height:36px;border-top:2px solid var(--gold);border-left:2px solid var(--gold);z-index:3;pointer-events:none}
+.hero-featured-card::after{content:"";position:absolute;bottom:-1px;right:-1px;width:36px;height:36px;border-bottom:2px solid var(--gold);border-right:2px solid var(--gold);z-index:3;pointer-events:none}
+.hero-featured-img-wrap{position:relative;height:210px;overflow:hidden;background:#0E0C0A}
+.hero-featured-img-wrap img{width:100%;height:100%;object-fit:cover;object-position:center;transition:transform .8s ease;display:block}
+.hero-featured-card:hover .hero-featured-img-wrap img{transform:scale(1.06)}
+.hero-featured-img-wrap::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(14,12,10,.55) 0%,rgba(14,12,10,.15) 45%,transparent 70%);pointer-events:none}
+.hero-featured-badge{position:absolute;top:12px;left:12px;z-index:2;background:var(--gold);color:var(--bg-dark);font-size:9.5px;letter-spacing:2px;text-transform:uppercase;padding:5px 11px 5px 9px;font-weight:500;display:inline-flex;align-items:center;gap:7px}
+.hero-featured-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--bg-dark);box-shadow:0 0 0 0 rgba(14,12,10,.6);animation:hf-dot-pulse 2s infinite}
+@keyframes hf-dot-pulse{0%{box-shadow:0 0 0 0 rgba(14,12,10,.55)}70%{box-shadow:0 0 0 8px rgba(14,12,10,0)}100%{box-shadow:0 0 0 0 rgba(14,12,10,0)}}
+.hero-featured-body{padding:1.25rem 1.4rem 1.3rem;background:var(--bg-card)}
+.hero-featured-loc{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:.45rem;display:flex;align-items:center;gap:8px}
+.hero-featured-loc::before{content:"";width:18px;height:1px;background:var(--gold)}
+.hero-featured-name{font-family:"Cormorant Garamond",serif;font-size:34px;font-weight:700;line-height:1;color:var(--text-primary);margin-bottom:.55rem;letter-spacing:-.5px}
+.hero-featured-name em{font-style:italic;color:var(--gold)}
+.hero-featured-desc{font-size:13px;color:var(--text-secondary);line-height:1.65;font-weight:300;margin-bottom:1rem}
+.hero-featured-cta{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);border-top:.5px solid var(--border);padding-top:.85rem;font-weight:500}
+.hero-featured-cta-arrow{font-size:14px;transition:transform .35s ease}
+.hero-featured-card:hover .hero-featured-cta-arrow{transform:translateX(5px)}
+.anim-5{animation:fadeUp .7s .6s ease forwards;opacity:0}
+@media(max-width:1100px){
+  .hero-featured-grid{grid-template-columns:minmax(0,1fr) 300px;gap:2.6rem}
+  .hero-featured-card{max-width:300px}
+}
+@media(max-width:900px){
+  .hero-featured-grid{grid-template-columns:1fr;gap:2.4rem;justify-items:start}
+  .hero-featured-card{justify-self:start;max-width:480px;margin-top:.4rem}
+  .hero-featured-img-wrap{height:200px}
+}
+@media(max-width:768px){
+  .hero-featured-grid{gap:2rem}
+  .hero-featured-card{max-width:100%}
+  .hero-featured-img-wrap{height:180px}
+  .hero-featured-name{font-size:30px}
+  .hero-featured-body{padding:1.1rem 1.2rem 1.15rem}
+  .hero-featured-card::before,.hero-featured-card::after{width:28px;height:28px}
+  .hero-featured-desc{font-size:12.5px}
+}
+@media(max-width:400px){
+  .hero-featured-img-wrap{height:160px}
+  .hero-featured-name{font-size:26px}
+  .hero-featured-loc{font-size:9.5px;letter-spacing:2px}
+  .hero-featured-body{padding:1rem 1rem 1rem}
+}
+
 /* ── AASTHA / plotted project specifics ── */
 .as-layout-pane{background:#f5f3ee;border:.5px solid var(--border);overflow:hidden}
 .as-layout-pane img{width:100%;height:auto;display:block;max-height:640px;object-fit:contain;background:#f5f3ee}
@@ -651,15 +699,31 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 
 <section class="hero" id="home">
   <div class="hero-bg"></div><div class="hero-grid"></div>
-  <div class="hero-content">
-    <div class="hero-eyebrow anim-1">Palghar, Maharashtra &middot; Est. 2005</div>
-    <h1 class="anim-2">Building<br/><em>Trust,</em><br/>Delivering<br/>Homes.</h1>
-    <p class="hero-sub anim-3">Om Shanti N R Construction has been shaping Palghar&#39;s residential landscape since 2005 &#8212; with over three decades of founding experience and an unwavering commitment to quality, compliance, and lasting value.</p>
-    <div class="hero-actions anim-4">
-      <a class="btn-primary" onclick="showPage('aastha')">View Aastha &#8212; Tembhode</a>
-      <a class="btn-outline" onclick="ss('projects')">All Projects</a>
-      <a class="btn-outline" onclick="ss('about')">Our Story</a>
+  <div class="hero-featured-grid">
+    <div class="hero-content">
+      <div class="hero-eyebrow anim-1">Palghar, Maharashtra &middot; Est. 2005</div>
+      <h1 class="anim-2">Building<br/><em>Trust,</em><br/>Delivering<br/>Homes.</h1>
+      <p class="hero-sub anim-3">Om Shanti N R Construction has been shaping Palghar&#39;s residential landscape since 2005 &#8212; with over three decades of founding experience and an unwavering commitment to quality, compliance, and lasting value.</p>
+      <div class="hero-actions anim-4">
+        <a class="btn-outline" onclick="ss('projects')">All Projects</a>
+        <a class="btn-outline" onclick="ss('about')">Our Story</a>
+      </div>
     </div>
+    <a class="hero-featured-card anim-5" href="#/projects/aastha" onclick="showPage('aastha');return false;" aria-label="View Aastha — Tembhode, Palghar">
+      <div class="hero-featured-img-wrap">
+        <img src="images/aastha/aastha-hero.jpeg" alt="Aastha &#8212; Tembhode, Palghar"/>
+        <span class="hero-featured-badge"><span class="hero-featured-badge-dot"></span>New Launch</span>
+      </div>
+      <div class="hero-featured-body">
+        <div class="hero-featured-loc">Tembhode, Palghar</div>
+        <div class="hero-featured-name"><em>Aastha</em></div>
+        <p class="hero-featured-desc">A fully gated NA plotted layout &#8212; with 9M &amp; 12M RCC roads, perimeter fencing and title-clear paperwork.</p>
+        <div class="hero-featured-cta">
+          <span>Explore the project</span>
+          <span class="hero-featured-cta-arrow">&#8594;</span>
+        </div>
+      </div>
+    </a>
   </div>
   <div class="hero-stats anim-4">
     <div><div class="hero-stat-num">20+</div><div class="hero-stat-label">Years in Palghar</div></div>
