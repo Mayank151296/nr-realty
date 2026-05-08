@@ -544,12 +544,13 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
     display: flex;
   }
 
-  /* ── Hamburger Button ── */
-  .nav-hamburger{display:none;flex-direction:column;justify-content:space-between;width:26px;height:18px;background:none;border:none;cursor:pointer;padding:0;z-index:200}
-  .nav-hamburger span{display:block;height:1.5px;width:100%;background:var(--gold);transition:all .3s;transform-origin:center}
-  .nav-hamburger.open span:nth-child(1){transform:translateY(8.25px) rotate(45deg)}
+  /* ── Hamburger Button (mobile menu trigger) ── */
+  .nav-hamburger{display:none;flex-direction:column;justify-content:space-between;width:32px;height:24px;background:rgba(200,169,110,0.08);border:1px solid rgba(200,169,110,0.35);cursor:pointer;padding:5px 6px;border-radius:4px;z-index:200;transition:background .2s,border-color .2s}
+  .nav-hamburger:hover,.nav-hamburger:active{background:rgba(200,169,110,0.18);border-color:var(--gold)}
+  .nav-hamburger span{display:block;height:2px;width:100%;background:var(--gold);transition:all .3s;transform-origin:center;border-radius:1px}
+  .nav-hamburger.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
   .nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
-  .nav-hamburger.open span:nth-child(3){transform:translateY(-8.25px) rotate(-45deg)}
+  .nav-hamburger.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
 
   /* ── Mobile Menu Overlay ── */
   .mobile-menu{position:fixed;top:72px;left:0;right:0;bottom:0;background:rgba(10,8,6,0.97);backdrop-filter:blur(16px);z-index:99;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
