@@ -1,0 +1,23 @@
+{
+  "name": "Om Shanti N R Realty",
+  "short_name": "NR Realty",
+  "description": "Om Shanti N R Construction \u2014 Building Trust, Delivering Homes in Palghar since 2005",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0E0C0A",
+  "theme_color": "#0E0C0A",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

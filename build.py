@@ -162,16 +162,17 @@ class BuildOptimizer:
         print(f"✓ {count} brochures copied ({total / (1024*1024):.1f} MB)")
 
     def copy_favicons(self):
-        """Copy favicon and PWA-icon files (live in project root) into dist root"""
+        """Copy favicon, PWA-icon, Safari mask-icon, and manifest files into dist root"""
         names = ['favicon.ico', 'favicon.png', 'favicon-16.png', 'favicon-32.png',
-                 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png']
+                 'favicon-48.png', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png',
+                 'mask-icon.svg', 'manifest.json']
         copied = 0
         for n in names:
             src = self.project_dir / n
             if src.exists():
                 shutil.copy2(src, self.dist_dir / n)
                 copied += 1
-        print(f"✓ {copied} favicon/icon files copied")
+        print(f"✓ {copied} favicon/icon/manifest files copied")
 
     def copy_config(self):
         """Copy configuration files"""
