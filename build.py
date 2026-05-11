@@ -161,6 +161,18 @@ class BuildOptimizer:
         count = len([f for f in br_dst.iterdir() if f.is_file()])
         print(f"✓ {count} brochures copied ({total / (1024*1024):.1f} MB)")
 
+    def copy_favicons(self):
+        """Copy favicon and PWA-icon files (live in project root) into dist root"""
+        names = ['favicon.ico', 'favicon.png', 'favicon-16.png', 'favicon-32.png',
+                 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png']
+        copied = 0
+        for n in names:
+            src = self.project_dir / n
+            if src.exists():
+                shutil.copy2(src, self.dist_dir / n)
+                copied += 1
+        print(f"✓ {copied} favicon/icon files copied")
+
     def copy_config(self):
         """Copy configuration files"""
         htaccess = self.project_dir / '.htaccess'
@@ -212,6 +224,7 @@ class BuildOptimizer:
         self.copy_images()
         self.copy_qr()
         self.copy_brochures()
+        self.copy_favicons()
         self.copy_config()
         self.generate_report()
         
