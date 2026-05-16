@@ -165,7 +165,7 @@ class BuildOptimizer:
         """Copy favicon, PWA-icon, Safari mask-icon, and manifest files into dist root"""
         names = ['favicon.ico', 'favicon.png', 'favicon-16.png', 'favicon-32.png',
                  'favicon-48.png', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png',
-                 'mask-icon.svg', 'manifest.json']
+                 'mask-icon.svg', 'manifest.json', 'logo-square.png', 'og-image.jpg']
         copied = 0
         for n in names:
             src = self.project_dir / n
