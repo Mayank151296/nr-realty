@@ -837,9 +837,92 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
   .cp-step-num{font-size:60px}
   .cp-quote{font-size:16px}
 }
+
+/* ═══════════ LUXE CINEMATIC LAYER ═══════════ */
+
+/* ── Preloader ── */
+#luxe-preloader{position:fixed;inset:0;z-index:9999;background:var(--bg-dark);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;transition:opacity .9s ease,visibility .9s}
+#luxe-preloader.done{opacity:0;visibility:hidden;pointer-events:none}
+.luxe-pre-logo{height:96px;width:auto;opacity:0;animation:luxePreFade 1.1s ease forwards .1s}
+.luxe-pre-line{width:170px;height:1px;background:rgba(200,169,110,.16);position:relative;overflow:hidden}
+.luxe-pre-line::after{content:"";position:absolute;left:-40%;top:0;height:100%;width:40%;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:luxePreSweep 1.15s ease-in-out infinite}
+.luxe-pre-text{font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--text-muted);opacity:0;animation:luxePreFade 1.1s ease forwards .35s}
+@keyframes luxePreFade{to{opacity:1}}
+@keyframes luxePreSweep{0%{left:-40%}100%{left:100%}}
+
+/* ── Gold scroll progress bar ── */
+#luxe-progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:1001;background:linear-gradient(90deg,var(--gold-dark),var(--gold),var(--gold-light));box-shadow:0 0 10px rgba(200,169,110,.45);transition:width .08s linear;pointer-events:none}
+
+/* ── Scroll reveal system ── */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .9s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1);transition-delay:var(--rv-d,0s);will-change:opacity,transform}
+.rv.in{opacity:1;transform:none}
+.rv.rv-line{transform:scaleX(0);transform-origin:left}
+.rv.rv-line.in{transform:scaleX(1)}
+
+/* ── Hero: Ken Burns ambience + gold shimmer ── */
+.hero-bg{animation:luxeAmbient 16s ease-in-out infinite alternate}
+@keyframes luxeAmbient{from{transform:scale(1) translate(0,0)}to{transform:scale(1.06) translate(-1.5%,1%)}}
+.hero-grid{animation:luxeGridPan 50s linear infinite}
+.page-hero-bg{animation:luxeAmbient 18s ease-in-out infinite alternate}
+@keyframes luxeGridPan{from{background-position:0 0}to{background-position:60px 60px}}
+.hero-proj .hero-img{animation:luxeKen 20s ease-in-out infinite alternate}
+@keyframes luxeKen{from{transform:scale(1)}to{transform:scale(1.07)}}
+.hero h1 em,.section-title em{background:linear-gradient(110deg,var(--gold) 30%,#F7E8C3 50%,var(--gold) 70%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:luxeShimmer 6s linear infinite}
+@keyframes luxeShimmer{0%{background-position:130% 0}100%{background-position:-90% 0}}
+
+/* ── Floating gold orbs ── */
+.luxe-orb{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(232,209,150,.65),rgba(200,169,110,0) 70%);pointer-events:none;filter:blur(.5px);animation:luxeFloat var(--dur,16s) ease-in-out infinite alternate;z-index:0}
+@keyframes luxeFloat{from{transform:translate(0,0);opacity:.25}50%{opacity:.75}to{transform:translate(var(--dx,30px),var(--dy,-70px));opacity:.3}}
+
+/* ── Hero entrance: retimed after preloader ── */
+.anim-1{animation:fadeUp .9s .8s ease forwards;opacity:0}
+.anim-2{animation:fadeUp .9s 1s ease forwards;opacity:0}
+.anim-3{animation:fadeUp .9s 1.2s ease forwards;opacity:0}
+.anim-4{animation:fadeUp .9s 1.4s ease forwards;opacity:0}
+
+/* ── Button sheen sweep ── */
+.btn-primary,.btn-outline,.nav-cta,.form-submit,.enq-btn,.fp-dl-btn{position:relative;overflow:hidden}
+.btn-primary::after,.btn-outline::after,.nav-cta::after,.form-submit::after,.enq-btn::after,.fp-dl-btn::after{content:"";position:absolute;top:0;left:-90%;width:55%;height:100%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.32),transparent);transform:skewX(-20deg);transition:left .65s ease;pointer-events:none}
+.btn-primary:hover::after,.btn-outline:hover::after,.nav-cta:hover::after,.form-submit:hover::after,.enq-btn:hover::after,.fp-dl-btn:hover::after{left:140%}
+
+/* ── Richer card hovers ── */
+.project-card{transition:transform .45s cubic-bezier(.22,.61,.36,1),border-color .45s,box-shadow .45s}
+.project-card:hover{transform:translateY(-6px);box-shadow:0 20px 48px rgba(0,0,0,.5),0 0 0 1px rgba(200,169,110,.22),0 10px 34px rgba(200,169,110,.08)}
+.project-card-img img{transition:transform .9s cubic-bezier(.22,.61,.36,1)}
+.project-card:hover .project-card-img img{transform:scale(1.07)}
+.vision-card{transition:transform .4s ease,box-shadow .4s ease}
+.vision-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.45)}
+.strength-item{transition:transform .35s ease,border-color .35s,box-shadow .35s}
+.strength-item:hover{transform:translateY(-3px);border-color:var(--border-strong);box-shadow:0 12px 28px rgba(0,0,0,.4)}
+.partner-card{transition:transform .45s ease,border-color .45s,box-shadow .45s}
+.partner-card:hover{transform:translateY(-5px);box-shadow:0 20px 48px rgba(0,0,0,.5),0 0 0 1px rgba(200,169,110,.2)}
+.about-pillar{transition:border-color .3s,transform .3s,background .3s}
+.about-pillar:hover{transform:translateX(5px);background:var(--bg-card2)}
+.completed-card{transition:background .25s,box-shadow .35s}
+.completed-card:hover{box-shadow:inset 0 0 0 1px rgba(200,169,110,.22)}
+.amenity-item:hover,.nearby-item:hover{box-shadow:inset 0 0 0 1px rgba(200,169,110,.18)}
+.config-card{transition:border-color .3s,transform .3s,box-shadow .3s}
+.config-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.35)}
+
+/* ── WhatsApp FAB pulse ── */
+.wa-fab::before{content:"";position:absolute;inset:-5px;border-radius:50%;border:1.5px solid rgba(37,211,102,.55);animation:luxeWaPulse 2.4s ease-out infinite}
+@keyframes luxeWaPulse{0%{transform:scale(.85);opacity:.9}70%{transform:scale(1.35);opacity:0}100%{transform:scale(1.35);opacity:0}}
+
+/* ── Reduced motion: respect user preference ── */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  .rv,.anim-1,.anim-2,.anim-3,.anim-4{opacity:1 !important;transform:none !important}
+  #luxe-preloader{display:none}
+}
 </style>
 </head>
 <body>
+<div id="luxe-preloader" aria-hidden="true">
+  <img class="luxe-pre-logo" src="images/logo.png" alt=""/>
+  <div class="luxe-pre-line"></div>
+  <div class="luxe-pre-text">Building Trust &middot; Delivering Homes</div>
+</div>
+<div id="luxe-progress" aria-hidden="true"></div>
 <a class="wa-fab" href="https://wa.me/918262885023" target="_blank"><svg viewBox="0 0 24 24" width="26" height="26" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
 
 <nav id="navbar">
@@ -2363,26 +2446,122 @@ window.addEventListener('scroll', () => {
   }
 });
 
-// Scroll reveal
-const obs = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
+// ═══ LUXE: unified scroll reveal + counters + cinematic layer ═══
+var LUXE_RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Animated count-up for stat numbers (e.g. "20+", "1992", "33")
+function luxeCount(el) {
+  if (el.dataset.counted) return;
+  el.dataset.counted = '1';
+  var raw = el.textContent.trim();
+  var m = raw.match(/^(\d+)(.*)$/);
+  if (!m) return;
+  var target = parseInt(m[1], 10), suffix = m[2] || '';
+  var dur = 1800, t0 = null;
+  function step(ts) {
+    if (!t0) t0 = ts;
+    var p = Math.min((ts - t0) / dur, 1);
+    var ease = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(target * ease) + suffix;
+    if (p < 1) requestAnimationFrame(step); else el.textContent = raw;
+  }
+  requestAnimationFrame(step);
+}
+
+var luxeObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
     if (e.isIntersecting) {
-      e.target.style.opacity = '1';
-      e.target.style.transform = 'translateY(0)';
-      obs.unobserve(e.target);
+      e.target.classList.add('in');
+      var nums = e.target.matches('.hero-stat-num,.about-badge-num') ? [e.target] : e.target.querySelectorAll('.hero-stat-num,.about-badge-num');
+      Array.prototype.forEach.call(nums, luxeCount);
+      luxeObs.unobserve(e.target);
     }
   });
-}, { threshold: 0.06 });
+}, { threshold: 0.08, rootMargin: '0px 0px -4% 0px' });
 
-document.querySelectorAll(
-  '.project-card,.vision-card,.strength-item,.completed-card,.about-pillar,' +
-  '.contact-item,.partner-card,.founder-feature,.amenity-item,.nearby-item,.config-card'
-).forEach(el => {
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(18px)';
-  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-  obs.observe(el);
-});
+if (!LUXE_RM) {
+  // Grids: stagger children
+  ['.ongoing-grid','.completed-grid','.vision-grid','.strengths-grid','.about-pillars','.contact-info','.partners-grid','.amenity-grid','.nearby-grid','.config-grid-proj','.hero-qr-grid','.qr-grid'].forEach(function(sel) {
+    document.querySelectorAll(sel).forEach(function(grid) {
+      Array.prototype.forEach.call(grid.children, function(child, i) {
+        child.classList.add('rv');
+        child.style.setProperty('--rv-d', (Math.min(i, 8) * 0.09) + 's');
+        luxeObs.observe(child);
+      });
+    });
+  });
+  // Singles
+  document.querySelectorAll('.section-eyebrow,.section-title,.divider,.about-logo-frame,.aastha-feature,.founder-feature,.proj-section,.enquiry-card,.contact-card,.rera-card,.gallery-card,.contact-form,.disclaimer-box,.firm-note').forEach(function(el) {
+    if (el.classList.contains('rv')) return;
+    el.classList.add('rv');
+    if (el.classList.contains('divider')) el.classList.add('rv-line');
+    luxeObs.observe(el);
+  });
+  // Stat counters (also when their parent grid item reveals)
+  document.querySelectorAll('.hero-stat-num,.about-badge-num').forEach(function(el) { luxeObs.observe(el); });
+} else {
+  document.querySelectorAll('.rv').forEach(function(el) { el.classList.add('in'); });
+}
+
+// Gold floating orbs in hero backgrounds
+if (!LUXE_RM) {
+  document.querySelectorAll('.hero-bg,.page-hero-bg').forEach(function(bg) {
+    for (var i = 0; i < 7; i++) {
+      var o = document.createElement('span');
+      o.className = 'luxe-orb';
+      var s = (Math.random() * 5 + 3).toFixed(1);
+      o.style.width = s + 'px'; o.style.height = s + 'px';
+      o.style.left = (Math.random() * 90 + 5).toFixed(1) + '%';
+      o.style.top = (Math.random() * 75 + 12).toFixed(1) + '%';
+      o.style.setProperty('--dur', (12 + Math.random() * 14).toFixed(1) + 's');
+      o.style.setProperty('--dx', (Math.random() * 70 - 35).toFixed(0) + 'px');
+      o.style.setProperty('--dy', (-(30 + Math.random() * 80)).toFixed(0) + 'px');
+      o.style.animationDelay = (-Math.random() * 12).toFixed(1) + 's';
+      bg.appendChild(o);
+    }
+  });
+}
+
+// Gold scroll progress bar
+var luxeBar = document.getElementById('luxe-progress');
+window.addEventListener('scroll', function() {
+  if (!luxeBar) return;
+  var h = document.documentElement.scrollHeight - window.innerHeight;
+  luxeBar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+}, { passive: true });
+
+// Hero parallax (home page only)
+if (!LUXE_RM) {
+  var luxeHeroC = document.querySelector('#page-home .hero-content');
+  var luxeHeroG = document.querySelector('#page-home .hero-grid');
+  window.addEventListener('scroll', function() {
+    if (_cp !== 'home') return;
+    var y = window.scrollY;
+    if (y < window.innerHeight * 1.2) {
+      if (luxeHeroC) {
+        luxeHeroC.style.transform = 'translateY(' + (y * 0.14).toFixed(1) + 'px)';
+        luxeHeroC.style.opacity = Math.max(1 - y / 900, 0).toFixed(3);
+      }
+      if (luxeHeroG) luxeHeroG.style.transform = 'translateY(' + (y * 0.05).toFixed(1) + 'px)';
+    }
+  }, { passive: true });
+}
+
+// Preloader dismissal (min 1s branding moment, 3.5s safety fallback)
+(function() {
+  var pre = document.getElementById('luxe-preloader');
+  if (!pre) return;
+  var t0 = Date.now(), hidden = false;
+  function hide() {
+    if (hidden) return;
+    hidden = true;
+    var wait = Math.max(0, 1000 - (Date.now() - t0));
+    setTimeout(function() { pre.classList.add('done'); }, wait);
+  }
+  if (document.readyState === 'complete') hide();
+  else window.addEventListener('load', hide);
+  setTimeout(hide, 3500);
+})();
 
 function oiGalleryPause() {
   const t = document.getElementById('oi-track');
