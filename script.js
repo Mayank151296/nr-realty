@@ -103,6 +103,16 @@ function switchShivUnit(n) {
   document.getElementById('shiv-btn-2').classList.toggle('active', n === '2');
 }
 
+// Capture the lead into the Om Shanti Group inventory portal (fire-and-forget).
+function captureLead(p) {
+  try {
+    fetch('https://xiwqnlhrinpykglrekac.supabase.co/functions/v1/inbound-lead', {
+      method: 'POST', headers: { 'content-type': 'application/json', 'x-lead-key': 'b688877b80ecf9ed8d989e6191476131a6440397f150c107' },
+      body: JSON.stringify(p), keepalive: true
+    }).catch(function(){});
+  } catch (e) {}
+}
+
 // Generic enquiry — sends to WhatsApp
 function sendEnquiry(prefix) {
   const name  = (document.getElementById(prefix + '-name')  || {}).value || '';
@@ -118,6 +128,7 @@ function sendEnquiry(prefix) {
     (conf ? '\nConfiguration: ' + conf : '') +
     (msg.trim() ? '\nMessage: ' + msg.trim() : '')
   );
+  captureLead({ name: name.trim(), phone: phone.trim(), project: pname, config: conf, message: msg.trim(), form: 'project-' + prefix });
   window.open('https://wa.me/918551801919?text=' + text, '_blank');
 }
 
@@ -134,6 +145,7 @@ function handleHomeEnquiry() {
     (proj ? '\nProject Interest: ' + proj : '') +
     (msg.trim() ? '\nMessage: ' + msg.trim() : '')
   );
+  captureLead({ name: name.trim(), phone: phone.trim(), project: proj, message: msg.trim(), form: 'home' });
   window.open('https://wa.me/918551801919?text=' + text, '_blank');
 }
 
@@ -174,6 +186,7 @@ function submitPartnerForm() {
     (msg.trim() ? '\nMessage: ' + msg.trim() : '')
   );
 
+  captureLead({ name: name.trim(), phone: phone.trim(), email: email.trim(), city: city.trim(), partner_type: type.trim(), message: msg.trim(), form: 'channel-partner' });
   window.open('https://wa.me/918262885023?text=' + text, '_blank');
 }
 
