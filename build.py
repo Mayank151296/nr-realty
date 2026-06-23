@@ -231,11 +231,13 @@ class BuildOptimizer:
             h = re.sub(r'(<meta property="og:url" content=")[^"]*(")', r'\g<1>' + url + r'\2', h, count=1)
             # 4) tell the SPA which page to open on first paint
             h = h.replace('</head>', f'<script>window.__INITIAL_PAGE__="{page}";</script>\n</head>', 1)
-            out = self.dist_dir / meta['slug'] / 'index.html'
-            out.parent.mkdir(parents=True, exist_ok=True)
-            out.write_text(h, encoding='utf-8')
+            # Write to BOTH the repo root (what Cloudflare Pages actually serves) and dist/
+            for base in (self.project_dir, self.dist_dir):
+                out = base / meta['slug'] / 'index.html'
+                out.parent.mkdir(parents=True, exist_ok=True)
+                out.write_text(h, encoding='utf-8')
             count += 1
-        print(f"✓ {count} standalone project/leadership pages generated")
+        print(f"✓ {count} standalone project/leadership pages generated (root + dist)")
 
     def copy_seo(self):
         """Generate robots.txt + sitemap.xml listing the real, indexable URLs."""
@@ -247,11 +249,13 @@ class BuildOptimizer:
             pr = '1.0' if u.endswith('.com/') else '0.8'
             sm.append(f'  <url><loc>{u}</loc><lastmod>{today}</lastmod><priority>{pr}</priority></url>')
         sm.append('</urlset>')
-        (self.dist_dir / 'sitemap.xml').write_text('\n'.join(sm) + '\n', encoding='utf-8')
         robots = ("User-agent: *\nAllow: /\n\n"
                   f"Sitemap: {self.BASE_URL}/sitemap.xml\n")
-        (self.dist_dir / 'robots.txt').write_text(robots, encoding='utf-8')
-        print(f"✓ sitemap.xml ({len(urls)} URLs) + robots.txt generated")
+        # Write to BOTH the repo root (served by Cloudflare Pages) and dist/
+        for base in (self.project_dir, self.dist_dir):
+            (base / 'sitemap.xml').write_text('\n'.join(sm) + '\n', encoding='utf-8')
+            (base / 'robots.txt').write_text(robots, encoding='utf-8')
+        print(f"✓ sitemap.xml ({len(urls)} URLs) + robots.txt generated (root + dist)")
     
     def generate_report(self):
         """Generate build report"""
