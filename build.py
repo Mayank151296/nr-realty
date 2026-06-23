@@ -206,6 +206,40 @@ class BuildOptimizer:
                      'desc': 'Channel partner program of Om Shanti N R Realty (Om Shanti N R Construction) — collaborate on residential and commercial real estate projects in Palghar, Maharashtra.'},
     }
 
+    PROJECT_LD = {
+        'ostwal': {'name': 'Ostwal Imperial', 'locality': 'Palghar West', 'rera': 'P99000049283'},
+        'balaji': {'name': 'Shree Balaji Pride', 'locality': 'Vevoor, Palghar East', 'rera': 'P99000050656'},
+        'shiv': {'name': 'Shiv Shrushti Complex', 'locality': 'Vevoor, Palghar East', 'rera': 'P99000051314, P99000077209'},
+        'aastha': {'name': 'Aastha', 'locality': 'Tembhode, Palghar', 'rera': ''},
+    }
+
+    def _page_jsonld(self, page, meta, url):
+        """BreadcrumbList for every generated page + a Residence/Place schema for projects."""
+        crumbs = [{"@type": "ListItem", "position": 1, "name": "Home", "item": self.BASE_URL + "/"}]
+        if page in self.PROJECT_LD:
+            crumbs.append({"@type": "ListItem", "position": 2, "name": "Projects", "item": self.BASE_URL + "/#projects"})
+            crumbs.append({"@type": "ListItem", "position": 3, "name": self.PROJECT_LD[page]['name'], "item": url})
+        else:
+            crumbs.append({"@type": "ListItem", "position": 2, "name": meta['title'].split(' — ')[0].split(' | ')[0], "item": url})
+        breadcrumb = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": crumbs}
+        out = '<script type="application/ld+json">' + json.dumps(breadcrumb) + '</script>\n'
+        if page in self.PROJECT_LD:
+            p = self.PROJECT_LD[page]
+            res = {
+                "@context": "https://schema.org",
+                "@type": "ApartmentComplex" if page != 'aastha' else "Place",
+                "name": p['name'],
+                "url": url,
+                "description": meta['desc'],
+                "address": {"@type": "PostalAddress", "addressLocality": p['locality'], "addressRegion": "Maharashtra", "postalCode": "401404", "addressCountry": "IN"},
+                "containedInPlace": {"@type": "City", "name": "Palghar"},
+                "provider": {"@id": self.BASE_URL + "/#organization"},
+            }
+            if p['rera']:
+                res["additionalProperty"] = {"@type": "PropertyValue", "name": "MahaRERA", "value": p['rera']}
+            out += '<script type="application/ld+json">' + json.dumps(res) + '</script>\n'
+        return out
+
     def generate_project_pages(self):
         """Emit standalone, crawlable HTML at real URLs for each project / leadership,
         so each can be indexed individually. The SPA still drives in-site navigation."""
@@ -229,8 +263,12 @@ class BuildOptimizer:
             h = re.sub(r'(<meta property="og:title" content=")[^"]*(")', r'\g<1>' + meta['title'] + r'\2', h, count=1)
             h = re.sub(r'(<meta property="og:description" content=")[^"]*(")', r'\g<1>' + meta['desc'] + r'\2', h, count=1)
             h = re.sub(r'(<meta property="og:url" content=")[^"]*(")', r'\g<1>' + url + r'\2', h, count=1)
-            # 4) tell the SPA which page to open on first paint
-            h = h.replace('</head>', f'<script>window.__INITIAL_PAGE__="{page}";</script>\n</head>', 1)
+            # FAQ schema belongs only on the home page — strip it from clones
+            h = re.sub(r'<!--FAQ-LD-START-->.*?<!--FAQ-LD-END-->', '', h, flags=re.S)
+            # 4) tell the SPA which page to open on first paint + per-page structured data
+            head_inject = f'<script>window.__INITIAL_PAGE__="{page}";</script>\n'
+            head_inject += self._page_jsonld(page, meta, url)
+            h = h.replace('</head>', head_inject + '</head>', 1)
             # Write to BOTH the repo root (what Cloudflare Pages actually serves) and dist/
             for base in (self.project_dir, self.dist_dir):
                 out = base / meta['slug'] / 'index.html'
@@ -249,13 +287,39 @@ class BuildOptimizer:
             pr = '1.0' if u.endswith('.com/') else '0.8'
             sm.append(f'  <url><loc>{u}</loc><lastmod>{today}</lastmod><priority>{pr}</priority></url>')
         sm.append('</urlset>')
-        robots = ("User-agent: *\nAllow: /\n\n"
-                  f"Sitemap: {self.BASE_URL}/sitemap.xml\n")
+        # Explicitly welcome search engines AND AI assistants (we WANT to be cited)
+        ai_bots = ['GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-Web',
+                   'anthropic-ai', 'PerplexityBot', 'Perplexity-User', 'Google-Extended',
+                   'Applebot-Extended', 'Amazonbot', 'CCBot', 'Bingbot']
+        robots = "User-agent: *\nAllow: /\n\n"
+        for b in ai_bots:
+            robots += f"User-agent: {b}\nAllow: /\n\n"
+        robots += f"Sitemap: {self.BASE_URL}/sitemap.xml\n"
+
+        # llms.txt — a concise, AI-friendly summary of the site (emerging standard)
+        llms = (f"# Om Shanti N R Realty\n\n"
+                f"> Business brand of Om Shanti N R Construction, a Palghar (Maharashtra, India) "
+                f"real-estate partnership firm established in 2005. Plans, develops and is associated "
+                f"with MahaRERA-registered residential and commercial projects across Palghar West and Palghar East.\n\n"
+                f"## Projects in Palghar\n")
+        for k, p in self.PROJECT_LD.items():
+            rera = f" — MahaRERA {p['rera']}" if p['rera'] else " — plotted development"
+            llms += f"- [{p['name']}]({self.BASE_URL}/{self.PROJECT_PAGES[k]['slug']}/): {p['locality']}{rera}\n"
+        llms += (f"\n## Key pages\n"
+                 f"- [Home]({self.BASE_URL}/)\n"
+                 f"- [Leadership]({self.BASE_URL}/leadership/)\n"
+                 f"- [Channel Partners]({self.BASE_URL}/channel-partners/)\n\n"
+                 f"## Contact\n"
+                 f"- Phone/WhatsApp: +91 82628 85023\n"
+                 f"- Email: info@omshantinrconstruction.com\n"
+                 f"- Office: Palghar West, Maharashtra 401404, India\n")
+
         # Write to BOTH the repo root (served by Cloudflare Pages) and dist/
         for base in (self.project_dir, self.dist_dir):
             (base / 'sitemap.xml').write_text('\n'.join(sm) + '\n', encoding='utf-8')
             (base / 'robots.txt').write_text(robots, encoding='utf-8')
-        print(f"✓ sitemap.xml ({len(urls)} URLs) + robots.txt generated (root + dist)")
+            (base / 'llms.txt').write_text(llms, encoding='utf-8')
+        print(f"✓ sitemap.xml ({len(urls)} URLs) + robots.txt (AI crawlers allowed) + llms.txt generated (root + dist)")
     
     def generate_report(self):
         """Generate build report"""
