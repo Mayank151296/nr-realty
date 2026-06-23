@@ -125,6 +125,9 @@ class BuildOptimizer:
         for src in self.images_dir.rglob('*'):
             if not src.is_file() or src.name.endswith('.bak') or src.name == '.DS_Store':
                 continue
+            # Ship WebP only: skip a JPEG/JPG if a .webp sibling exists
+            if src.suffix.lower() in ('.jpeg', '.jpg') and src.with_suffix('.webp').exists():
+                continue
             rel = src.relative_to(self.images_dir)
             dst = dist_images / rel
             dst.parent.mkdir(parents=True, exist_ok=True)
@@ -180,6 +183,72 @@ class BuildOptimizer:
         if htaccess.exists():
             shutil.copy(htaccess, self.dist_dir / '.htaccess')
             print("✓ .htaccess copied")
+
+    BASE_URL = 'https://omshantinrconstruction.com'
+    PROJECT_PAGES = {
+        'ostwal': {'slug': 'projects/ostwal-imperial',
+                   'title': 'Ostwal Imperial — Residential & Commercial in Palghar West | Om Shanti N R Realty',
+                   'desc': 'Ostwal Imperial by Om Shanti N R Realty — MahaRERA-registered residential & commercial project in Palghar West, Maharashtra. Configurations, RERA details and brochure.'},
+        'balaji': {'slug': 'projects/shree-balaji-pride',
+                   'title': 'Shree Balaji Pride — Homes in Palghar West | Om Shanti N R Realty',
+                   'desc': 'Shree Balaji Pride by Om Shanti N R Realty — MahaRERA-registered residential project in Palghar West, Maharashtra. Configurations, RERA details and brochure.'},
+        'shiv': {'slug': 'projects/shiv-shrushti',
+                 'title': 'Shiv Shrushti — Residential Project in Palghar West | Om Shanti N R Realty',
+                 'desc': 'Shiv Shrushti by Om Shanti N R Realty — MahaRERA-registered residential project in Palghar West, Maharashtra. Configurations, RERA details and brochure.'},
+        'aastha': {'slug': 'projects/aastha',
+                   'title': 'Aastha — Plotted Development in Palghar | Om Shanti N R Realty',
+                   'desc': 'Aastha by Om Shanti N R Realty — plotted development in Palghar, Maharashtra. Layout, approvals and project details.'},
+        'leadership': {'slug': 'leadership',
+                       'title': 'Leadership — Om Shanti N R Realty | Palghar Real Estate',
+                       'desc': 'Meet the leadership of Om Shanti N R Construction (Om Shanti N R Realty) — a Palghar family real estate firm building with trust and compliance since 2005.'},
+    }
+
+    def generate_project_pages(self):
+        """Emit standalone, crawlable HTML at real URLs for each project / leadership,
+        so each can be indexed individually. The SPA still drives in-site navigation."""
+        import re, time
+        src = self.html_file.read_text(encoding='utf-8')
+        version = int(time.time())
+        count = 0
+        for page, meta in self.PROJECT_PAGES.items():
+            h = src
+            # 1) make asset URLs root-relative so they resolve from a sub-path
+            h = re.sub(r'((?:src|href)=")(images/|qr/|brochures/)', r'\1/\2', h)
+            h = re.sub(r'((?:src|href)=")(favicon|apple-touch-icon|icon-1|icon-5|mask-icon|manifest\.json|logo-square|og-image)', r'\1/\2', h)
+            # 2) cache-bust root-relative assets
+            h = re.sub(r'(?:src|href)="/(?:images|qr|brochures)/[^"?#]+\.(?:jpe?g|png|gif|webp|svg|pdf)"',
+                       lambda m: m.group(0)[:-1] + f'?v={version}"', h)
+            url = f'{self.BASE_URL}/{meta["slug"]}/'
+            # 3) per-page SEO head
+            h = re.sub(r'<title>.*?</title>', '<title>' + meta['title'] + '</title>', h, count=1, flags=re.S)
+            h = re.sub(r'(<meta name="description" content=")[^"]*(")', r'\g<1>' + meta['desc'] + r'\2', h, count=1)
+            h = re.sub(r'(<link rel="canonical" href=")[^"]*(")', r'\g<1>' + url + r'\2', h, count=1)
+            h = re.sub(r'(<meta property="og:title" content=")[^"]*(")', r'\g<1>' + meta['title'] + r'\2', h, count=1)
+            h = re.sub(r'(<meta property="og:description" content=")[^"]*(")', r'\g<1>' + meta['desc'] + r'\2', h, count=1)
+            h = re.sub(r'(<meta property="og:url" content=")[^"]*(")', r'\g<1>' + url + r'\2', h, count=1)
+            # 4) tell the SPA which page to open on first paint
+            h = h.replace('</head>', f'<script>window.__INITIAL_PAGE__="{page}";</script>\n</head>', 1)
+            out = self.dist_dir / meta['slug'] / 'index.html'
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(h, encoding='utf-8')
+            count += 1
+        print(f"✓ {count} standalone project/leadership pages generated")
+
+    def copy_seo(self):
+        """Generate robots.txt + sitemap.xml listing the real, indexable URLs."""
+        urls = [self.BASE_URL + '/'] + [f'{self.BASE_URL}/{m["slug"]}/' for m in self.PROJECT_PAGES.values()]
+        today = __import__('datetime').date.today().isoformat()
+        sm = ['<?xml version="1.0" encoding="UTF-8"?>',
+              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+        for u in urls:
+            pr = '1.0' if u.endswith('.com/') else '0.8'
+            sm.append(f'  <url><loc>{u}</loc><lastmod>{today}</lastmod><priority>{pr}</priority></url>')
+        sm.append('</urlset>')
+        (self.dist_dir / 'sitemap.xml').write_text('\n'.join(sm) + '\n', encoding='utf-8')
+        robots = ("User-agent: *\nAllow: /\n\n"
+                  f"Sitemap: {self.BASE_URL}/sitemap.xml\n")
+        (self.dist_dir / 'robots.txt').write_text(robots, encoding='utf-8')
+        print(f"✓ sitemap.xml ({len(urls)} URLs) + robots.txt generated")
     
     def generate_report(self):
         """Generate build report"""
@@ -227,6 +296,8 @@ class BuildOptimizer:
         self.copy_brochures()
         self.copy_favicons()
         self.copy_config()
+        self.generate_project_pages()
+        self.copy_seo()
         self.generate_report()
         
         print("✅ Build completed successfully!")
