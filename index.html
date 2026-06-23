@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<base href="/"/>
 <title>Om Shanti N R Realty &mdash; Palghar Real Estate</title>
 <link rel="shortcut icon" href="favicon.ico?v=4"/>
 <link rel="icon" href="favicon.ico?v=4" sizes="any"/>
@@ -933,13 +934,13 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
     <div class="nav-logo" onclick="showPage('home');window.scrollTo(0,0)"><img loading="lazy" src="images/logo.png" alt="Om Shanti N R Realty" style="height:48px;width:auto;display:block"></div>
   </div>
   <div class="nav-links">
-    <a onclick="showPage('home');window.scrollTo(0,0)" data-page="home">Home</a>
-    <a onclick="showPage('home');ss('about')" data-page="home">About</a>
-    <a onclick="showPage('home');ss('projects')" data-page="home">Projects</a>
-    <a onclick="showPage('home');ss('vision')" data-page="home">Vision</a>
-    <a onclick="showPage('leadership')" data-page="leadership">Leadership</a>
-    <a onclick="showPage('partners')" data-page="partners">Channel Partners</a>
-    <a onclick="showPage('home');ss('contact')" data-page="home">Contact</a>
+    <a href="/" data-page="home">Home</a>
+    <a href="/#about" data-page="home">About</a>
+    <a href="/#projects" data-page="home">Projects</a>
+    <a href="/#vision" data-page="home">Vision</a>
+    <a href="/leadership/" data-page="leadership">Leadership</a>
+    <a href="/channel-partners/" data-page="partners">Channel Partners</a>
+    <a href="/#contact" data-page="home">Contact</a>
   </div>
   <button class="nav-cta" onclick="showPage('home');setTimeout(()=>ss('contact'),80)">Enquire Now</button>
   <button class="nav-hamburger" id="navHamburger" onclick="toggleMobileMenu()" aria-label="Toggle menu">
@@ -1041,7 +1042,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
           <span class="project-tag">Title-Clear</span>
         </div>
         <div class="aastha-feature-actions">
-          <a class="btn-primary" onclick="event.stopPropagation();showPage('aastha')">View Full Project</a>
+          <a class="btn-primary" href="/projects/aastha/">View Full Project</a>
           <a class="btn-outline" href="https://wa.me/918262885023?text=Hi%2C%20I%27m%20interested%20in%20Aastha%20%E2%80%94%20Tembhode%2C%20Palghar." target="_blank" rel="noopener" onclick="event.stopPropagation()">Enquire on WhatsApp</a>
         </div>
       </div>
@@ -1104,7 +1105,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
           <div class="project-role">N R Realty &#8212; Land Partner &nbsp;&middot;&nbsp; Shree Ostwal Builders Ltd.</div>
           <div class="project-tags"><span class="project-tag">1 BHK</span><span class="project-tag">2 BHK</span><span class="project-tag">3 BHK</span></div>
           <div class="project-rera">MahaRERA: P99000049283</div>
-          <button class="project-cta">View Project &#8594;</button>
+          <a class="project-cta" href="/projects/ostwal-imperial/">View Project &#8594;</a>
         </div>
       </div>
 
@@ -1118,7 +1119,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
           <div class="project-role">N R Realty &#8212; Land Partner &nbsp;&middot;&nbsp; Shree Balaji Projects</div>
           <div class="project-tags"><span class="project-tag">1 BHK</span><span class="project-tag">2 BHK</span></div>
           <div class="project-rera">MahaRERA: P99000050656</div>
-          <button class="project-cta">View Project &#8594;</button>
+          <a class="project-cta" href="/projects/shree-balaji-pride/">View Project &#8594;</a>
         </div>
       </div>
 
@@ -1132,7 +1133,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
           <div class="project-role">N R Realty &#8212; Land Partner &nbsp;&middot;&nbsp; Kavita Builder &amp; Developers</div>
           <div class="project-tags"><span class="project-tag">1 BHK</span><span class="project-tag">2 BHK</span><span class="project-tag">Ready to Move</span></div>
           <div class="project-rera">MahaRERA: P99000051314 &nbsp;&middot;&nbsp; P99000077209</div>
-          <button class="project-cta">View Project &#8594;</button>
+          <a class="project-cta" href="/projects/shiv-shrushti/">View Project &#8594;</a>
         </div>
       </div>
 
@@ -2261,8 +2262,12 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 var _cp = 'home';
 
 // ── URL hash <-> page mapping (for browser back/forward, swipe-back, deep links) ──
-var PAGE_HASH = {home: '', leadership: '#/leadership', partners: '#/partners', ostwal: '#/projects/ostwal', balaji: '#/projects/balaji', shiv: '#/projects/shiv', aastha: '#/projects/aastha'};
+var PAGE_PATH = {home: '/', leadership: '/leadership/', partners: '/channel-partners/', ostwal: '/projects/ostwal-imperial/', balaji: '/projects/shree-balaji-pride/', shiv: '/projects/shiv-shrushti/', aastha: '/projects/aastha/'};
+var PATH_PAGE = {};
+Object.keys(PAGE_PATH).forEach(function(k){ var p = PAGE_PATH[k]; PATH_PAGE[p] = k; PATH_PAGE[p.replace(/\/$/, '')] = k; });
+// Legacy hash links (older shared URLs) still resolve
 var HASH_PAGE = {'': 'home', '#': 'home', '#/': 'home', '#/leadership': 'leadership', '#/partners': 'partners', '#/projects/ostwal': 'ostwal', '#/projects/balaji': 'balaji', '#/projects/shiv': 'shiv', '#/projects/aastha': 'aastha'};
+function pageFromLocation() { return PATH_PAGE[location.pathname] || HASH_PAGE[location.hash] || 'home'; }
 
 function showPage(name, fromHistory) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -2275,11 +2280,10 @@ function showPage(name, fromHistory) {
   document.querySelectorAll('.nav-links a').forEach(a => {
     a.classList.toggle('active', a.dataset.page === name);
   });
-  // Push a history entry so browser back / trackpad swipe-back works
+  // Push a real URL so links are shareable/indexable and back/forward works
   if (!fromHistory) {
-    var newHash = PAGE_HASH[name] || '';
-    var newUrl = newHash ? newHash : location.pathname + location.search;
-    if (location.hash !== newHash) {
+    var newUrl = PAGE_PATH[name] || '/';
+    if (location.pathname !== newUrl) {
       history.pushState({page: name}, '', newUrl);
     }
   }
@@ -2300,8 +2304,18 @@ function goBack() {
 
 // Handle browser back/forward and trackpad swipe gestures
 window.addEventListener('popstate', function() {
-  var page = HASH_PAGE[location.hash] || 'home';
-  showPage(page, true);
+  showPage(pageFromLocation(), true);
+});
+// Route internal links through the SPA while keeping them real, crawlable <a href>
+document.addEventListener('click', function(e) {
+  var a = e.target.closest && e.target.closest('a[href^="/"]');
+  if (!a || a.target === '_blank') return;
+  var url = new URL(a.getAttribute('href'), location.origin);
+  var page = PATH_PAGE[url.pathname];
+  if (!page) return;                 // not an SPA route (e.g. /brochures/x.pdf) — let the browser handle it
+  e.preventDefault();
+  showPage(page);
+  if (url.hash) ss(url.hash.slice(1));
 });
 
 
@@ -2735,7 +2749,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (btns[0]) btns[0].classList.add('active');
 
   // Route from URL hash so deep links (#/leadership, #/projects/ostwal, etc.) work on first load
-  var initialPage = (window.__INITIAL_PAGE__) || HASH_PAGE[location.hash] || 'home';
+  var initialPage = (window.__INITIAL_PAGE__) || pageFromLocation();
   if (initialPage !== 'home') {
     showPage(initialPage, true);
   } else {

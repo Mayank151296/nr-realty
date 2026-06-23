@@ -201,6 +201,9 @@ class BuildOptimizer:
         'leadership': {'slug': 'leadership',
                        'title': 'Leadership — Om Shanti N R Realty | Palghar Real Estate',
                        'desc': 'Meet the leadership of Om Shanti N R Construction (Om Shanti N R Realty) — a Palghar family real estate firm building with trust and compliance since 2005.'},
+        'partners': {'slug': 'channel-partners',
+                     'title': 'Channel Partners — Om Shanti N R Realty | Palghar Real Estate',
+                     'desc': 'Channel partner program of Om Shanti N R Realty (Om Shanti N R Construction) — collaborate on residential and commercial real estate projects in Palghar, Maharashtra.'},
     }
 
     def generate_project_pages(self):
