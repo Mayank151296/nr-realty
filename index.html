@@ -149,6 +149,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .hero-stats{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,auto);gap:2rem 3rem;margin-top:4rem;padding-top:2rem;border-top:.5px solid var(--border);width:fit-content}
 .hero-stat-num{font-family:"Cormorant Garamond",serif;font-size:40px;font-weight:600;color:var(--gold);line-height:1}
 .hero-stat-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-top:4px;white-space:nowrap}
+.hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,430px);gap:4rem;align-items:center}
+.hero-inner .hero-content{max-width:640px}
+.hero-media{position:relative;width:100%;aspect-ratio:1608/1488;overflow:hidden;border:.5px solid var(--border-strong);border-radius:2px;background:var(--bg-card);box-shadow:0 30px 80px -24px rgba(0,0,0,.75)}
+.hero-media video{width:100%;height:100%;object-fit:cover;display:block}
+.hero-media::before,.hero-media::after{content:"";position:absolute;width:22px;height:22px;z-index:2;pointer-events:none}
+.hero-media::before{top:10px;left:10px;border-top:1.5px solid var(--gold);border-left:1.5px solid var(--gold)}
+.hero-media::after{bottom:10px;right:10px;border-bottom:1.5px solid var(--gold);border-right:1.5px solid var(--gold)}
+.hero-media-cap{position:absolute;left:0;bottom:0;right:0;z-index:2;display:flex;align-items:center;gap:8px;padding:14px 14px 11px;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-primary);background:linear-gradient(to top,rgba(8,6,4,.82),transparent)}
+.hero-media-cap i{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;animation:reelPulse 2.4s infinite}
+@keyframes reelPulse{0%{box-shadow:0 0 0 0 rgba(200,169,110,.5)}70%{box-shadow:0 0 0 7px rgba(200,169,110,0)}100%{box-shadow:0 0 0 0 rgba(200,169,110,0)}}
 
 /* SECTIONS */
 section{padding:90px 4rem}
@@ -435,6 +445,9 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 /* MOBILE */
 /* ── Tablet (≤1024px) ── */
 @media(max-width:1024px){
+  .hero-inner{grid-template-columns:1fr;gap:2.5rem}
+  .hero-inner .hero-content{max-width:720px}
+  .hero-media{max-width:460px;margin-top:.25rem}
   .founder-feature{grid-template-columns:1fr}
   .founder-photo{height:340px}
   .partners-grid{grid-template-columns:1fr 1fr}
@@ -461,6 +474,9 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 
   /* Hero */
   .hero{padding:105px 1.25rem 3rem;min-height:auto}
+  .hero-inner{gap:2rem}
+  .hero-media{max-width:none}
+  .hero-media::before,.hero-media::after{width:16px;height:16px}
   .hero h1{font-size:clamp(40px,9vw,62px)}
   .hero-sub{font-size:14px;margin-bottom:1.8rem}
   .hero-actions{gap:.7rem;width:100%}
@@ -979,13 +995,22 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 
 <section class="hero" id="home">
   <div class="hero-bg"></div><div class="hero-grid"></div>
-  <div class="hero-content">
-    <div class="hero-eyebrow anim-1">Palghar, Maharashtra &middot; Est. 2005</div>
-    <h1 class="anim-2">Building<br/><em>Trust,</em><br/>Delivering<br/>Homes.</h1>
-    <p class="hero-sub anim-3">Om Shanti N R Realty &mdash; the business brand of Om Shanti N R Construction &mdash; has been shaping Palghar&#39;s residential landscape since 2005, with over three decades of founding experience and an unwavering commitment to quality, compliance, and lasting value.</p>
-    <div class="hero-actions anim-4">
-      <a class="btn-primary" onclick="ss('projects')">View Projects</a>
-      <a class="btn-outline" onclick="ss('about')">Our Story</a>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-eyebrow anim-1">Palghar, Maharashtra &middot; Est. 2005</div>
+      <h1 class="anim-2">Building<br/><em>Trust,</em><br/>Delivering<br/>Homes.</h1>
+      <p class="hero-sub anim-3">Om Shanti N R Realty &mdash; the business brand of Om Shanti N R Construction &mdash; has been shaping Palghar&#39;s residential landscape since 2005, with over three decades of founding experience and an unwavering commitment to quality, compliance, and lasting value.</p>
+      <div class="hero-actions anim-4">
+        <a class="btn-primary" onclick="ss('projects')">View Projects</a>
+        <a class="btn-outline" onclick="ss('about')">Our Story</a>
+      </div>
+    </div>
+    <div class="hero-media anim-3">
+      <video class="hero-reel" autoplay muted loop playsinline preload="metadata" poster="images/hero/hero-reel-poster.jpg" aria-label="Om Shanti N R Realty showreel">
+        <source src="images/hero/hero-reel.webm" type="video/webm"/>
+        <source src="images/hero/hero-reel.mp4" type="video/mp4"/>
+      </video>
+      <div class="hero-media-cap"><i></i>Om Shanti N R Realty &mdash; Showreel</div>
     </div>
   </div>
   <div class="hero-stats anim-4">
@@ -2819,6 +2844,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Make sure home has a history entry to come back to
     history.replaceState({page: 'home'}, '', location.pathname + location.search);
   }
+
+  // Hero showreel: respect reduced-motion preference
+  try {
+    var reel = document.querySelector('.hero-reel');
+    if (reel && window.matchMedia('(prefers-reduced-motion:reduce)').matches) {
+      reel.removeAttribute('autoplay');
+      reel.pause();
+    }
+  } catch (e) {}
 });
 
 </script>
