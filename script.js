@@ -123,7 +123,7 @@ function sendEnquiry(prefix) {
   const projects = {oi:'Ostwal Imperial', bp:'Shree Balaji Pride', ss:'Shiv Shrushti Complex'};
   const pname = projects[prefix] || 'a project';
   const text = encodeURIComponent(
-    'Hello Om Shanti N R Realty,\n\nI am interested in ' + pname + '.\n\n' +
+    'Hello Om Shanti N R Construction,\n\nI am interested in ' + pname + '.\n\n' +
     'Name: ' + name.trim() + '\nPhone: ' + phone.trim() +
     (conf ? '\nConfiguration: ' + conf : '') +
     (msg.trim() ? '\nMessage: ' + msg.trim() : '')
@@ -140,7 +140,7 @@ function handleHomeEnquiry() {
   const msg   = (document.getElementById('f-msg')   || {}).value || '';
   if (!name.trim() || !phone.trim()) { alert('Please enter your name and phone number.'); return; }
   const text = encodeURIComponent(
-    'Hello Om Shanti N R Realty,\n\nI would like to enquire.\n\n' +
+    'Hello Om Shanti N R Construction,\n\nI would like to enquire.\n\n' +
     'Name: ' + name.trim() + '\nPhone: ' + phone.trim() +
     (proj ? '\nProject Interest: ' + proj : '') +
     (msg.trim() ? '\nMessage: ' + msg.trim() : '')
@@ -175,7 +175,7 @@ function submitPartnerForm() {
 
   // Construct WhatsApp message
   const text = encodeURIComponent(
-    'Hello Om Shanti N R Realty,\n\nI am interested in joining as a Channel Partner.\n\n' +
+    'Hello Om Shanti N R Construction,\n\nI am interested in joining as a Channel Partner.\n\n' +
     'Name: ' + name.trim() + '\n' +
     'Phone: ' + phone.trim() + '\n' +
     'Email: ' + email.trim() + '\n' +

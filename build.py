@@ -187,23 +187,23 @@ class BuildOptimizer:
     BASE_URL = 'https://omshantinrconstruction.com'
     PROJECT_PAGES = {
         'ostwal': {'slug': 'projects/ostwal-imperial',
-                   'title': 'Ostwal Imperial — Residential & Commercial in Palghar West | Om Shanti N R Realty',
-                   'desc': 'Ostwal Imperial by Om Shanti N R Realty — MahaRERA-registered residential & commercial project in Palghar West, Maharashtra. Configurations, RERA details and brochure.'},
+                   'title': 'Ostwal Imperial — Residential & Commercial in Palghar West | Om Shanti N R Construction',
+                   'desc': 'Ostwal Imperial by Om Shanti N R Construction — MahaRERA-registered residential & commercial project in Palghar West, Maharashtra. Configurations, RERA details and brochure.'},
         'balaji': {'slug': 'projects/shree-balaji-pride',
-                   'title': 'Shree Balaji Pride — Homes in Palghar West | Om Shanti N R Realty',
-                   'desc': 'Shree Balaji Pride by Om Shanti N R Realty — MahaRERA-registered residential project in Palghar West, Maharashtra. Configurations, RERA details and brochure.'},
+                   'title': 'Shree Balaji Pride — Homes in Palghar West | Om Shanti N R Construction',
+                   'desc': 'Shree Balaji Pride by Om Shanti N R Construction — MahaRERA-registered residential project in Palghar West, Maharashtra. Configurations, RERA details and brochure.'},
         'shiv': {'slug': 'projects/shiv-shrushti',
-                 'title': 'Shiv Shrushti — Residential Project in Palghar West | Om Shanti N R Realty',
-                 'desc': 'Shiv Shrushti by Om Shanti N R Realty — MahaRERA-registered residential project in Palghar West, Maharashtra. Configurations, RERA details and brochure.'},
+                 'title': 'Shiv Shrushti — Residential Project in Palghar West | Om Shanti N R Construction',
+                 'desc': 'Shiv Shrushti by Om Shanti N R Construction — MahaRERA-registered residential project in Palghar West, Maharashtra. Configurations, RERA details and brochure.'},
         'aastha': {'slug': 'projects/aastha',
-                   'title': 'Aastha — Plotted Development in Palghar | Om Shanti N R Realty',
-                   'desc': 'Aastha by Om Shanti N R Realty — plotted development in Palghar, Maharashtra. Layout, approvals and project details.'},
+                   'title': 'Aastha — Plotted Development in Palghar | Om Shanti N R Construction',
+                   'desc': 'Aastha by Om Shanti N R Construction — plotted development in Palghar, Maharashtra. Layout, approvals and project details.'},
         'leadership': {'slug': 'leadership',
-                       'title': 'Leadership — Om Shanti N R Realty | Palghar Real Estate',
-                       'desc': 'Meet the leadership of Om Shanti N R Construction (Om Shanti N R Realty) — a Palghar family real estate firm building with trust and compliance since 2005.'},
+                       'title': 'Leadership — Om Shanti N R Construction | Palghar Real Estate',
+                       'desc': 'Meet the leadership of Om Shanti N R Construction — a Palghar family real estate firm building with trust and compliance since 2005.'},
         'partners': {'slug': 'channel-partners',
-                     'title': 'Channel Partners — Om Shanti N R Realty | Palghar Real Estate',
-                     'desc': 'Channel partner program of Om Shanti N R Realty (Om Shanti N R Construction) — collaborate on residential and commercial real estate projects in Palghar, Maharashtra.'},
+                     'title': 'Channel Partners — Om Shanti N R Construction | Palghar Real Estate',
+                     'desc': 'Channel partner program of Om Shanti N R Construction — collaborate on residential and commercial real estate projects in Palghar, Maharashtra.'},
     }
 
     PROJECT_LD = {
@@ -297,8 +297,8 @@ class BuildOptimizer:
         robots += f"Sitemap: {self.BASE_URL}/sitemap.xml\n"
 
         # llms.txt — a concise, AI-friendly summary of the site (emerging standard)
-        llms = (f"# Om Shanti N R Realty\n\n"
-                f"> Business brand of Om Shanti N R Construction, a Palghar (Maharashtra, India) "
+        llms = (f"# Om Shanti N R Construction\n\n"
+                f"> A Palghar (Maharashtra, India) "
                 f"real-estate partnership firm established in 2005. Plans, develops and is associated "
                 f"with MahaRERA-registered residential and commercial projects across Palghar West and Palghar East.\n\n"
                 f"## Projects in Palghar\n")
