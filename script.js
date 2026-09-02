@@ -113,7 +113,7 @@ function captureLead(p) {
   } catch (e) {}
 }
 
-// Generic enquiry — sends to WhatsApp
+// Generic enquiry: sends to WhatsApp
 function sendEnquiry(prefix) {
   const name  = (document.getElementById(prefix + '-name')  || {}).value || '';
   const phone = (document.getElementById(prefix + '-phone') || {}).value || '';

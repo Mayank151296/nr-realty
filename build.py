@@ -91,7 +91,7 @@ class BuildOptimizer:
             'src="script.min.js"'
         )
         
-        # Add cache busting version — forces browsers and CDNs (Cloudflare Pages)
+        # Add cache busting version: forces browsers and CDNs (Cloudflare Pages)
         # to refetch CSS, JS, AND images on every new deploy. Without this,
         # if an image filename stays the same but contents change, edge
         # caches and browser caches will continue serving the old version
@@ -120,7 +120,7 @@ class BuildOptimizer:
         """Copy images to dist (overwriting individual files, not the dir)"""
         dist_images = self.dist_dir / 'images'
         dist_images.mkdir(exist_ok=True)
-        # Recurse — preserves subfolder structure (e.g. images/aastha/) so per-project asset folders work.
+        # Recurse: preserves subfolder structure (e.g. images/aastha/) so per-project asset folders work.
         copied = 0
         for src in self.images_dir.rglob('*'):
             if not src.is_file() or src.name.endswith('.bak') or src.name == '.DS_Store':
@@ -187,23 +187,23 @@ class BuildOptimizer:
     BASE_URL = 'https://omshantinrconstruction.com'
     PROJECT_PAGES = {
         'ostwal': {'slug': 'projects/ostwal-imperial',
-                   'title': 'Ostwal Imperial — Residential & Commercial in Palghar West | Om Shanti N R Construction',
-                   'desc': 'Ostwal Imperial by Om Shanti N R Construction — MahaRERA-registered residential & commercial project in Palghar West, Maharashtra. Configurations, RERA details and brochure.'},
+                   'title': 'Ostwal Imperial | Residential & Commercial in Palghar West | Om Shanti N R Construction',
+                   'desc': 'Ostwal Imperial by Om Shanti N R Construction is a MahaRERA-registered residential and commercial project in Palghar West, Maharashtra. Configurations, RERA details and brochure.'},
         'balaji': {'slug': 'projects/shree-balaji-pride',
-                   'title': 'Shree Balaji Pride — Homes in Palghar West | Om Shanti N R Construction',
-                   'desc': 'Shree Balaji Pride by Om Shanti N R Construction — MahaRERA-registered residential project in Palghar West, Maharashtra. Configurations, RERA details and brochure.'},
+                   'title': 'Shree Balaji Pride | Homes in Palghar West | Om Shanti N R Construction',
+                   'desc': 'Shree Balaji Pride by Om Shanti N R Construction is a MahaRERA-registered residential project in Palghar West, Maharashtra. Configurations, RERA details and brochure.'},
         'shiv': {'slug': 'projects/shiv-shrushti',
-                 'title': 'Shiv Shrushti — Residential Project in Palghar West | Om Shanti N R Construction',
-                 'desc': 'Shiv Shrushti by Om Shanti N R Construction — MahaRERA-registered residential project in Palghar West, Maharashtra. Configurations, RERA details and brochure.'},
+                 'title': 'Shiv Shrushti | Residential Project in Palghar West | Om Shanti N R Construction',
+                 'desc': 'Shiv Shrushti by Om Shanti N R Construction is a MahaRERA-registered residential project in Palghar West, Maharashtra. Configurations, RERA details and brochure.'},
         'aastha': {'slug': 'projects/aastha',
-                   'title': 'Aastha — Plotted Development in Palghar | Om Shanti N R Construction',
-                   'desc': 'Aastha by Om Shanti N R Construction — plotted development in Palghar, Maharashtra. Layout, approvals and project details.'},
+                   'title': 'Aastha | Plotted Development in Palghar | Om Shanti N R Construction',
+                   'desc': 'Aastha by Om Shanti N R Construction is a plotted development in Palghar, Maharashtra. Layout, approvals and project details.'},
         'leadership': {'slug': 'leadership',
-                       'title': 'Leadership — Om Shanti N R Construction | Palghar Real Estate',
-                       'desc': 'Meet the leadership of Om Shanti N R Construction — a Palghar family real estate firm building with trust and compliance since 2005.'},
+                       'title': 'Leadership | Om Shanti N R Construction | Palghar Real Estate',
+                       'desc': 'Meet the leadership of Om Shanti N R Construction, a Palghar family real estate firm building with trust and compliance since 2005.'},
         'partners': {'slug': 'channel-partners',
-                     'title': 'Channel Partners — Om Shanti N R Construction | Palghar Real Estate',
-                     'desc': 'Channel partner program of Om Shanti N R Construction — collaborate on residential and commercial real estate projects in Palghar, Maharashtra.'},
+                     'title': 'Channel Partners | Om Shanti N R Construction | Palghar Real Estate',
+                     'desc': 'Channel partner program of Om Shanti N R Construction. Collaborate on residential and commercial real estate projects in Palghar, Maharashtra.'},
     }
 
     PROJECT_LD = {
@@ -263,7 +263,7 @@ class BuildOptimizer:
             h = re.sub(r'(<meta property="og:title" content=")[^"]*(")', r'\g<1>' + meta['title'] + r'\2', h, count=1)
             h = re.sub(r'(<meta property="og:description" content=")[^"]*(")', r'\g<1>' + meta['desc'] + r'\2', h, count=1)
             h = re.sub(r'(<meta property="og:url" content=")[^"]*(")', r'\g<1>' + url + r'\2', h, count=1)
-            # FAQ schema belongs only on the home page — strip it from clones
+            # FAQ schema belongs only on the home page: strip it from clones
             h = re.sub(r'<!--FAQ-LD-START-->.*?<!--FAQ-LD-END-->', '', h, flags=re.S)
             # 4) tell the SPA which page to open on first paint + per-page structured data
             head_inject = f'<script>window.__INITIAL_PAGE__="{page}";</script>\n'
@@ -296,14 +296,14 @@ class BuildOptimizer:
             robots += f"User-agent: {b}\nAllow: /\n\n"
         robots += f"Sitemap: {self.BASE_URL}/sitemap.xml\n"
 
-        # llms.txt — a concise, AI-friendly summary of the site (emerging standard)
+        # llms.txt: a concise, AI-friendly summary of the site (emerging standard)
         llms = (f"# Om Shanti N R Construction\n\n"
                 f"> A Palghar (Maharashtra, India) "
                 f"real-estate partnership firm established in 2005. Plans, develops and is associated "
                 f"with MahaRERA-registered residential and commercial projects across Palghar West and Palghar East.\n\n"
                 f"## Projects in Palghar\n")
         for k, p in self.PROJECT_LD.items():
-            rera = f" — MahaRERA {p['rera']}" if p['rera'] else " — plotted development"
+            rera = f", MahaRERA {p['rera']}" if p['rera'] else ", plotted development"
             llms += f"- [{p['name']}]({self.BASE_URL}/{self.PROJECT_PAGES[k]['slug']}/): {p['locality']}{rera}\n"
         llms += (f"\n## Key pages\n"
                  f"- [Home]({self.BASE_URL}/)\n"
@@ -375,6 +375,6 @@ class BuildOptimizer:
         print(f"📦 Ready to deploy from: {self.dist_dir}\n")
 
 if __name__ == '__main__':
-    # Use the directory containing this script — portable across environments
+    # Use the directory containing this script: portable across environments
     builder = BuildOptimizer(Path(__file__).resolve().parent)
     builder.build()
