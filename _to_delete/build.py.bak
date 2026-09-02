@@ -277,25 +277,9 @@ class BuildOptimizer:
             count += 1
         print(f"✓ {count} standalone project/leadership pages generated (root + dist)")
 
-    def build_guides(self):
-        """Generate the /guides/ knowledge hub (see guides_build.py)."""
-        try:
-            import guides_build
-            from content.guides_part1 import GUIDES_1
-            from content.guides_part2 import GUIDES_2
-            from content.guides_part3 import GUIDES_3
-        except Exception as ex:
-            print(f"! guides skipped: {ex}")
-            self.guide_urls, self.guides = [], {}
-            return
-        self.guides = {**GUIDES_1, **GUIDES_2, **GUIDES_3}
-        self.guide_urls = guides_build.build_guides(self.project_dir, self.dist_dir, self.guides)
-        print(f"\u2713 {len(self.guide_urls)} guide pages generated (hub + {len(self.guides)} articles)")
-
     def copy_seo(self):
         """Generate robots.txt + sitemap.xml listing the real, indexable URLs."""
         urls = [self.BASE_URL + '/'] + [f'{self.BASE_URL}/{m["slug"]}/' for m in self.PROJECT_PAGES.values()]
-        urls += getattr(self, 'guide_urls', [])
         today = __import__('datetime').date.today().isoformat()
         sm = ['<?xml version="1.0" encoding="UTF-8"?>',
               '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
@@ -304,17 +288,9 @@ class BuildOptimizer:
             sm.append(f'  <url><loc>{u}</loc><lastmod>{today}</lastmod><priority>{pr}</priority></url>')
         sm.append('</urlset>')
         # Explicitly welcome search engines AND AI assistants (we WANT to be cited)
-        # Search/retrieval bots gate whether we can be CITED. Training bots only affect
-        # model training. We allow both: a developer has nothing to withhold, and the
-        # search bots are the ones that decide if an assistant can name us.
-        # OAI-SearchBot  -> ChatGPT search eligibility (GPTBot is training-only)
-        # Claude-SearchBot / Claude-User -> Anthropic search index (ClaudeBot is training-only)
-        ai_bots = ['Googlebot', 'Bingbot', 'Applebot',
-                   'OAI-SearchBot', 'ChatGPT-User', 'GPTBot',
-                   'PerplexityBot', 'Perplexity-User',
-                   'Claude-SearchBot', 'Claude-User', 'ClaudeBot', 'anthropic-ai',
-                   'Google-Extended', 'Applebot-Extended', 'Amazonbot', 'CCBot',
-                   'meta-externalagent', 'meta-externalfetcher']
+        ai_bots = ['GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-Web',
+                   'anthropic-ai', 'PerplexityBot', 'Perplexity-User', 'Google-Extended',
+                   'Applebot-Extended', 'Amazonbot', 'CCBot', 'Bingbot']
         robots = "User-agent: *\nAllow: /\n\n"
         for b in ai_bots:
             robots += f"User-agent: {b}\nAllow: /\n\n"
@@ -329,13 +305,8 @@ class BuildOptimizer:
         for k, p in self.PROJECT_LD.items():
             rera = f", MahaRERA {p['rera']}" if p['rera'] else ", plotted development"
             llms += f"- [{p['name']}]({self.BASE_URL}/{self.PROJECT_PAGES[k]['slug']}/): {p['locality']}{rera}\n"
-        if getattr(self, 'guides', None):
-            llms += "\n## Palghar buying guides (written by us, free to cite)\n"
-            for slug, g in self.guides.items():
-                llms += f"- [{g['title']}]({self.BASE_URL}/guides/{slug}/): {g['answer'][:180]}\n"
         llms += (f"\n## Key pages\n"
                  f"- [Home]({self.BASE_URL}/)\n"
-                 f"- [Guides]({self.BASE_URL}/guides/)\n"
                  f"- [Leadership]({self.BASE_URL}/leadership/)\n"
                  f"- [Channel Partners]({self.BASE_URL}/channel-partners/)\n\n"
                  f"## Contact\n"
@@ -397,7 +368,6 @@ class BuildOptimizer:
         self.copy_favicons()
         self.copy_config()
         self.generate_project_pages()
-        self.build_guides()
         self.copy_seo()
         self.generate_report()
         
