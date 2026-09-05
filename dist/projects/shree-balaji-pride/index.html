@@ -964,6 +964,26 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 /* showreel hidden pending trademark approval: hero runs single column. Remove to restore. */
 .hero-inner{grid-template-columns:minmax(0,1fr)}
 .hero-inner .hero-content{max-width:820px}
+
+/* ── 3D explorer feature ── */
+.x3d{position:relative;overflow:hidden;background:var(--bg-card);border:.5px solid var(--border-strong);min-height:420px;display:grid;align-items:end}
+.x3d-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.85) brightness(.62);transition:transform 1.2s cubic-bezier(.23,1,.32,1)}
+@media (hover:hover) and (pointer:fine){.x3d:hover .x3d-img{transform:scale(1.04)}}
+.x3d::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,12,10,.15) 0%,rgba(14,12,10,.55) 55%,rgba(14,12,10,.94) 100%)}
+.x3d-in{position:relative;z-index:2;padding:clamp(1.6rem,4vw,3rem)}
+.x3d-eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:.9rem;display:flex;align-items:center;gap:10px}
+.x3d-eyebrow i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 0 rgba(200,169,110,.6);animation:x3dpulse 2.4s ease-out infinite}
+@keyframes x3dpulse{0%{box-shadow:0 0 0 0 rgba(200,169,110,.55)}100%{box-shadow:0 0 0 12px rgba(200,169,110,0)}}
+.x3d h2,.x3d h3{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:clamp(28px,3.6vw,46px);line-height:1.05;margin:0 0 .6rem;color:var(--text-primary)}
+.x3d h2 em,.x3d h3 em{color:var(--gold);font-style:italic}
+.x3d p{max-width:52ch;color:var(--text-secondary);margin:0 0 1.4rem;font-size:15px;line-height:1.65}
+.x3d-facts{display:flex;flex-wrap:wrap;gap:1.6rem 2.4rem;margin:0 0 1.6rem;padding:0;list-style:none}
+.x3d-facts li{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text-secondary)}
+.x3d-facts li b{display:block;font-family:"Cormorant Garamond",serif;font-size:26px;font-weight:600;color:var(--gold);letter-spacing:0;text-transform:none;line-height:1.1}
+.x3d-ctas{display:flex;flex-wrap:wrap;gap:12px}
+.x3d.home{min-height:min(72vh,620px)}
+@media (max-width:768px){.x3d{min-height:360px}.x3d.home{min-height:480px}}
+@media (prefers-reduced-motion:reduce){.x3d-eyebrow i{animation:none}.x3d-img{transition:none}}
 </style>
 <script>window.__INITIAL_PAGE__="balaji";</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://omshantinrconstruction.com/"}, {"@type": "ListItem", "position": 2, "name": "Projects", "item": "https://omshantinrconstruction.com/#projects"}, {"@type": "ListItem", "position": 3, "name": "Shree Balaji Pride", "item": "https://omshantinrconstruction.com/projects/shree-balaji-pride/"}]}</script>
@@ -971,7 +991,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 </head>
 <body>
 <div id="luxe-preloader" aria-hidden="true">
-  <img loading="lazy" class="luxe-pre-logo" src="/images/logo.png?v=1788377929" alt=""/>
+  <img loading="lazy" class="luxe-pre-logo" src="/images/logo.png?v=1788617535" alt=""/>
   <div class="luxe-pre-line"></div>
   <div class="luxe-pre-text">Building Trust &middot; Delivering Homes</div>
 </div>
@@ -983,7 +1003,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
     <button class="fixed-back-btn" id="fixedBackBtn" onclick="goBack()" aria-label="Go back">
       <span class="arrow">&#8592;</span> Back
     </button>
-    <div class="nav-logo" onclick="showPage('home');window.scrollTo(0,0)"><img loading="lazy" src="/images/logo.png?v=1788377929" alt="Om Shanti N R Construction" style="height:64px;width:auto;display:block"></div>
+    <div class="nav-logo" onclick="showPage('home');window.scrollTo(0,0)"><img loading="lazy" src="/images/logo.png?v=1788617535" alt="Om Shanti N R Construction" style="height:64px;width:auto;display:block"></div>
   </div>
   <div class="nav-links">
     <a href="/" data-page="home">Home</a>
@@ -993,6 +1013,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
     <a href="/leadership/" data-page="leadership">Leadership</a>
     <a href="/channel-partners/" data-page="partners">Channel Partners</a>
     <a href="/guides/">Guides</a>
+    <a href="/projects/ostwal-imperial/explore/" class="nav-3d">3D Explorer</a>
     <a href="/#contact" data-page="home">Contact</a>
   </div>
   <button class="nav-cta" onclick="showPage('home');setTimeout(()=>ss('contact'),80)">Enquire Now</button>
@@ -1052,7 +1073,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
   <div class="about-inner">
     <div style="position:relative">
       <div class="about-logo-frame">
-        <img loading="lazy" src="/images/logo.png?v=1788377929" alt="Om Shanti N R Construction" style="height:100%;width:auto;max-width:100%;object-fit:contain;display:block">
+        <img loading="lazy" src="/images/logo.png?v=1788617535" alt="Om Shanti N R Construction" style="height:100%;width:auto;max-width:100%;object-fit:contain;display:block">
         <div class="about-badge"><div class="about-badge-num">33</div><div class="about-badge-text">Years of<br/>Legacy</div></div>
       </div>
     </div>
@@ -1087,7 +1108,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
   <div class="tab-content" id="tab-aastha">
     <div class="aastha-feature" onclick="showPage('aastha')">
       <div class="aastha-feature-img">
-        <img loading="lazy" src="/images/aastha/aastha-master-plan-2.webp?v=1788377929" alt="Aastha, Tembhode, Palghar"/>
+        <img loading="lazy" src="/images/aastha/aastha-master-plan-2.webp?v=1788617535" alt="Aastha, Tembhode, Palghar"/>
         <span class="aastha-feature-badge"><span class="aastha-feature-badge-dot"></span>New Launch</span>
       </div>
       <div class="aastha-feature-body">
@@ -1177,7 +1198,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
       <!-- BALAJI PRIDE -->
       <div class="project-card" style="cursor:pointer" onclick="showPage('balaji')">
         <div class="project-card-badge">Land Partner</div>
-        <div class="project-card-img"><img loading="lazy" src="/images/image_002.webp?v=1788377929" alt="Shree Balaji Pride"/></div>
+        <div class="project-card-img"><img loading="lazy" src="/images/image_002.webp?v=1788617535" alt="Shree Balaji Pride"/></div>
         <div class="project-card-body">
           <div class="project-location">Village Vevoor, Palghar East</div>
           <div class="project-name">Shree Balaji Pride</div>
@@ -1205,6 +1226,24 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
     </div>
     <div class="disclaimer-box">Properties listed under Select Project represent inventory held by partners of Om Shanti N R Construction in their personal capacity as Land Partners. These are not projects developed or promoted by Om Shanti N R Construction unless explicitly stated. All information is indicative. Verify MahaRERA details before purchase.</div>
   </div>
+</section>
+
+
+<section class="x3d-section" id="explore-3d" style="background:var(--bg-mid)">
+  <div style="max-width:640px;margin-bottom:2.2rem">
+    <div class="section-eyebrow">Ostwal Imperial</div>
+    <h2 class="section-title">See every home <em>in 3D</em></h2>
+  </div>
+  <a class="x3d home" href="/projects/ostwal-imperial/explore/" style="text-decoration:none" aria-label="Open the Ostwal Imperial 3D explorer">
+    <img loading="lazy" class="x3d-img" src="/projects/ostwal-imperial/explore/assets/tower-night.jpeg" alt="Ostwal Imperial tower at night">
+    <div class="x3d-in">
+      <div class="x3d-eyebrow"><i></i>New · Interactive 3D explorer</div>
+      <h3>Two towers. Sixteen floors. <em>Pick yours.</em></h3>
+      <p>Orbit the site, light up a floor, open its plate and step inside a 3D view of the flat with every room named and a compass showing which way it opens. Then book a site visit from the same screen.</p>
+      <ul class="x3d-facts"><li><b>346</b>Homes</li><li><b>2 min</b>Palghar Station</li><li><b>P99000049283</b>MahaRERA</li></ul>
+      <div class="x3d-ctas"><span class="btn-primary">Open the 3D explorer &#8594;</span></div>
+    </div>
+  </a>
 </section>
 
 <section class="vision" id="vision">
@@ -1300,7 +1339,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 
 <footer
   <div style="display:flex;flex-wrap:wrap;gap:3rem;margin-bottom:2rem">
-    <div style="flex:2;min-width:200px"><img loading="lazy" src="/images/logo.png?v=1788377929" alt="Om Shanti N R Construction" style="height:76px;width:auto;display:block"><div class="footer-brand-desc">&copy; 2026 Om Shanti N R Construction (Partnership Firm). All rights reserved.</div></div>
+    <div style="flex:2;min-width:200px"><img loading="lazy" src="/images/logo.png?v=1788617535" alt="Om Shanti N R Construction" style="height:76px;width:auto;display:block"><div class="footer-brand-desc">&copy; 2026 Om Shanti N R Construction (Partnership Firm). All rights reserved.</div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Navigation</div><div class="footer-links"><a href="/">Home</a><a href="/#about">About Us</a><a href="/#projects">Projects</a><a href="/leadership/">Leadership</a><a href="/channel-partners/">Channel Partners</a><a href="/guides/">Palghar Buying Guides</a><a href="/#contact">Contact Us</a></div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Reach Us</div><div class="footer-links"><a href="tel:+918262885023">+91 82628 85023</a><a href="mailto:info@omshantinrconstruction.com">info@omshantinrconstruction.com</a><a>Palghar West, 401404<br/>Maharashtra, India</a><a href="https://wa.me/918262885023" target="_blank" style="color:var(--gold)">WhatsApp Us &#8599;</a></div></div>
   </div>
@@ -1319,7 +1358,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 </div>
 <div class="leadership-body">
   <div class="founder-feature">
-    <div class="founder-photo"><img loading="lazy" src="/images/image_004.webp?v=1788377929" alt="Mr. Rajkishor Mishra"/><div class="founder-photo-overlay"></div></div>
+    <div class="founder-photo"><img loading="lazy" src="/images/image_004.webp?v=1788617535" alt="Mr. Rajkishor Mishra"/><div class="founder-photo-overlay"></div></div>
     <div class="founder-body">
       <div class="founder-gen">First Generation &middot; Founder</div>
       <div class="founder-name">Mr. Rajkishor<br/>Mishra</div>
@@ -1331,7 +1370,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
   </div>
   <div class="partners-grid">
     <div class="partner-card">
-      <div class="partner-photo"><img loading="lazy" src="/images/image_005.webp?v=1788377929" alt="Mr. Rajkumar Mishra"/><div class="partner-photo-overlay"></div></div>
+      <div class="partner-photo"><img loading="lazy" src="/images/image_005.webp?v=1788617535" alt="Mr. Rajkumar Mishra"/><div class="partner-photo-overlay"></div></div>
       <div class="partner-body">
         <div class="partner-name">Mr. Rajkumar<br/>Mishra</div>
         <div class="partner-role">Partner, Operations &amp; Execution</div>
@@ -1340,7 +1379,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
       </div>
     </div>
     <div class="partner-card">
-      <div class="partner-photo"><img loading="lazy" src="/images/image_006.webp?v=1788377929" alt="Mrs. Rupali Mishra"/><div class="partner-photo-overlay"></div></div>
+      <div class="partner-photo"><img loading="lazy" src="/images/image_006.webp?v=1788617535" alt="Mrs. Rupali Mishra"/><div class="partner-photo-overlay"></div></div>
       <div class="partner-body">
         <div class="partner-name">Mrs. Rupali<br/>Rajkumar Mishra</div>
         <div class="partner-role">Partner, Strategy &amp; Business Development</div>
@@ -1350,7 +1389,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
       </div>
     </div>
     <div class="partner-card">
-      <div class="partner-photo"><img loading="lazy" src="/images/image_007.webp?v=1788377929" alt="Mr. Vedant Mishra"/><div class="partner-photo-overlay"></div></div>
+      <div class="partner-photo"><img loading="lazy" src="/images/image_007.webp?v=1788617535" alt="Mr. Vedant Mishra"/><div class="partner-photo-overlay"></div></div>
       <div class="partner-body">
         <div class="partner-name">Mr. Vedant<br/>Mishra</div>
         <div class="partner-role">Director, Marketing &amp; Future Growth</div>
@@ -1360,7 +1399,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
       </div>
     </div>
     <div class="partner-card">
-      <div class="partner-photo"><img loading="lazy" src="/images/nalini-mishra.webp?v=1788377929" alt="Mrs. Nalini Mishra"/><div class="partner-photo-overlay"></div></div>
+      <div class="partner-photo"><img loading="lazy" src="/images/nalini-mishra.webp?v=1788617535" alt="Mrs. Nalini Mishra"/><div class="partner-photo-overlay"></div></div>
       <div class="partner-body">
         <div class="partner-name">Mrs. Nalini<br/>Mishra</div>
         <div class="partner-role">Land Partner, Om Shanti N R Construction</div>
@@ -1372,7 +1411,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 </div>
 <footer>
   <div style="display:flex;flex-wrap:wrap;gap:3rem;margin-bottom:2rem">
-    <div style="flex:2;min-width:200px"><img loading="lazy" src="/images/logo.png?v=1788377929" alt="Om Shanti N R Construction" style="height:76px;width:auto;display:block"><div class="footer-brand-desc">&copy; 2026 Om Shanti N R Construction (Partnership Firm). All rights reserved.</div></div>
+    <div style="flex:2;min-width:200px"><img loading="lazy" src="/images/logo.png?v=1788617535" alt="Om Shanti N R Construction" style="height:76px;width:auto;display:block"><div class="footer-brand-desc">&copy; 2026 Om Shanti N R Construction (Partnership Firm). All rights reserved.</div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Navigation</div><div class="footer-links"><a href="/">Home</a><a href="/#about">About Us</a><a href="/#projects">Projects</a><a href="/leadership/">Leadership</a><a href="/channel-partners/">Channel Partners</a><a href="/guides/">Palghar Buying Guides</a><a href="/#contact">Contact Us</a></div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Reach Us</div><div class="footer-links"><a href="tel:+918262885023">+91 82628 85023</a><a href="mailto:info@omshantinrconstruction.com">info@omshantinrconstruction.com</a><a>Palghar West, 401404<br/>Maharashtra, India</a><a href="https://wa.me/918262885023" target="_blank" style="color:var(--gold)">WhatsApp Us &#8599;</a></div></div>
   </div>
@@ -1611,7 +1650,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 
 <footer>
   <div style="display:flex;flex-wrap:wrap;gap:3rem;margin-bottom:2rem">
-    <div style="flex:2;min-width:200px"><img loading="lazy" src="/images/logo.png?v=1788377929" alt="Om Shanti N R Construction" style="height:76px;width:auto;display:block"><div class="footer-brand-desc">&copy; 2026 Om Shanti N R Construction (Partnership Firm). All rights reserved.</div></div>
+    <div style="flex:2;min-width:200px"><img loading="lazy" src="/images/logo.png?v=1788617535" alt="Om Shanti N R Construction" style="height:76px;width:auto;display:block"><div class="footer-brand-desc">&copy; 2026 Om Shanti N R Construction (Partnership Firm). All rights reserved.</div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Navigation</div><div class="footer-links"><a onclick="showPage('home');window.scrollTo(0,0)">Home</a><a onclick="showPage('home');ss('about')">About Us</a><a onclick="showPage('home');ss('projects')">Projects</a><a onclick="showPage('leadership')">Leadership</a><a onclick="showPage('partners')">Channel Partners</a><a onclick="showPage('home');ss('contact')">Contact Us</a></div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Reach Us</div><div class="footer-links"><a href="tel:+918262885023">+91 82628 85023</a><a href="mailto:info@omshantinrconstruction.com">info@omshantinrconstruction.com</a><a>Palghar West, 401404<br/>Maharashtra, India</a><a href="https://wa.me/918262885023" target="_blank" style="color:var(--gold)">WhatsApp Us &#8599;</a></div></div>
   </div>
@@ -1622,7 +1661,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 <!-- ══ AASTHA ══ -->
 <div class="page" id="page-aastha">
 <div class="hero-proj">
-  <img loading="lazy" class="hero-img" src="/images/aastha/aastha-master-plan-2.webp?v=1788377929" alt="Aastha, Tembhode, Palghar"/>
+  <img loading="lazy" class="hero-img" src="/images/aastha/aastha-master-plan-2.webp?v=1788617535" alt="Aastha, Tembhode, Palghar"/>
   <div class="hero-overlay"></div>
   <div class="hero-content-proj">
     <div class="hero-tag">New &middot; Plotted Community</div>
@@ -1665,15 +1704,15 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
         <button class="fp-tab" onclick="switchAasthaLayout('tilr',this)">Master T.I.L.R</button>
       </div>
       <div id="as-layout-p1" class="as-layout-pane">
-        <img loading="lazy" src="/images/aastha/aastha-master-plan-2.webp?v=1788377929" alt="Aastha Plotting Layout 1"/>
+        <img loading="lazy" src="/images/aastha/aastha-master-plan-2.webp?v=1788617535" alt="Aastha Plotting Layout 1"/>
         <div class="as-layout-cap">Plotting Layout &middot; Sheet 1</div>
       </div>
       <div id="as-layout-p2" class="as-layout-pane" style="display:none">
-        <img loading="lazy" src="/images/aastha/aastha-master-plan-1.webp?v=1788377929" alt="Aastha Plotting Layout 2"/>
+        <img loading="lazy" src="/images/aastha/aastha-master-plan-1.webp?v=1788617535" alt="Aastha Plotting Layout 2"/>
         <div class="as-layout-cap">Plotting Layout &middot; Sheet 2</div>
       </div>
       <div id="as-layout-tilr" class="as-layout-pane" style="display:none">
-        <img loading="lazy" src="/images/aastha/aastha-tilr-clean.webp?v=1788377929" alt="Aastha Master TILR Plotting"/>
+        <img loading="lazy" src="/images/aastha/aastha-tilr-clean.webp?v=1788617535" alt="Aastha Master TILR Plotting"/>
         <div class="as-layout-cap">Master Plotting &middot; Tentative Internal Layout Reference (TILR)</div>
       </div>
       <div class="fp-dl-row" style="margin-top:1.2rem"><div class="fp-dl-note">Plot numbering, dimensions and final boundary are subject to architect &amp; statutory approvals.</div><a class="fp-dl-btn" href="https://wa.me/918262885023?text=Hi%2C%20please%20share%20the%20Aastha%20full%20brochure%20%2B%20layout%20PDF." target="_blank">&#8595; &nbsp;Request Full Brochure</a></div>
@@ -1726,14 +1765,14 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
       <div style="padding:1.5rem 1.8rem .8rem"><div class="sec-title" style="margin-bottom:0">Layout &amp; Site Gallery</div></div>
       <div class="oi-gallery-wrap aastha-gallery">
         <div class="oi-gallery-track" id="aastha-track">
-<div class="oi-slide"><img loading="lazy" src="/images/aastha/aastha-dp-plan.webp?v=1788377929" alt="Development Plan"/><div class="oi-slide-label">Development Plan</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/aastha/aastha-tilr-clean.webp?v=1788377929" alt="Master TILR"/><div class="oi-slide-label">Master TILR</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/aastha/aastha-master-plan-2.webp?v=1788377929" alt="Plotting Layout 1"/><div class="oi-slide-label">Plotting Layout 1</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/aastha/aastha-master-plan-1.webp?v=1788377929" alt="Plotting Layout 2"/><div class="oi-slide-label">Plotting Layout 2</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/aastha/aastha-dp-plan.webp?v=1788377929" alt="Development Plan"/><div class="oi-slide-label">Development Plan</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/aastha/aastha-tilr-clean.webp?v=1788377929" alt="Master TILR"/><div class="oi-slide-label">Master TILR</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/aastha/aastha-master-plan-2.webp?v=1788377929" alt="Plotting Layout 1"/><div class="oi-slide-label">Plotting Layout 1</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/aastha/aastha-master-plan-1.webp?v=1788377929" alt="Plotting Layout 2"/><div class="oi-slide-label">Plotting Layout 2</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/aastha/aastha-dp-plan.webp?v=1788617535" alt="Development Plan"/><div class="oi-slide-label">Development Plan</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/aastha/aastha-tilr-clean.webp?v=1788617535" alt="Master TILR"/><div class="oi-slide-label">Master TILR</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/aastha/aastha-master-plan-2.webp?v=1788617535" alt="Plotting Layout 1"/><div class="oi-slide-label">Plotting Layout 1</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/aastha/aastha-master-plan-1.webp?v=1788617535" alt="Plotting Layout 2"/><div class="oi-slide-label">Plotting Layout 2</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/aastha/aastha-dp-plan.webp?v=1788617535" alt="Development Plan"/><div class="oi-slide-label">Development Plan</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/aastha/aastha-tilr-clean.webp?v=1788617535" alt="Master TILR"/><div class="oi-slide-label">Master TILR</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/aastha/aastha-master-plan-2.webp?v=1788617535" alt="Plotting Layout 1"/><div class="oi-slide-label">Plotting Layout 1</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/aastha/aastha-master-plan-1.webp?v=1788617535" alt="Plotting Layout 2"/><div class="oi-slide-label">Plotting Layout 2</div></div>
         </div>
       </div>
       <div style="display:flex;justify-content:center;gap:1rem;padding:1rem 1.8rem">
@@ -1821,7 +1860,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
       <div class="status-line"><span class="status-line-l">Internal RCC Roads</span><span class="status-line-r pending">In Progress</span></div>
       <div class="status-line"><span class="status-line-l">Bookings</span><span class="status-line-r pending">Opening Soon</span></div>
     </div>
-    <div class="gallery-card"><img loading="lazy" class="gallery-img" src="/images/aastha/aastha-dp-plan.webp?v=1788377929" alt="Aastha &middot; Site Satellite View"/><div class="gallery-caption">Aastha &middot; Site location, Tembhode, Palghar</div></div>
+    <div class="gallery-card"><img loading="lazy" class="gallery-img" src="/images/aastha/aastha-dp-plan.webp?v=1788617535" alt="Aastha &middot; Site Satellite View"/><div class="gallery-caption">Aastha &middot; Site location, Tembhode, Palghar</div></div>
     <div class="architect-card">
       <div class="architect-card-head">
         <div class="architect-icon">&#9670;</div>
@@ -1847,7 +1886,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 
 <footer>
   <div style="display:flex;flex-wrap:wrap;gap:3rem;margin-bottom:2rem">
-    <div style="flex:2;min-width:200px"><img loading="lazy" src="/images/logo.png?v=1788377929" alt="Om Shanti N R Construction" style="height:76px;width:auto;display:block"><div class="footer-brand-desc">&copy; 2026 Om Shanti N R Construction (Partnership Firm). All rights reserved.</div></div>
+    <div style="flex:2;min-width:200px"><img loading="lazy" src="/images/logo.png?v=1788617535" alt="Om Shanti N R Construction" style="height:76px;width:auto;display:block"><div class="footer-brand-desc">&copy; 2026 Om Shanti N R Construction (Partnership Firm). All rights reserved.</div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Navigation</div><div class="footer-links"><a href="/">Home</a><a href="/#about">About Us</a><a href="/#projects">Projects</a><a href="/leadership/">Leadership</a><a href="/channel-partners/">Channel Partners</a><a href="/guides/">Palghar Buying Guides</a><a href="/#contact">Contact Us</a></div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Reach Us</div><div class="footer-links"><a href="tel:+918262885023">+91 82628 85023</a><a href="mailto:info@omshantinrconstruction.com">info@omshantinrconstruction.com</a><a>Palghar West, 401404<br/>Maharashtra, India</a><a href="https://wa.me/918262885023" target="_blank" style="color:var(--gold)">WhatsApp Us &#8599;</a></div></div>
   </div>
@@ -1858,7 +1897,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 <div class="page" id="page-ostwal">
 <div class="hero-proj">
 
-  <img loading="lazy" class="hero-img" src="/images/image_008.webp?v=1788377929" alt="Ostwal Imperial"/>
+  <img loading="lazy" class="hero-img" src="/images/image_008.webp?v=1788617535" alt="Ostwal Imperial"/>
   <div class="hero-overlay"></div>
   <div class="hero-content-proj">
     <div class="hero-tag">Select Residence</div>
@@ -1867,7 +1906,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
     <div class="hero-role-badge"><span class="hero-role-text">Om Shanti N R Construction &middot; Land Partner</span><span class="hero-role-div"></span><span class="hero-role-dev">Developed by Shree Ostwal Builders Ltd.</span></div>
   </div>
   <div class="hero-qr-panel">
-    <img loading="lazy" src="/qr/ostwal-imperial-mrera-qr.png?v=1788377929" alt="MahaRERA QR" />
+    <img loading="lazy" src="/qr/ostwal-imperial-mrera-qr.png?v=1788617535" alt="MahaRERA QR" />
     <div class="hero-qr-title">MahaRERA</div>
   </div>
 </div>
@@ -1885,6 +1924,17 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
       <p class="overview-text">A landmark residential development near Palghar Station, <strong>Ostwal Imperial</strong> comprises two towers, each with two wings, offering 1, 2 &amp; 3 BHK residences set around a grand landscaped garden. A self-contained community with shops, offices, modern amenities, and integrated infrastructure.</p>
       <p class="overview-text" style="margin-top:.7rem">Partners of <strong>Om Shanti N R Construction</strong> are Land Partners in this project and hold residential inventory available for direct sale.</p>
     </div>
+
+    <a class="proj-section x3d" href="/projects/ostwal-imperial/explore/" style="padding:0;text-decoration:none;display:grid" aria-label="Open the Ostwal Imperial 3D explorer">
+      <img loading="lazy" class="x3d-img" src="/projects/ostwal-imperial/explore/assets/aerial-dusk.jpeg" alt="Ostwal Imperial towers at dusk, aerial view">
+      <div class="x3d-in">
+        <div class="x3d-eyebrow"><i></i>New · Interactive 3D</div>
+        <h3>Walk the towers <em>before you visit</em></h3>
+        <p>Turn the site, pick any floor, open its plate and step inside a flat. Every one of the 346 homes is drawn from the sanctioned plans, with its carpet area and the direction it faces.</p>
+        <ul class="x3d-facts"><li><b>2</b>Towers</li><li><b>G+16</b>Storeys</li><li><b>346</b>Homes, each one clickable</li><li><b>1·2·3</b>BHK</li></ul>
+        <div class="x3d-ctas"><span class="btn-primary">Explore in 3D &#8594;</span><span class="btn-outline">Book a site visit</span></div>
+      </div>
+    </a>
 
     <div class="proj-section"><div class="sec-title">Configurations</div>
       <div class="config-grid-proj">
@@ -1907,17 +1957,17 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
         </div>
         <div class="fp-plan-display active" id="oi-b1-1">
           <div class="fp-plan-card"><div class="fp-plan-header"><div class="fp-plan-header-title">Building 1 &middot; 1 BHK</div><div class="fp-plan-header-area">431.85 sq.ft. RERA carpet</div></div>
-          <div class="fp-plan-img-area"><img loading="lazy" src="/images/image_009.webp?v=1788377929" alt="1 BHK Floor Plan"/></div>
+          <div class="fp-plan-img-area"><img loading="lazy" src="/images/image_009.webp?v=1788617535" alt="1 BHK Floor Plan"/></div>
           <div class="fp-plan-rooms"><div class="fp-room"><div class="fp-room-name">Living</div><div class="fp-room-size">9&#39;0&#34; &times; 16&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Bedroom</div><div class="fp-room-size">9&#39;0&#34; &times; 11&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Kitchen</div><div class="fp-room-size">8&#39;0&#34; &times; 11&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Balcony</div><div class="fp-room-size">4&#39;0&#34; &times; 4&#39;6&#34;</div></div></div></div>
         </div>
         <div class="fp-plan-display" id="oi-b1-2">
           <div class="fp-plan-card"><div class="fp-plan-header"><div class="fp-plan-header-title">Building 1 &middot; 2 BHK</div><div class="fp-plan-header-area">687.93 to 703.86 sq.ft. RERA carpet</div></div>
-          <div class="fp-plan-img-area"><img loading="lazy" src="/images/image_010.webp?v=1788377929" alt="2 BHK Floor Plan"/></div>
+          <div class="fp-plan-img-area"><img loading="lazy" src="/images/image_010.webp?v=1788617535" alt="2 BHK Floor Plan"/></div>
           <div class="fp-plan-rooms"><div class="fp-room"><div class="fp-room-name">Living</div><div class="fp-room-size">16&#39;0&#34; &times; 10&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Master Bed</div><div class="fp-room-size">12&#39;0&#34; &times; 10&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Bed 2</div><div class="fp-room-size">10&#39;0&#34; &times; 13&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Kitchen</div><div class="fp-room-size">9&#39;0&#34; &times; 10&#39;0&#34;</div></div></div></div>
         </div>
         <div class="fp-plan-display" id="oi-b1-3">
           <div class="fp-plan-card"><div class="fp-plan-header"><div class="fp-plan-header-title">Building 1 &middot; 3 BHK</div><div class="fp-plan-header-area">1,050.35 sq.ft. RERA carpet</div></div>
-          <div class="fp-plan-img-area"><img loading="lazy" src="/images/image_011.webp?v=1788377929" alt="3 BHK Floor Plan"/></div>
+          <div class="fp-plan-img-area"><img loading="lazy" src="/images/image_011.webp?v=1788617535" alt="3 BHK Floor Plan"/></div>
           <div class="fp-plan-rooms"><div class="fp-room"><div class="fp-room-name">Living</div><div class="fp-room-size">11&#39;0&#34; &times; 20&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Master Bed</div><div class="fp-room-size">12&#39;6&#34; &times; 10&#39;6&#34;</div></div><div class="fp-room"><div class="fp-room-name">Bed 2 &amp; 3</div><div class="fp-room-size">10&#39;6&#34; &times; 12&#39;6&#34;</div></div><div class="fp-room"><div class="fp-room-name">Kitchen</div><div class="fp-room-size">10&#39;6&#34; &times; 9&#39;0&#34;</div></div></div></div>
         </div>
         
@@ -1930,22 +1980,22 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
         </div>
         <div class="fp-plan-display active" id="oi-b2-1">
           <div class="fp-plan-card"><div class="fp-plan-header"><div class="fp-plan-header-title">Building 2 &middot; 1 BHK</div><div class="fp-plan-header-area">433.04 sq.ft. RERA carpet</div></div>
-          <div class="fp-plan-img-area"><img loading="lazy" src="/images/image_012.webp?v=1788377929" alt="B2 1 BHK"/></div>
+          <div class="fp-plan-img-area"><img loading="lazy" src="/images/image_012.webp?v=1788617535" alt="B2 1 BHK"/></div>
           <div class="fp-plan-rooms"><div class="fp-room"><div class="fp-room-name">Living</div><div class="fp-room-size">10&#39;0&#34; &times; 16&#39;9&#34;</div></div><div class="fp-room"><div class="fp-room-name">Bedroom</div><div class="fp-room-size">9&#39;6&#34; &times; 11&#39;4&#34;</div></div><div class="fp-room"><div class="fp-room-name">Kitchen</div><div class="fp-room-size">7&#39;6&#34; &times; 8&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Balcony</div><div class="fp-room-size">3&#39;11&#34; open</div></div></div></div>
         </div>
         <div class="fp-plan-display" id="oi-b2-2">
           <div class="fp-plan-card"><div class="fp-plan-header"><div class="fp-plan-header-title">Building 2 &middot; 2 BHK</div><div class="fp-plan-header-area">606.98 sq.ft. RERA carpet</div></div>
-          <div class="fp-plan-img-area"><img loading="lazy" src="/images/image_013.webp?v=1788377929" alt="B2 2 BHK"/></div>
+          <div class="fp-plan-img-area"><img loading="lazy" src="/images/image_013.webp?v=1788617535" alt="B2 2 BHK"/></div>
           <div class="fp-plan-rooms"><div class="fp-room"><div class="fp-room-name">Living</div><div class="fp-room-size">10&#39;0&#34; &times; 16&#39;9&#34;</div></div><div class="fp-room"><div class="fp-room-name">Master Bed</div><div class="fp-room-size">9&#39;6&#34; &times; 11&#39;4&#34;</div></div><div class="fp-room"><div class="fp-room-name">Bed 2</div><div class="fp-room-size">9&#39;6&#34; &times; 11&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Kitchen</div><div class="fp-room-size">7&#39;6&#34; &times; 8&#39;0&#34;</div></div></div></div>
         </div>
         <div class="fp-plan-display" id="oi-b2-3">
           <div class="fp-plan-card"><div class="fp-plan-header"><div class="fp-plan-header-title">Building 2 &middot; 3 BHK (Refuge Floor)</div><div class="fp-plan-header-area">776.62 sq.ft. RERA carpet</div></div>
-          <div class="fp-plan-img-area"><img loading="lazy" src="/images/image_014.webp?v=1788377929" alt="B2 3 BHK"/></div>
+          <div class="fp-plan-img-area"><img loading="lazy" src="/images/image_014.webp?v=1788617535" alt="B2 3 BHK"/></div>
           <div class="fp-plan-rooms"><div class="fp-room"><div class="fp-room-name">Living</div><div class="fp-room-size">10&#39;0&#34; &times; 16&#39;9&#34;</div></div><div class="fp-room"><div class="fp-room-name">Master Bed</div><div class="fp-room-size">9&#39;6&#34; &times; 11&#39;4&#34;</div></div><div class="fp-room"><div class="fp-room-name">Bed 2 &amp; 3</div><div class="fp-room-size">9&#39;6&#34; &times; 11&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Kitchen</div><div class="fp-room-size">7&#39;6&#34; &times; 8&#39;0&#34;</div></div></div></div>
         </div>
         
       </div>
-      <div class="fp-dl-row"><div class="fp-dl-note">All dimensions are indicative. Verify RERA carpet areas before purchase.</div><a class="fp-dl-btn" href="/brochures/ostwal-imperial.pdf?v=1788377929" target="_blank" rel="noopener" download>&#8595; &nbsp;Download Full Brochure (PDF)</a></div>
+      <div class="fp-dl-row"><div class="fp-dl-note">All dimensions are indicative. Verify RERA carpet areas before purchase.</div><a class="fp-dl-btn" href="/brochures/ostwal-imperial.pdf?v=1788617535" target="_blank" rel="noopener" download>&#8595; &nbsp;Download Full Brochure (PDF)</a></div>
     </div>
 
 
@@ -1953,16 +2003,16 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
       <div style="padding:1.5rem 1.8rem .8rem"><div class="sec-title" style="margin-bottom:0">Gallery</div></div>
       <div class="oi-gallery-wrap">
         <div class="oi-gallery-track" id="oi-track">
-<div class="oi-slide"><img loading="lazy" src="/images/image_015.webp?v=1788377929" alt="Aerial Top View"/><div class="oi-slide-label">Aerial Top View</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/image_016.webp?v=1788377929" alt="Night Elevation"/><div class="oi-slide-label">Night Elevation</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/image_017.webp?v=1788377929" alt="Garden & Amenities"/><div class="oi-slide-label">Garden & Amenities</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/image_018.webp?v=1788377929" alt="Building Elevation, Day"/><div class="oi-slide-label">Building Elevation, Day</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/image_019.webp?v=1788377929" alt="Building Elevation, Night"/><div class="oi-slide-label">Building Elevation, Night</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/image_020.webp?v=1788377929" alt="Aerial Top View"/><div class="oi-slide-label">Aerial Top View</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/image_021.webp?v=1788377929" alt="Night Elevation"/><div class="oi-slide-label">Night Elevation</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/image_022.webp?v=1788377929" alt="Garden & Amenities"/><div class="oi-slide-label">Garden & Amenities</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/image_023.webp?v=1788377929" alt="Building Elevation, Day"/><div class="oi-slide-label">Building Elevation, Day</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/image_024.webp?v=1788377929" alt="Building Elevation, Night"/><div class="oi-slide-label">Building Elevation, Night</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_015.webp?v=1788617535" alt="Aerial Top View"/><div class="oi-slide-label">Aerial Top View</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_016.webp?v=1788617535" alt="Night Elevation"/><div class="oi-slide-label">Night Elevation</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_017.webp?v=1788617535" alt="Garden & Amenities"/><div class="oi-slide-label">Garden & Amenities</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_018.webp?v=1788617535" alt="Building Elevation, Day"/><div class="oi-slide-label">Building Elevation, Day</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_019.webp?v=1788617535" alt="Building Elevation, Night"/><div class="oi-slide-label">Building Elevation, Night</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_020.webp?v=1788617535" alt="Aerial Top View"/><div class="oi-slide-label">Aerial Top View</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_021.webp?v=1788617535" alt="Night Elevation"/><div class="oi-slide-label">Night Elevation</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_022.webp?v=1788617535" alt="Garden & Amenities"/><div class="oi-slide-label">Garden & Amenities</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_023.webp?v=1788617535" alt="Building Elevation, Day"/><div class="oi-slide-label">Building Elevation, Day</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_024.webp?v=1788617535" alt="Building Elevation, Night"/><div class="oi-slide-label">Building Elevation, Night</div></div>
         </div>
       </div>
       <div style="display:flex;justify-content:center;gap:1rem;padding:1rem 1.8rem">
@@ -2030,13 +2080,13 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
     <div class="contact-row"><div class="contact-icon">&#9993;</div><div><div class="contact-label">Email</div><div class="contact-value"><a href="mailto:info@omshantinrconstruction.com">info@omshantinrconstruction.com</a></div></div></div>
   </div>
   <div class="rera-card"><div class="rera-badge">MAHA<br/>RERA</div><div><div class="rera-label">Registration No.</div><div class="rera-num">P99000049283</div><div class="rera-link">maharera.mahaonline.gov.in</div></div></div>
-  <div class="gallery-card"><img loading="lazy" class="gallery-img" src="/images/image_025.webp?v=1788377929" alt="Ostwal Imperial &middot; Artist&#39;s impression"/><div class="gallery-caption">Ostwal Imperial &middot; Artist&#39;s impression</div></div>
+  <div class="gallery-card"><img loading="lazy" class="gallery-img" src="/images/image_025.webp?v=1788617535" alt="Ostwal Imperial &middot; Artist&#39;s impression"/><div class="gallery-caption">Ostwal Imperial &middot; Artist&#39;s impression</div></div>
 </div>
 </div>
 <div class="disclaimer">Partners of Om Shanti N R Construction hold residential inventory in Ostwal Imperial in their personal capacity as Land Partners. This listing is not a project of Om Shanti N R Construction. All information is indicative. Verify MahaRERA details before purchase.</div>
 <footer>
   <div style="display:flex;flex-wrap:wrap;gap:3rem;margin-bottom:2rem">
-    <div style="flex:2;min-width:200px"><img loading="lazy" src="/images/logo.png?v=1788377929" alt="Om Shanti N R Construction" style="height:76px;width:auto;display:block"><div class="footer-brand-desc">&copy; 2026 Om Shanti N R Construction (Partnership Firm). All rights reserved.</div></div>
+    <div style="flex:2;min-width:200px"><img loading="lazy" src="/images/logo.png?v=1788617535" alt="Om Shanti N R Construction" style="height:76px;width:auto;display:block"><div class="footer-brand-desc">&copy; 2026 Om Shanti N R Construction (Partnership Firm). All rights reserved.</div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Navigation</div><div class="footer-links"><a href="/">Home</a><a href="/#about">About Us</a><a href="/#projects">Projects</a><a href="/leadership/">Leadership</a><a href="/channel-partners/">Channel Partners</a><a href="/guides/">Palghar Buying Guides</a><a href="/#contact">Contact Us</a></div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Reach Us</div><div class="footer-links"><a href="tel:+918262885023">+91 82628 85023</a><a href="mailto:info@omshantinrconstruction.com">info@omshantinrconstruction.com</a><a>Palghar West, 401404<br/>Maharashtra, India</a><a href="https://wa.me/918262885023" target="_blank" style="color:var(--gold)">WhatsApp Us &#8599;</a></div></div>
   </div>
@@ -2047,7 +2097,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 <div class="page" id="page-balaji">
 <div class="hero-proj">
 
-  <img loading="lazy" class="hero-img" src="/images/image_026.webp?v=1788377929" alt="Shree Balaji Pride" style="object-position:center top"/>
+  <img loading="lazy" class="hero-img" src="/images/image_026.webp?v=1788617535" alt="Shree Balaji Pride" style="object-position:center top"/>
   <div class="hero-overlay"></div>
   <div class="hero-content-proj">
     <div class="hero-tag">Select Residence</div>
@@ -2056,7 +2106,7 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
     <div class="hero-role-badge"><span class="hero-role-text">Om Shanti N R Construction &middot; Land Partner</span><span class="hero-role-div"></span><span class="hero-role-dev">Developed by Shree Balaji Projects</span></div>
   </div>
   <div class="hero-qr-panel">
-    <img loading="lazy" src="/qr/balaji-heights-qr.png?v=1788377929" alt="MahaRERA QR" />
+    <img loading="lazy" src="/qr/balaji-heights-qr.png?v=1788617535" alt="MahaRERA QR" />
     <div class="hero-qr-title">MahaRERA</div>
   </div>
 </div>
@@ -2089,15 +2139,15 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
       </div>
       <div id="bp-1bhk">
         <div class="fp-plan-card"><div class="fp-plan-header"><div class="fp-plan-header-title">1 BHK Typical Unit</div><div class="fp-plan-header-area">Carpet area on request</div></div>
-        <div class="fp-plan-img-area" style="height:360px"><img loading="lazy" src="/images/image_027.webp?v=1788377929" alt="1 BHK Floor Plan"/></div>
+        <div class="fp-plan-img-area" style="height:360px"><img loading="lazy" src="/images/image_027.webp?v=1788617535" alt="1 BHK Floor Plan"/></div>
         <div class="fp-plan-rooms"><div class="fp-room"><div class="fp-room-name">Living</div><div class="fp-room-size">9&#39;0&#34; &times; 14&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Bedroom</div><div class="fp-room-size">9&#39;0&#34; &times; 9&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Kitchen</div><div class="fp-room-size">7&#39;0&#34; &times; 7&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Balcony</div><div class="fp-room-size">4&#39;0&#34; W. open</div></div></div></div>
       </div>
       <div id="bp-2bhk" style="display:none">
         <div class="fp-plan-card"><div class="fp-plan-header"><div class="fp-plan-header-title">2 BHK Typical Unit</div><div class="fp-plan-header-area">Carpet area on request</div></div>
-        <div class="fp-plan-img-area" style="height:360px"><img loading="lazy" src="/images/image_028.webp?v=1788377929" alt="2 BHK Floor Plan"/></div>
+        <div class="fp-plan-img-area" style="height:360px"><img loading="lazy" src="/images/image_028.webp?v=1788617535" alt="2 BHK Floor Plan"/></div>
         <div class="fp-plan-rooms"><div class="fp-room"><div class="fp-room-name">Living</div><div class="fp-room-size">14&#39;6&#34; &times; 10&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Master Bed</div><div class="fp-room-size">9&#39;6&#34; &times; 10&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Bed 2</div><div class="fp-room-size">9&#39;6&#34; &times; 10&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Kitchen</div><div class="fp-room-size">8&#39;6&#34; &times; 8&#39;6&#34;</div></div></div></div>
       </div>
-      <div class="fp-dl-row"><div class="fp-dl-note">All dimensions are indicative. Verify RERA carpet areas before purchase.</div><a class="fp-dl-btn" href="/brochures/shree-balaji-pride.pdf?v=1788377929" target="_blank" rel="noopener" download>&#8595; &nbsp;Download Full Brochure (PDF)</a></div>
+      <div class="fp-dl-row"><div class="fp-dl-note">All dimensions are indicative. Verify RERA carpet areas before purchase.</div><a class="fp-dl-btn" href="/brochures/shree-balaji-pride.pdf?v=1788617535" target="_blank" rel="noopener" download>&#8595; &nbsp;Download Full Brochure (PDF)</a></div>
     </div>
 
 
@@ -2105,12 +2155,12 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
       <div style="padding:1.5rem 1.8rem .8rem"><div class="sec-title" style="margin-bottom:0">Gallery</div></div>
       <div class="oi-gallery-wrap">
         <div class="oi-gallery-track" id="balaji-track">
-<div class="oi-slide"><img loading="lazy" src="/images/image_029.webp?v=1788377929" alt="Night Aerial View"/><div class="oi-slide-label">Night Aerial View</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/image_030.webp?v=1788377929" alt="Building Elevation, Night"/><div class="oi-slide-label">Building Elevation, Night</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/image_031.webp?v=1788377929" alt="Building Elevation, Day"/><div class="oi-slide-label">Building Elevation, Day</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/image_032.webp?v=1788377929" alt="Night Aerial View"/><div class="oi-slide-label">Night Aerial View</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/image_033.webp?v=1788377929" alt="Building Elevation, Night"/><div class="oi-slide-label">Building Elevation, Night</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/image_034.webp?v=1788377929" alt="Building Elevation, Day"/><div class="oi-slide-label">Building Elevation, Day</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_029.webp?v=1788617535" alt="Night Aerial View"/><div class="oi-slide-label">Night Aerial View</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_030.webp?v=1788617535" alt="Building Elevation, Night"/><div class="oi-slide-label">Building Elevation, Night</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_031.webp?v=1788617535" alt="Building Elevation, Day"/><div class="oi-slide-label">Building Elevation, Day</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_032.webp?v=1788617535" alt="Night Aerial View"/><div class="oi-slide-label">Night Aerial View</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_033.webp?v=1788617535" alt="Building Elevation, Night"/><div class="oi-slide-label">Building Elevation, Night</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_034.webp?v=1788617535" alt="Building Elevation, Day"/><div class="oi-slide-label">Building Elevation, Day</div></div>
         </div>
       </div>
       <div style="display:flex;justify-content:center;gap:1rem;padding:1rem 1.8rem">
@@ -2172,13 +2222,13 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
     <div class="contact-row"><div class="contact-icon">&#9993;</div><div><div class="contact-label">Email</div><div class="contact-value"><a href="mailto:info@omshantinrconstruction.com">info@omshantinrconstruction.com</a></div></div></div>
   </div>
   <div class="rera-card"><div class="rera-badge">MAHA<br/>RERA</div><div><div class="rera-label">Registration No.</div><div class="rera-num">P99000050656</div><div class="rera-link">maharera.mahaonline.gov.in</div></div></div>
-  <div class="gallery-card"><img loading="lazy" class="gallery-img" src="/images/image_035.webp?v=1788377929" alt="Shree Balaji Pride &middot; Artist&#39;s impression"/><div class="gallery-caption">Shree Balaji Pride &middot; Artist&#39;s impression</div></div>
+  <div class="gallery-card"><img loading="lazy" class="gallery-img" src="/images/image_035.webp?v=1788617535" alt="Shree Balaji Pride &middot; Artist&#39;s impression"/><div class="gallery-caption">Shree Balaji Pride &middot; Artist&#39;s impression</div></div>
 </div>
 </div>
 <div class="disclaimer">A partner of Om Shanti N R Construction holds residential inventory in Shree Balaji Pride in their personal capacity as Land Partner. This listing is not a project of Om Shanti N R Construction. All information is indicative. Verify MahaRERA details before purchase.</div>
 <footer>
   <div style="display:flex;flex-wrap:wrap;gap:3rem;margin-bottom:2rem">
-    <div style="flex:2;min-width:200px"><img loading="lazy" src="/images/logo.png?v=1788377929" alt="Om Shanti N R Construction" style="height:76px;width:auto;display:block"><div class="footer-brand-desc">&copy; 2026 Om Shanti N R Construction (Partnership Firm). All rights reserved.</div></div>
+    <div style="flex:2;min-width:200px"><img loading="lazy" src="/images/logo.png?v=1788617535" alt="Om Shanti N R Construction" style="height:76px;width:auto;display:block"><div class="footer-brand-desc">&copy; 2026 Om Shanti N R Construction (Partnership Firm). All rights reserved.</div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Navigation</div><div class="footer-links"><a href="/">Home</a><a href="/#about">About Us</a><a href="/#projects">Projects</a><a href="/leadership/">Leadership</a><a href="/channel-partners/">Channel Partners</a><a href="/guides/">Palghar Buying Guides</a><a href="/#contact">Contact Us</a></div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Reach Us</div><div class="footer-links"><a href="tel:+918262885023">+91 82628 85023</a><a href="mailto:info@omshantinrconstruction.com">info@omshantinrconstruction.com</a><a>Palghar West, 401404<br/>Maharashtra, India</a><a href="https://wa.me/918262885023" target="_blank" style="color:var(--gold)">WhatsApp Us &#8599;</a></div></div>
   </div>
@@ -2200,11 +2250,11 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
   <div class="hero-qr-panel" style="gap:6px;">
     <div style="display:flex;gap:6px;align-items:flex-start;">
       <div style="text-align:center;">
-        <img loading="lazy" src="/qr/shiv-shrushti-building1-qr.png?v=1788377929" alt="MahaRERA QR B1" />
+        <img loading="lazy" src="/qr/shiv-shrushti-building1-qr.png?v=1788617535" alt="MahaRERA QR B1" />
         <div class="hero-qr-title" style="margin-top:3px;">B1</div>
       </div>
       <div style="text-align:center;">
-        <img loading="lazy" src="/qr/shiv-shrushti-building2-qr.png?v=1788377929" alt="MahaRERA QR B2" />
+        <img loading="lazy" src="/qr/shiv-shrushti-building2-qr.png?v=1788617535" alt="MahaRERA QR B2" />
         <div class="hero-qr-title" style="margin-top:3px;">B2</div>
       </div>
     </div>
@@ -2259,24 +2309,24 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
         </div>
         <div class="fp-plan-card" id="shiv-plan-1">
           <div class="fp-plan-header"><div class="fp-plan-header-title">1 BHK Unit Layout</div><div class="fp-plan-header-area">328 to 389 sq.ft. (varies by bldg &amp; floor)</div></div>
-          <div class="fp-plan-img-area" style="height:360px"><img loading="lazy" src="/images/image_037.webp?v=1788377929" alt="Unit Layouts" style="object-position:center bottom"/></div>
+          <div class="fp-plan-img-area" style="height:360px"><img loading="lazy" src="/images/image_037.webp?v=1788617535" alt="Unit Layouts" style="object-position:center bottom"/></div>
           <div class="fp-plan-rooms"><div class="fp-room"><div class="fp-room-name">Living</div><div class="fp-room-size">9&#39;0&#34; &times; 14&#39;6&#34;</div></div><div class="fp-room"><div class="fp-room-name">Bedroom</div><div class="fp-room-size">9&#39;6&#34; &times; 9&#39;6&#34;</div></div><div class="fp-room"><div class="fp-room-name">Kitchen</div><div class="fp-room-size">7&#39;0&#34; &times; 8&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Balcony</div><div class="fp-room-size">3&#39;3&#34; open</div></div></div>
         </div>
         <div class="fp-plan-card" id="shiv-plan-2" style="display:none">
           <div class="fp-plan-header"><div class="fp-plan-header-title">2 BHK Unit Layout</div><div class="fp-plan-header-area">426 to 760 sq.ft. (varies by bldg &amp; floor)</div></div>
-          <div class="fp-plan-img-area" style="height:360px"><img loading="lazy" src="/images/image_038.webp?v=1788377929" alt="Unit Layouts" style="object-position:center top"/></div>
+          <div class="fp-plan-img-area" style="height:360px"><img loading="lazy" src="/images/image_038.webp?v=1788617535" alt="Unit Layouts" style="object-position:center top"/></div>
           <div class="fp-plan-rooms"><div class="fp-room"><div class="fp-room-name">Living</div><div class="fp-room-size">9&#39;0&#34; &times; 14&#39;9&#34;</div></div><div class="fp-room"><div class="fp-room-name">Master Bed</div><div class="fp-room-size">9&#39;6&#34; &times; 10&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Bed 2</div><div class="fp-room-size">9&#39;6&#34; &times; 10&#39;0&#34;</div></div><div class="fp-room"><div class="fp-room-name">Kitchen</div><div class="fp-room-size">8&#39;6&#34; &times; 8&#39;0&#34;</div></div></div>
         </div>
       </div>
       <div id="shiv-b1fp" style="display:none">
         <div class="fp-plan-card"><div class="fp-plan-header"><div class="fp-plan-header-title">Building No. 1, 1st to 7th Floor Plan (Type A)</div><div class="fp-plan-header-area">MahaRERA: P99000051314</div></div>
-        <div class="fp-plan-img-area" style="height:480px;background:#f0eee8"><img loading="lazy" src="/images/image_039.webp?v=1788377929" alt="Building 1 Floor Plan" style="background:#f0eee8"/></div></div>
+        <div class="fp-plan-img-area" style="height:480px;background:#f0eee8"><img loading="lazy" src="/images/image_039.webp?v=1788617535" alt="Building 1 Floor Plan" style="background:#f0eee8"/></div></div>
       </div>
       <div id="shiv-b2fp" style="display:none">
         <div class="fp-plan-card"><div class="fp-plan-header"><div class="fp-plan-header-title">Building No. 2, 1st to 7th Floor Plan (Type B)</div><div class="fp-plan-header-area">MahaRERA: P99000077209</div></div>
-        <div class="fp-plan-img-area" style="height:480px;background:#f0eee8"><img loading="lazy" src="/images/image_040.webp?v=1788377929" alt="Building 2 Floor Plan" style="background:#f0eee8"/></div></div>
+        <div class="fp-plan-img-area" style="height:480px;background:#f0eee8"><img loading="lazy" src="/images/image_040.webp?v=1788617535" alt="Building 2 Floor Plan" style="background:#f0eee8"/></div></div>
       </div>
-      <div class="fp-dl-row"><div class="fp-dl-note">All carpet areas are indicative. Verify RERA details before purchase.</div><a class="fp-dl-btn" href="/brochures/shiv-shrushti.pdf?v=1788377929" target="_blank" rel="noopener" download>&#8595; &nbsp;Download Full Brochure (PDF)</a></div>
+      <div class="fp-dl-row"><div class="fp-dl-note">All carpet areas are indicative. Verify RERA details before purchase.</div><a class="fp-dl-btn" href="/brochures/shiv-shrushti.pdf?v=1788617535" target="_blank" rel="noopener" download>&#8595; &nbsp;Download Full Brochure (PDF)</a></div>
     </div>
 
 
@@ -2284,12 +2334,12 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
       <div style="padding:1.5rem 1.8rem .8rem"><div class="sec-title" style="margin-bottom:0">Gallery</div></div>
       <div class="oi-gallery-wrap">
         <div class="oi-gallery-track" id="shiv-track">
-<div class="oi-slide"><img loading="lazy" src="/images/image_041.webp?v=1788377929" alt="Building No. 1 Elevation"/><div class="oi-slide-label">Building No. 1 Elevation</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/image_042.webp?v=1788377929" alt="Building No. 2 Elevation"/><div class="oi-slide-label">Building No. 2 Elevation</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/image_043.webp?v=1788377929" alt="Building No. 1 Side View"/><div class="oi-slide-label">Building No. 1 Side View</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/image_044.webp?v=1788377929" alt="Building No. 1 Elevation"/><div class="oi-slide-label">Building No. 1 Elevation</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/image_045.webp?v=1788377929" alt="Building No. 2 Elevation"/><div class="oi-slide-label">Building No. 2 Elevation</div></div>
-<div class="oi-slide"><img loading="lazy" src="/images/image_046.webp?v=1788377929" alt="Building No. 1 Side View"/><div class="oi-slide-label">Building No. 1 Side View</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_041.webp?v=1788617535" alt="Building No. 1 Elevation"/><div class="oi-slide-label">Building No. 1 Elevation</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_042.webp?v=1788617535" alt="Building No. 2 Elevation"/><div class="oi-slide-label">Building No. 2 Elevation</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_043.webp?v=1788617535" alt="Building No. 1 Side View"/><div class="oi-slide-label">Building No. 1 Side View</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_044.webp?v=1788617535" alt="Building No. 1 Elevation"/><div class="oi-slide-label">Building No. 1 Elevation</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_045.webp?v=1788617535" alt="Building No. 2 Elevation"/><div class="oi-slide-label">Building No. 2 Elevation</div></div>
+<div class="oi-slide"><img loading="lazy" src="/images/image_046.webp?v=1788617535" alt="Building No. 1 Side View"/><div class="oi-slide-label">Building No. 1 Side View</div></div>
         </div>
       </div>
       <div style="display:flex;justify-content:center;gap:1rem;padding:1rem 1.8rem">
@@ -2345,13 +2395,13 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
     <div class="contact-row"><div class="contact-icon">&#9993;</div><div><div class="contact-label">Email</div><div class="contact-value"><a href="mailto:info@omshantinrconstruction.com">info@omshantinrconstruction.com</a></div></div></div>
   </div>
   <div class="rera-card"><div class="rera-badge">MAHA<br/>RERA</div><div><div class="rera-label">Building No. 1</div><div class="rera-num">P99000051314</div><div class="rera-link">maharera.mahaonline.gov.in</div></div></div>
-  <div class="rera-card" style="margin-top:6px"><div class="rera-badge">MAHA<br/>RERA</div><div><div class="rera-label">Building No. 2</div><div class="rera-num">P99000077209</div><div class="rera-link">maharera.mahaonline.gov.in</div></div></div><div class="gallery-card"><img loading="lazy" class="gallery-img" src="/images/image_047.webp?v=1788377929" alt="Shiv Shrushti Complex &middot; Building No.1"/><div class="gallery-caption">Shiv Shrushti Complex &middot; Building No.1</div></div>
+  <div class="rera-card" style="margin-top:6px"><div class="rera-badge">MAHA<br/>RERA</div><div><div class="rera-label">Building No. 2</div><div class="rera-num">P99000077209</div><div class="rera-link">maharera.mahaonline.gov.in</div></div></div><div class="gallery-card"><img loading="lazy" class="gallery-img" src="/images/image_047.webp?v=1788617535" alt="Shiv Shrushti Complex &middot; Building No.1"/><div class="gallery-caption">Shiv Shrushti Complex &middot; Building No.1</div></div>
 </div>
 </div>
 <div class="disclaimer">A partner of Om Shanti N R Construction holds residential inventory in Shiv Shrushti Complex in their personal capacity as Land Partner. Both buildings have received OC. All information is indicative. Verify MahaRERA details before purchase. Govt taxes extra.</div>
 <footer>
   <div style="display:flex;flex-wrap:wrap;gap:3rem;margin-bottom:2rem">
-    <div style="flex:2;min-width:200px"><img loading="lazy" src="/images/logo.png?v=1788377929" alt="Om Shanti N R Construction" style="height:76px;width:auto;display:block"><div class="footer-brand-desc">&copy; 2026 Om Shanti N R Construction (Partnership Firm). All rights reserved.</div></div>
+    <div style="flex:2;min-width:200px"><img loading="lazy" src="/images/logo.png?v=1788617535" alt="Om Shanti N R Construction" style="height:76px;width:auto;display:block"><div class="footer-brand-desc">&copy; 2026 Om Shanti N R Construction (Partnership Firm). All rights reserved.</div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Navigation</div><div class="footer-links"><a href="/">Home</a><a href="/#about">About Us</a><a href="/#projects">Projects</a><a href="/leadership/">Leadership</a><a href="/channel-partners/">Channel Partners</a><a href="/guides/">Palghar Buying Guides</a><a href="/#contact">Contact Us</a></div></div>
     <div style="flex:1;min-width:140px"><div class="footer-col-title">Reach Us</div><div class="footer-links"><a href="tel:+918262885023">+91 82628 85023</a><a href="mailto:info@omshantinrconstruction.com">info@omshantinrconstruction.com</a><a>Palghar West, 401404<br/>Maharashtra, India</a><a href="https://wa.me/918262885023" target="_blank" style="color:var(--gold)">WhatsApp Us &#8599;</a></div></div>
   </div>

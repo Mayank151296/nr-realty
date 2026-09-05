@@ -164,6 +164,18 @@ class BuildOptimizer:
         count = len([f for f in br_dst.iterdir() if f.is_file()])
         print(f"✓ {count} brochures copied ({total / (1024*1024):.1f} MB)")
 
+    def copy_explore(self):
+        """Copy the Ostwal Imperial 3D explorer (its own static folder) into dist/"""
+        src = self.project_dir / 'projects' / 'ostwal-imperial' / 'explore'
+        if not src.exists():
+            print("  (no explorer folder, skipping)"); return
+        dst = self.dist_dir / 'projects' / 'ostwal-imperial' / 'explore'
+        if dst.exists():
+            shutil.rmtree(dst)
+        shutil.copytree(src, dst)
+        size = sum(f.stat().st_size for f in dst.rglob('*') if f.is_file())
+        print(f"✓ 3D explorer copied to dist ({size/1024/1024:.1f} MB)")
+
     def copy_favicons(self):
         """Copy favicon, PWA-icon, Safari mask-icon, and manifest files into dist root"""
         names = ['favicon.ico', 'favicon.png', 'favicon-16.png', 'favicon-32.png',
@@ -296,6 +308,7 @@ class BuildOptimizer:
         """Generate robots.txt + sitemap.xml listing the real, indexable URLs."""
         urls = [self.BASE_URL + '/'] + [f'{self.BASE_URL}/{m["slug"]}/' for m in self.PROJECT_PAGES.values()]
         urls += getattr(self, 'guide_urls', [])
+        urls.append(f'{self.BASE_URL}/projects/ostwal-imperial/explore/')
         today = __import__('datetime').date.today().isoformat()
         sm = ['<?xml version="1.0" encoding="UTF-8"?>',
               '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
@@ -395,6 +408,7 @@ class BuildOptimizer:
         self.copy_qr()
         self.copy_brochures()
         self.copy_favicons()
+        self.copy_explore()
         self.copy_config()
         self.generate_project_pages()
         self.build_guides()

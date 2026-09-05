@@ -7,3 +7,12 @@ images/*.bak
 # Python build artifacts
 __pycache__/
 *.pyc
+
+# 3D explorer working files (source of truth is projects/ostwal-imperial/explore/)
+Building 3D massing model/
+Building 3D massing model.zip
+3d_ostwal-imperial/
+
+# Scratch / parked
+_scan_tmp/
+_to_delete/
