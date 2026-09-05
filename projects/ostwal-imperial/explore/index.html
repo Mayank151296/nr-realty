@@ -36,6 +36,7 @@
   --gold-soft:rgba(203,161,53,.13); --r:16px;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html,body{margin:0;background:var(--ink);color:var(--fg);font-family:Jost,system-ui,sans-serif;font-weight:300;-webkit-font-smoothing:antialiased}
 h1,h2,h3,.disp{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;letter-spacing:.01em}
 a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(203,161,53,.35)}
@@ -442,7 +443,7 @@ const stageBox = canvas.parentElement;
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.shadowMap.type = THREE.PCFShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 0.88;
 
