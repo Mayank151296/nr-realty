@@ -279,7 +279,7 @@ export function buildFlat(unit) {
     furnish(g, room, M);
     root.add(g);
     const sqft = Math.round(w * d * s * s * SQFT);
-    const label = labelSprite(room.name, sqft + ' sq ft', Math.min(2.3, Math.max(w, d) * 0.78) / s);
+    const label = labelSprite(room.name, '', Math.min(2.3, Math.max(w, d) * 0.78) / s);
     label.position.set(x + w / 2, WALL + 0.95, z + d / 2);
     g.add(label);
     rooms.push({
@@ -306,7 +306,7 @@ export function buildFlat(unit) {
   const scene = new THREE.Group();
   scene.name = `flat_scene_${unit.id}`;
   scene.add(holder);
-  scene.add(compass(span, b, unit.facing || ''));
+  // Survey compass omitted: not established by drawings.
   return { root: scene, rooms, span, envelope: [L.env[0] * s, L.env[1] * s] };
 }
 

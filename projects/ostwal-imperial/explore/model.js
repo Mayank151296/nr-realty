@@ -46,10 +46,10 @@ export const BUILDINGS = [
   {
     id: 'B2', label: 'Building 02', wingLabel: 'Wing A · 5 + Wing B · 7',
     wings: { A: B2_WING_A, B: B2_WING_B },
-    refuge: [],
+    refuge: [8, 13],
     site: { x: 24, z: -12 }, rot: -Math.PI / 2,
-    planName: () => 'Typical plan · 1–16',
-    note: () => '',
+    planName: (f) => ([8, 13].includes(f) ? 'Refuge floor plate' : 'Typical plan · 1–16'),
+    note: (f) => ([8, 13].includes(f) ? 'Refuge floor — the end flat of each wing is given over to refuge area.' : ''),
   },
 ];
 
@@ -136,22 +136,21 @@ export const summary = (units) => {
 
 function mats() {
   const m = {
-    stone: new THREE.MeshStandardMaterial({ name: 'stone', color: 0xd6c3a6, roughness: 0.9 }),
-    trim: new THREE.MeshStandardMaterial({ name: 'trim', color: 0xe6d6bf, emissive: 0xffc98a, emissiveIntensity: 0.05, roughness: 0.8 }),
-    slab: new THREE.MeshStandardMaterial({ name: 'slab', color: 0xb8a48a, roughness: 0.9 }),
-    shade: new THREE.MeshStandardMaterial({ name: 'shade', color: 0x8f7860, emissive: 0xff9740, emissiveIntensity: 0.42, roughness: 0.95 }),
-    glass: new THREE.MeshStandardMaterial({ name: 'glass', color: 0x10161c, emissive: 0xffc07a, emissiveIntensity: 1.7, roughness: 0.16, metalness: 0.35 }),
+    stone: new THREE.MeshStandardMaterial({ name: 'stone', color: 0xdac5b7, roughness: 0.9 }),
+    trim: new THREE.MeshStandardMaterial({ name: 'trim', color: 0xf7eadc, roughness: 0.75 }),
+    shade: new THREE.MeshStandardMaterial({ name: 'shade', color: 0xaf8e7b, roughness: 0.95 }),
+    glass: new THREE.MeshStandardMaterial({ name: 'glass', color: 0x2b3841, roughness: 0.16, metalness: 0.35 }),
     iron: new THREE.MeshStandardMaterial({ name: 'iron', color: 0x312a23, roughness: 0.6, metalness: 0.3 }),
-    podium: new THREE.MeshStandardMaterial({ name: 'podium', color: 0x4d3a2c, roughness: 0.85 }),
+    podium: new THREE.MeshStandardMaterial({ name: 'podium', color: 0x59514b, roughness: 0.85 }),
     paving: new THREE.MeshStandardMaterial({ name: 'paving', color: 0x9c968b, roughness: 1 }),
     road: new THREE.MeshStandardMaterial({ name: 'road', color: 0x4a4a48, roughness: 1 }),
-    lawn: new THREE.MeshStandardMaterial({ name: 'lawn', color: 0x3f5233, roughness: 1 }),
+    lawn: new THREE.MeshStandardMaterial({ name: 'lawn', color: 0x54683f, roughness: 1 }),
     foliage: new THREE.MeshStandardMaterial({ name: 'foliage', color: 0x415530, roughness: 1 }),
     gold: new THREE.MeshStandardMaterial({ name: 'gold_highlight', color: 0xcba135, emissive: 0x6a4f10, roughness: 0.4, metalness: 0.3 }),
     select: new THREE.MeshStandardMaterial({ name: 'gold_selected', color: 0xe8c266, emissive: 0x8a6714, roughness: 0.35, metalness: 0.3 }),
   };
   m.dim = {};
-  for (const k of ['stone', 'trim', 'shade', 'glass', 'iron', 'slab']) {
+  for (const k of ['stone', 'trim', 'shade', 'glass', 'iron']) {
     m.dim[k] = m[k].clone();
     m.dim[k].name = `${k}_dim`;
     m.dim[k].color.setHex(0x39404a);
@@ -161,61 +160,7 @@ function mats() {
     m.dim[k].transparent = true;
     m.dim[k].opacity = 0.5;
   }
-
-  // Facade skins: perspective-rectified crops of the brochure's night render.
-  // The same image drives colour and emissive, so the windows that are lit in
-  // the render are the windows that glow in the model.
-  const loader = new THREE.TextureLoader();
-  const tex = (url) => {
-    const t = loader.load(url);
-    t.colorSpace = THREE.SRGBColorSpace;
-    t.wrapS = t.wrapT = THREE.RepeatWrapping;
-    t.anisotropy = 8;
-    return t;
-  };
-  const facadeTex = tex('assets/tex-facade.jpeg');
-  const crownTex = tex('assets/tex-crown.jpeg');
-  const endTex = tex('assets/tex-endwall.jpeg');
-  const skin = (name, t, o = {}) => new THREE.MeshStandardMaterial({
-    name, map: t, emissiveMap: t, emissive: 0xffffff, emissiveIntensity: 1.45, roughness: 0.9, metalness: 0, ...o,
-  });
-  m.facade = skin('facade', facadeTex);
-  m.crownSkin = skin('crown_skin', crownTex);
-  m.endSkin = skin('endwall_skin', endTex, { emissiveIntensity: 0.5 });
-  m.facadeA = [m.stone, m.stone, m.stone, m.stone, m.facade, m.stone];   // outward face is +z
-  m.facadeB = [m.stone, m.stone, m.stone, m.stone, m.stone, m.facade];   // outward face is -z
-  // Dimmed floors keep their facade, just unlit and pushed back.
-  const dimSkin = skin('facade_dim', facadeTex, { color: 0x9da3ad, emissive: 0xffffff, emissiveIntensity: 0.28, transparent: true, opacity: 0.95 });
-  m.dim.facadeA = [m.dim.stone, m.dim.stone, m.dim.stone, m.dim.stone, dimSkin, m.dim.stone];
-  m.dim.facadeB = [m.dim.stone, m.dim.stone, m.dim.stone, m.dim.stone, m.dim.stone, dimSkin];
-  // Selection and hover keep the facade but tint it gold, rather than swapping to a flat gold block.
-  m.select = skin('facade_selected', facadeTex, { color: 0xffd98a, emissive: 0xffc35c, emissiveIntensity: 1.35 });
-  m.hover = skin('facade_hover', facadeTex, { color: 0xffe6b8, emissive: 0xffd27a, emissiveIntensity: 1.0 });
   return m;
-}
-
-/** Width in metres covered by one repeat of the facade tile (four bays), and
- *  the number of storeys in it. Shared by every skinned box so the pattern is
- *  continuous across flat boundaries and from floor to floor. */
-const TILE_W = 18.4;
-const TILE_FLOORS = 2;
-
-/**
- * A box with one face carrying a slice of a texture. `face` is the BoxGeometry
- * face index (0 +x, 1 -x, 4 +z, 5 -z); the UV window is given in texture repeats.
- */
-function skinBox(name, w, h, d, x, y, z, mats, face, u0, u1, v0, v1) {
-  const geo = new THREE.BoxGeometry(w, h, d);
-  const uv = geo.attributes.uv;
-  for (let i = 0; i < 4; i++) {
-    const k = face * 4 + i;
-    uv.setXY(k, uv.getX(k) > 0.5 ? u1 : u0, uv.getY(k) > 0.5 ? v1 : v0);
-  }
-  uv.needsUpdate = true;
-  const mesh = new THREE.Mesh(geo, mats);
-  mesh.name = name; mesh.position.set(x, y, z);
-  mesh.castShadow = true; mesh.receiveShadow = true;
-  return mesh;
 }
 
 const box = (name, w, h, d, x, y, z, mat) => {
@@ -279,6 +224,7 @@ export function buildProject() {
 
   const track = (mesh, key, floor, bldg) => {
     mesh.userData.baseMat = M[key];
+    mesh.userData.floor=floor; mesh.userData.bldg=bldg;
     dimmable.push({ mesh, base: M[key], dim: M.dim[key], floor, bldg });
     return mesh;
   };
@@ -305,10 +251,12 @@ export function buildProject() {
     g.add(box(`${bld.id}_core`, total, H, 4.5, 0, PODIUM_H + H / 2, 0, M.stone));
     for (const s of [-1, 1]) {
       const x = s * (total / 2 + 2.4);
-      const endMats = [M.stone, M.stone, M.stone, M.stone, M.stone, M.stone];
-      endMats[s > 0 ? 0 : 1] = M.endSkin;
-      g.add(skinBox(`${bld.id}_endwall_${s > 0 ? 'r' : 'l'}`, 4.8, H + 4.5, 14, x, PODIUM_H + (H + 4.5) / 2, 0,
-        endMats, s > 0 ? 0 : 1, 0, 1, 0, 1));
+      g.add(box(`${bld.id}_endwall_${s > 0 ? 'r' : 'l'}`, 4.8, H + 4.5, 14, x, PODIUM_H + (H + 4.5) / 2, 0, M.stone));
+      for (let i = 0; i < 4; i++) {
+        const fy = PODIUM_H + (H + 4.5) * (0.17 + i * 0.22);
+        g.add(box(`${bld.id}_endpanel_${s > 0 ? 'r' : 'l'}_${i}`, 0.22, 6.2, 9.5, x + s * 2.45, fy, 0, M.trim));
+        g.add(box(`${bld.id}_endinset_${s > 0 ? 'r' : 'l'}_${i}`, 0.22, 5.0, 8.0, x + s * 2.52, fy, 0, M.shade));
+      }
       cornice(g, `${bld.id}_endcrown_${s > 0 ? 'r' : 'l'}`, 4.8, 14, x, PODIUM_H + H + 4.5, 0, M);
       pediment(g, `${bld.id}_endped_${s > 0 ? 'r' : 'l'}`, 5.6, x, PODIUM_H + H + 6.1, 4.0, M);
     }
@@ -316,33 +264,39 @@ export function buildProject() {
     // floor plates
     for (let f = 1; f <= PROJECT.topFloor; f++) {
       const y = PODIUM_H + (f - 1) * FLOOR_H;
-      g.add(track(box(`${bld.id}_plate_${f}`, total + 0.4, 0.22, plateD + 0.5, 0, y + 0.11, 0, M.slab), 'slab', f, bld.id));
+      g.add(track(box(`${bld.id}_plate_${f}`, total + 1.0, 0.3, plateD + 1.0, 0, y + 0.15, 0, M.trim), 'trim', f, bld.id));
     }
 
-    // flats
+
+    // Modeled recessed glazing and balcony rails.
     for (const u of mine) {
-      const y = PODIUM_H + (u.floor - 1) * FLOOR_H;
-      const zc = u.z * (2.25 + DEPTH / 2);
-      const face = u.z * (2.25 + DEPTH);
-      const x0 = u.x - u.w / 2 + total / 2;                     // metres from the left end of the elevation
-      const v0 = ((u.floor - 1) % TILE_FLOORS) / TILE_FLOORS;
-      const key = u.z > 0 ? 'facadeA' : 'facadeB';
-      const shell = skinBox(`${bld.id}_flat_${u.id}`, u.w - 0.14, FLOOR_H - 0.34, DEPTH, u.x, y + 0.3 + (FLOOR_H - 0.34) / 2, zc,
-        M[key], u.z > 0 ? 4 : 5, x0 / TILE_W, (x0 + u.w) / TILE_W, v0, v0 + 1 / TILE_FLOORS);
-      shell.userData.unit = u;
-      g.add(track(shell, key, u.floor, bld.id));
+      const y=PODIUM_H+(u.floor-1)*FLOOR_H;
+      const face=u.z*(2.25+DEPTH);
+      function part(n,w,h,d,x,yy,z,key) {
+        const m=box(n+'_'+u.id,w,h,d,x,yy,z,M[key]);
+        m.userData.unit=u;g.add(track(m,key,u.floor,bld.id));return m;
+      }
+      const shell=part('flat',u.w-0.14,2.66,DEPTH-1.25,u.x,y+1.63,u.z*(2.25+(DEPTH-1.25)/2),'stone');
       pickable.push(shell);
+      const glass=part('window',u.w-0.9,2.15,0.08,u.x,y+1.43,face-u.z*1.2,'glass');
+      pickable.push(glass);
+      part('balcony',u.w-0.12,0.18,1.55,u.x,y+0.32,face-u.z*0.48,'trim');
+      part('mullion',0.09,2.2,0.14,u.x,y+1.43,face-u.z*1.12,'iron');
+      part('column',0.38,2.72,0.65,u.x-u.w/2+0.14,y+1.65,face-u.z*0.1,'trim');
+      part('rail_top',u.w-0.52,0.07,0.09,u.x,y+1.4,face+u.z*0.19,'iron').castShadow=false;
+      part('rail_bottom',u.w-0.52,0.05,0.09,u.x,y+0.57,face+u.z*0.19,'iron').castShadow=false;
+      const n=Math.max(5,Math.floor((u.w-0.6)/0.28));
+      const bars=new THREE.InstancedMesh(new THREE.BoxGeometry(0.035,0.83,0.035),M.iron,n);
+      const matrix=new THREE.Matrix4();
+      for(let i=0;i<n;i++) {
+        matrix.makeTranslation(u.x-u.w/2+0.36+i*(u.w-0.72)/(n-1),y+0.985,face+u.z*0.19);
+        bars.setMatrixAt(i,matrix);
+      }
+      bars.name='balusters_'+u.id;g.add(track(bars,'iron',u.floor,bld.id));
     }
-
     // crown
     const topY = PODIUM_H + H;
     cornice(g, `${bld.id}_crown`, total, plateD, 0, topY, 0, M);
-    for (const side of [1, -1]) {
-      const cm = [M.stone, M.stone, M.stone, M.stone, M.stone, M.stone];
-      cm[side > 0 ? 4 : 5] = M.crownSkin;
-      g.add(skinBox(`${bld.id}_crownband_${side > 0 ? 'f' : 'b'}`, total, 2.4, 1.2, 0, topY + 1.2, side * (plateD / 2 - 0.5),
-        cm, side > 0 ? 4 : 5, 0, total / TILE_W, 0, 1));
-    }
     g.add(box(`${bld.id}_roof`, total - 1, 0.3, plateD - 1, 0, topY + 1.75, 0, M.paving));
     pediment(g, `${bld.id}_ped_front`, 13, 0, topY + 1.9, plateD / 2 - 3.4, M);
     const pedBack = new THREE.Group();
@@ -379,7 +333,28 @@ export function buildProject() {
   [[-50, 38], [-26, 38], [-4, 38], [12, 34], [38, 24], [38, 2], [38, -22], [38, -38], [-8, -36], [-32, -36], [-50, -12], [-50, 8]]
     .forEach(([x, z], i) => root.add(palm(`palm_${i}`, x, z, 6.5 + (i % 3) * 1.5, M)));
 
+
+  for(let x=-70;x<65;x+=9) root.add(box('lane_mark',4,0.03,0.16,x,0.25,46,M.trim));
+  for(let z=-72;z<58;z+=9) root.add(box('lane_mark',0.16,0.03,4,52,0.25,z,M.trim));
+  const carMats=[0x283a4d,0xa24b39,0xe1ddd5,0x303436].map(color=>new THREE.MeshStandardMaterial({color,roughness:0.3}));
+  for(let i=0;i<11;i++) {
+    const x=-46+i*4.3,z=35;
+    root.add(box('parking_line',0.08,0.025,4.5,x-1.7,0.24,z,M.trim));
+    root.add(box('car_body',1.75,0.75,3.8,x,0.75,z,carMats[i%4]));
+    root.add(box('car_cabin',1.5,0.62,2.0,x,1.35,z-0.2,M.glass));
+  }
+  const leaves=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1,2),M.foliage,72);
+  const dummy=new THREE.Object3D();
+  for(let i=0;i<72;i++) {
+    const side=i%4,k=Math.floor(i/4),t=-70+k*8;
+    const x=side<2?t:(side===2?-70:70),z=side<2?(side===0?-66:66):t;
+    const h=5+(i%5)*0.5;
+    root.add(box('tree_trunk',0.35,h,0.35,x,h/2,z,M.podium));
+    dummy.position.set(x,h,z);dummy.scale.set(3+(i%3)*0.3,3.9,3);dummy.updateMatrix();leaves.setMatrixAt(i,dummy.matrix);
+  }
+  leaves.castShadow=true;root.add(leaves);
   const bb = new THREE.Box3().setFromObject(root);
+
   const c = bb.getCenter(new THREE.Vector3());
   root.position.set(-c.x, -bb.min.y, -c.z);
 
