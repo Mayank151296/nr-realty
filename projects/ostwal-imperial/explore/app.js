@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import{initSales}from'./sales.js';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {buildProject,BUILDINGS,summary} from './model.js';
-import {buildFlat,focusRoom,stepFocus} from './flat-model.js';
+import {buildFlat,focusRoom,stepFocus,playIn} from './flat-model.js';
 
 const $=id=>document.getElementById(id);
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -34,12 +34,30 @@ const selectionBox=new THREE.Box3Helper(new THREE.Box3(),0xffd496);scene.add(sel
 selectionBox.material.depthTest=false;selectionBox.renderOrder=12;
 const state={building:'all',floor:0,type:'all',selected:null,mode:'site',lighting:'day',view:'aerial',cut:false};
 let flat=null,flight=null,lastTime=performance.now(),dirty=true;
+let clipTarget=1000,clipReady=false,dimT=1,dimTarget=1,flatT=1;
 const clip=new THREE.Plane(new THREE.Vector3(0,-1,0),1000);
 const allMaterials=new Set();
 built.root.traverse(o=>{if(o.material)(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>allMaterials.add(m));});
 for(const d of built.dimmable)if(d.dim)allMaterials.add(d.dim);
 for(const m of allMaterials){m.clippingPlanes=[];m.clipShadows=true;}
 const daylightColor=built.materials.glass.color.clone();
+// One tween fades every shared dim material between "lit" and "receded", so a
+// floor change reads as the rest of the mass stepping back rather than snapping.
+const dimPairs=(()=>{
+  const seen=new Set(),out=[];
+  for(const d of built.dimmable){
+    if(!d.dim||seen.has(d.dim))continue;seen.add(d.dim);
+    const base=Array.isArray(d.base)?d.base[0]:d.base;
+    out.push({m:d.dim,from:base.color.clone(),to:d.dim.color.clone(),toOpacity:d.dim.opacity});
+  }
+  return out;
+})();
+function applyDim(){
+  for(const p of dimPairs){
+    p.m.color.copy(p.from).lerp(p.to,dimT);
+    p.m.opacity=1+(p.toOpacity-1)*dimT;
+  }
+}
 const floorY=f=>built.PODIUM_H+(f-1)*built.FLOOR_H+built.root.position.y;
 
 function resized(){const w=stage.clientWidth,h=stage.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/Math.max(1,h);camera.updateProjectionMatrix();dirty=true;}
@@ -57,7 +75,7 @@ function targetPoint(){
 function setView(view,instant=false){
   state.view=view;
   const t=targetPoint();
-  const dist=state.mode==='flat'?flat.span*2.2:(state.building==='all'?155:112);
+  const dist=state.mode==='flat'?flat.span*2.2:state.floor?(state.building==='all'?122:96):(state.building==='all'?155:112);
   let offset;
   if(view==='top')offset=new THREE.Vector3(.01,dist,0.01);
   else if(view==='front')offset=new THREE.Vector3(dist*.12,dist*.1,dist);
@@ -86,8 +104,11 @@ function apply(){
   built.root.visible=isSite;if(flat)flat.root.visible=!isSite;
   bldGroups.forEach(g=>g.visible=state.building==='all'||g.name===state.building);
   const clipped=isSite&&state.cut&&state.floor>0;
-  clip.constant=floorY(state.floor)+2.97;
+  clipTarget=floorY(state.floor)+2.97;
+  if(!clipReady||reduced){clip.constant=clipTarget;clipReady=true;}
   for(const m of allMaterials){const was=m.clippingPlanes.length>0;m.clippingPlanes=clipped?[clip]:[];if(was!==clipped)m.needsUpdate=true;}
+  dimTarget=(state.floor||state.type!=='all')?1:0;
+  if(reduced)dimT=dimTarget;
   for(const d of built.dimmable){
     const u=d.mesh.userData.unit;
     const match=(!state.floor||d.floor===state.floor)&&(!u||state.type==='all'||u.type===state.type);
@@ -101,10 +122,10 @@ function apply(){
     if(m){m.updateWorldMatrix(true,false);selectionBox.box.setFromObject(m);}
   }
   document.querySelectorAll('[data-building]').forEach(b=>{const on=b.dataset.building===state.building;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));});
-  $('floor').value=state.floor;$('floor-value').value=state.floor?'Floor '+String(state.floor).padStart(2,'0'):'All floors';
-  $('floor').setAttribute('aria-valuetext',state.floor?'Floor '+state.floor:'All floors');
+  $('floor-value').value=state.floor?'Floor '+String(state.floor).padStart(2,'0'):'All floors';
+  syncFloorChips();syncTypeChips();
   $('cut').disabled=!state.floor||!isSite;$('cut').checked=state.cut;
-  $('floor-note').textContent=state.floor&&[8,13].includes(state.floor)?'Refuge floor \u2014 the end flat of each wing is given over to refuge area.':state.floor===1&&state.building!=='B2'?'Building 1: the two end positions on this floor are not residential.':'Ground floor: retail frontage and parking.';
+  $('floor-note').textContent=state.floor&&[8,13].includes(state.floor)?'Refuge floor \u2014 the end flat of each wing is given over to refuge area.':state.floor===1&&state.building!=='B2'?'Building 1: the two end positions on this floor are not residential.':state.floor?'Typical residential plate \u2014 '+(state.building==='all'?'both towers':'this tower')+'.':'Ground floor: retail frontage and parking.';
   $('view-caption').textContent=isSite?(state.building==='all'?'Both buildings':'Building '+state.building.slice(1))+' · '+(state.floor?'Floor '+state.floor:'All floors'):state.selected.id+' · '+state.selected.type+' \u00b7 Indicative interior';
   $('scene-kicker').textContent=isSite?'INTERACTIVE SITE MODEL':'INSIDE THE HOME';
   $('scene-title').textContent=isSite?(state.floor?'Floor '+String(state.floor).padStart(2,'0'):state.building==='all'?'The complete picture.':'Building '+state.building.slice(1)):state.selected.type+' · '+state.selected.id;
@@ -123,18 +144,33 @@ function disposeFlat(){
 function loadFlat(){
   if(!state.selected)return;
   disposeFlat();flat=buildFlat(state.selected);scene.add(flat.root);
+  flatT=reduced?1:0;playIn(flat,flatT);
   const holder=$('room-buttons');holder.replaceChildren();
   const all=document.createElement('button');all.textContent='All rooms';all.className='active';
   const roomPick=name=>{focusRoom(flat,name);holder.querySelectorAll('button').forEach(b=>{const on=b.dataset.room===(name||'');b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));});dirty=true;};
   all.dataset.room='';all.onclick=()=>roomPick(null);holder.append(all);
   flat.rooms.forEach(r=>{r.label.visible=$('room-labels').checked;const b=document.createElement('button');b.textContent=r.name;b.dataset.room=r.name;b.onclick=()=>roomPick(r.name);holder.append(b);});
 }
+function maskSwap(run){
+  if(reduced){run();dirty=true;return;}
+  stage.classList.add('swapping');
+  setTimeout(()=>{run();dirty=true;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>stage.classList.remove('swapping')));
+  },170);
+}
+function revealStage(){
+  // The mode buttons sit low in the sidebar on a laptop; without this the model
+  // changes while the stage is off-screen and the visitor sees nothing happen.
+  const r=stage.getBoundingClientRect();
+  if(r.top<0||r.bottom>innerHeight)stage.scrollIntoView({block:'nearest',behavior:reduced?'auto':'smooth'});
+}
 function setMode(mode){
   if(mode==='flat'&&!state.selected){
     const first=matching()[0];if(!first){window.toast('Choose filters with at least one apartment.');return;}state.selected=first;updateList();updateInfo();
   }
-  state.mode=mode;if(mode==='flat')loadFlat();
-  apply();setLighting(state.lighting);setView('aerial');
+  revealStage();
+  maskSwap(()=>{state.mode=mode;if(mode==='flat')loadFlat();
+    apply();setLighting(state.lighting);setView('aerial');});
 }
 function selectUnit(u){
   if(!u)return;state.selected=u;
@@ -142,6 +178,33 @@ function selectUnit(u){
   if(state.mode==='flat')loadFlat();
   updateList();updateInfo();apply();
   if(state.mode==='flat')setView('aerial');
+}
+const REFUGE=[8,13];
+function buildFloorChips(){
+  const wrap=$('floor-chips');wrap.replaceChildren();
+  const mk=(value,label,title,cls)=>{
+    const b=document.createElement('button');
+    b.dataset.floor=String(value);b.textContent=label;b.className=cls||'';
+    if(title)b.title=title;
+    b.setAttribute('aria-pressed',String(state.floor===value));
+    b.onclick=()=>setFilter('floor',value);
+    wrap.append(b);return b;
+  };
+  mk(0,'All','Show every floor','wide');
+  for(let f=16;f>=1;f--)mk(f,String(f),REFUGE.includes(f)?'Floor '+f+' — refuge floor':'Floor '+f,REFUGE.includes(f)?'refuge':'');
+  syncFloorChips();
+}
+function syncFloorChips(){
+  $('floor-chips').querySelectorAll('button').forEach(b=>{
+    const on=Number(b.dataset.floor)===state.floor;
+    b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));
+  });
+}
+function syncTypeChips(){
+  $('type').querySelectorAll('button').forEach(b=>{
+    const on=b.dataset.type===state.type;
+    b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));
+  });
 }
 function setFilter(name,value){
   state[name]=value;
@@ -161,7 +224,7 @@ function setLighting(mode){
     night:{bg:0x182c46,sky:0x90b1db,ground:0x332b28,hemi:.75,sun:.65,fill:.4,exposure:1.1,glow:1.5}
   };
   const p=presets[mode];
-  scene.background=new THREE.Color(flatView?0xaebdc1:p.bg);
+  scene.background=new THREE.Color(flatView?0xcdc6b8:p.bg);
   stage.classList.toggle('night',!flatView&&mode!=='day');
   hemi.color.setHex(p.sky);hemi.groundColor.setHex(p.ground);hemi.intensity=flatView?2.6:p.hemi;
   sun.intensity=flatView?2.7:p.sun;sun.color.setHex(mode==='day'?0xffe2ba:0xffc18c);fill.intensity=p.fill;
@@ -174,8 +237,7 @@ function setLighting(mode){
 document.querySelectorAll('[data-building]').forEach(b=>b.onclick=()=>setFilter('building',b.dataset.building));
 document.querySelectorAll('[data-light]').forEach(b=>b.onclick=()=>setLighting(b.dataset.light));
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));
-$('floor').oninput=e=>setFilter('floor',Number(e.target.value));
-$('type').onchange=e=>setFilter('type',e.target.value);
+$('type').onclick=e=>{const b=e.target.closest('button[data-type]');if(b)setFilter('type',b.dataset.type);};
 $('cut').onchange=e=>{state.cut=e.target.checked;apply();};
 $('unit-list').onchange=e=>{if(!e.target.value){state.selected=null;if(state.mode==='flat')state.mode='site';updateInfo();apply();setLighting(state.lighting);setView('aerial');return;}selectUnit(units.find(u=>u.id===e.target.value));};
 $('flat-mode').onclick=$('open-flat').onclick=()=>setMode('flat');
@@ -185,7 +247,7 @@ $('plan-reference').onclick=()=>{if(state.selected)window.showReference('plan-'+
 $('rotate').onclick=()=>{controls.autoRotate=!controls.autoRotate;$('rotate').setAttribute('aria-pressed',String(controls.autoRotate));dirty=true;};
 $('reset').onclick=()=>{
   Object.assign(state,{building:'all',floor:0,type:'all',selected:null,mode:'site',cut:false});
-  $('type').value='all';controls.autoRotate=false;$('rotate').setAttribute('aria-pressed','false');
+  syncTypeChips();controls.autoRotate=false;$('rotate').setAttribute('aria-pressed','false');
   updateList();updateInfo();apply();setLighting('day');setView('aerial');
 };
 const raycaster=new THREE.Raycaster(),mouse=new THREE.Vector2();
@@ -244,17 +306,22 @@ if(context?.registerTool){
       if(input.floor!==undefined&&(!Number.isInteger(input.floor)||input.floor<0||input.floor>16))throw Error('Invalid floor');
       if(input.type!==undefined&&!['all','1 BHK','2 BHK','3 BHK'].includes(input.type))throw Error('Invalid type');
       for(const [k,v]of Object.entries(input))setFilter(k,v);
-      $('type').value=state.type;
+      syncTypeChips();
       return {building:state.building,floor:state.floor,type:state.type,matchingHomes:matching().length};
     }
   })).catch(()=>{});}catch{}
 }
+buildFloorChips();
 updateList();updateInfo();apply();setLighting('day');setView('aerial',true);
 clearTimeout(window.viewerWatchdog);$('loading').hidden=true;
 function animate(now){
   requestAnimationFrame(animate);if(document.hidden){lastTime=now;return;}
   const dt=Math.min(.05,(now-lastTime)/1000);lastTime=now;
-  if(flight){const f=flight,k=Math.min(1,(now-f.start)/650),t=1-Math.pow(1-k,3);controls.target.lerpVectors(f.fromT,f.toT,t);camera.position.lerpVectors(f.fromP,f.toP,t);if(k===1)flight=null;dirty=true;}
+  if(flight){const f=flight,k=Math.min(1,(now-f.start)/720),t=1-Math.pow(1-k,3);controls.target.lerpVectors(f.fromT,f.toT,t);camera.position.lerpVectors(f.fromP,f.toP,t);if(k===1)flight=null;dirty=true;}
+  // Damped, retargetable: changing your mind mid-move never restarts from zero.
+  if(Math.abs(dimT-dimTarget)>0.002){dimT+=(dimTarget-dimT)*Math.min(1,dt*7);applyDim();dirty=true;}
+  if(clipReady&&Math.abs(clip.constant-clipTarget)>0.01){clip.constant+=(clipTarget-clip.constant)*Math.min(1,dt*8);dirty=true;}
+  if(flatT<1&&flat&&state.mode==='flat'){flatT=Math.min(1,flatT+dt*1.05);playIn(flat,flatT);dirty=true;}
   if(flat&&state.mode==='flat'){stepFocus(flat,dt);dirty=true;}
   controls.update(dt);
   if(dirty||controls.autoRotate||dragging){renderer.render(scene,camera);dirty=false;}

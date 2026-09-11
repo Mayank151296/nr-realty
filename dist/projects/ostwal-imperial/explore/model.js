@@ -153,7 +153,7 @@ function mats() {
   for (const k of ['stone', 'trim', 'shade', 'glass', 'iron']) {
     m.dim[k] = m[k].clone();
     m.dim[k].name = `${k}_dim`;
-    m.dim[k].color.setHex(0x39404a);
+    m.dim[k].color.setHex(0x4a4238);
     m.dim[k].emissive.setHex(0x000000);
     m.dim[k].roughness = 1;
     m.dim[k].metalness = 0;
