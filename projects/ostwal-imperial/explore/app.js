@@ -79,7 +79,7 @@ function updateInfo(){
   const u=state.selected;
   $('open-flat').disabled=!u;
   if(!u){$('unit-info').innerHTML='<p class="hint">Click a home on the model or select one above.</p>';return;}
-  $('unit-info').innerHTML='<div class="unit-head"><h3>'+u.id+'</h3><span>'+u.type+'</span></div><dl><dt>Building / wing</dt><dd>'+u.bldg.slice(1)+' / '+u.wing+'</dd><dt>Floor</dt><dd>'+u.floor+'</dd><dt>Carpet area*</dt><dd>'+u.rera+' sq ft</dd><dt>Sanctioned area*</dt><dd>'+u.sanc+' sq ft</dd></dl><p class="small-note">*Areas and flat IDs as supplied; not independently verified.</p>';
+  $('unit-info').innerHTML='<div class="unit-head"><h3>'+u.id+'</h3><span>'+u.type+'</span></div><dl><dt>Building / wing</dt><dd>'+u.bldg.slice(1)+' / '+u.wing+'</dd><dt>Floor</dt><dd>'+u.floor+'</dd><dt>Carpet area*</dt><dd>'+u.rera+' sq ft</dd><dt>Sanctioned area*</dt><dd>'+u.sanc+' sq ft</dd></dl><p class="small-note">*Carpet area as per the approved plan. Verify in the MahaRERA agreement before purchase.</p>';
 }
 function apply(){
   const isSite=state.mode==='site';
@@ -104,9 +104,9 @@ function apply(){
   $('floor').value=state.floor;$('floor-value').value=state.floor?'Floor '+String(state.floor).padStart(2,'0'):'All floors';
   $('floor').setAttribute('aria-valuetext',state.floor?'Floor '+state.floor:'All floors');
   $('cut').disabled=!state.floor||!isSite;$('cut').checked=state.cut;
-  $('floor-note').textContent=state.floor&&[8,13].includes(state.floor)&&state.building!=='B2'?'Building 1: refuge areas recorded on this floor.':state.floor===1&&state.building!=='B2'?'Building 1: two end positions omitted in the supplied first-floor inventory.':'Ground floor: retail frontage and parking.';
-  $('view-caption').textContent=isSite?(state.building==='all'?'Both buildings':'Building '+state.building.slice(1))+' · '+(state.floor?'Floor '+state.floor:'All floors'):state.selected.id+' · '+state.selected.type+' · Illustrative interior';
-  $('scene-kicker').textContent=isSite?'INTERACTIVE SITE MODEL':'ILLUSTRATIVE APARTMENT';
+  $('floor-note').textContent=state.floor&&[8,13].includes(state.floor)?'Refuge floor \u2014 the end flat of each wing is given over to refuge area.':state.floor===1&&state.building!=='B2'?'Building 1: the two end positions on this floor are not residential.':'Ground floor: retail frontage and parking.';
+  $('view-caption').textContent=isSite?(state.building==='all'?'Both buildings':'Building '+state.building.slice(1))+' · '+(state.floor?'Floor '+state.floor:'All floors'):state.selected.id+' · '+state.selected.type+' \u00b7 Indicative interior';
+  $('scene-kicker').textContent=isSite?'INTERACTIVE SITE MODEL':'INSIDE THE HOME';
   $('scene-title').textContent=isSite?(state.floor?'Floor '+String(state.floor).padStart(2,'0'):state.building==='all'?'The complete picture.':'Building '+state.building.slice(1)):state.selected.type+' · '+state.selected.id;
   $('scene-sub').textContent=isSite?'Select a tower, floor or home to explore.':'Orbit the furnished model or select a room.';
   $('site-mode').classList.toggle('active',isSite);$('site-mode').setAttribute('aria-pressed',String(isSite));

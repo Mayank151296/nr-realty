@@ -29,7 +29,6 @@
 <header>
   <div class="brand"><span class="monogram">OI</span><div><h1>Ostwal Imperial</h1><p>PALGHAR WEST <span> / </span> 3D EXPLORER</p></div></div>
   <nav aria-label="Viewer mode"><button id="site-mode" class="active" aria-pressed="true">Site model</button><button id="flat-mode" aria-pressed="false">Apartment</button><button id="references">Original renders</button></nav>
-  <button id="info-button" class="text-button">Model notes</button>
 </header>
 <main>
 <aside>
@@ -54,7 +53,7 @@
     <button id="enquire" class="enquire-btn">Book a visit for this home</button>
   </section>
   <button class="reference-card" id="reference-card"><img src="./assets/aerial-dusk.jpeg" alt="Original aerial render of both towers"><span>Architect’s reference <b>View original ↗</b></span></button>
-  <p class="small-note">*G+16 follows the supplied model. Dimensions, layouts and orientation are illustrative. <button id="notes-link">Read model notes</button></p>
+  <p class="small-note">*Ground plus 16 residential floors. Layouts, dimensions and orientation shown here are indicative.</p>
   <p class="small-note">Ostwal Imperial is developed by Shree Ostwal Builders Ltd. Three partners of Om Shanti N R Construction are Land Partners in the project in their individual capacity and hold residential inventory for direct sale; the firm itself is not the land partner. MahaRERA P99000049283. <a href="/projects/ostwal-imperial/">Project details</a></p>
 </aside>
 <section class="workspace" aria-label="Interactive architectural model">
@@ -64,13 +63,13 @@
     <div class="lighting" aria-label="Scene lighting"><button data-light="day" aria-pressed="true" class="active">Day</button><button data-light="dusk" aria-pressed="false">Dusk</button><button data-light="night" aria-pressed="false">Night</button></div>
     <div id="loading" role="status"><div class="loader"></div><strong>Preparing the 3D model</strong><p>Loading the viewer and apartment geometry.</p></div>
     <div id="hover-tip" hidden></div>
-    <div class="scene-bottom"><span id="gesture-hint">Drag to orbit · Scroll to zoom · Right-drag to pan</span><span class="concept-badge">ILLUSTRATIVE MODEL</span></div>
+    <div class="scene-bottom"><span id="gesture-hint">Drag to orbit · Scroll to zoom · Right-drag to pan</span><span class="concept-badge">ARTIST’S IMPRESSION</span></div>
     <div class="view-tools">
       <button data-view="aerial" class="active" title="Aerial view">Aerial</button><button data-view="front" title="Elevation view">Elevation</button><button data-view="top" title="Top view">Top</button><span></span><button id="rotate" aria-pressed="false">Auto orbit</button><button id="reset" title="Reset view and filters">Reset</button>
     </div>
   </div>
   <footer class="workspace-footer"><div><span class="eyebrow">CURRENT VIEW</span><b id="view-caption">Both buildings · All floors</b></div><div class="export-actions"><button id="snapshot">Save image</button><button id="export">Download 3D</button></div></footer>
-  <section id="rooms" hidden><div class="label-row"><h3>Inside the apartment</h3><label class="checkbox"><input id="room-labels" type="checkbox" checked> Room labels</label></div><div id="room-buttons"></div><p>Illustrative interior from the supplied code. Compare with the brochure for the actual layout.</p><button id="plan-reference" class="text-button">View this configuration’s brochure plan ↗</button></section>
+  <section id="rooms" hidden><div class="label-row"><h3>Inside the apartment</h3><label class="checkbox"><input id="room-labels" type="checkbox" checked> Room labels</label></div><div id="room-buttons"></div><p>Indicative interior. Refer to the approved floor plan for exact dimensions and openings.</p><button id="plan-reference" class="text-button">View this configuration’s brochure plan ↗</button></section>
 </section>
 </main>
 <dialog id="gallery"><div class="dialog-head"><div><span class="eyebrow">ORIGINAL REFERENCE</span><h2 id="gallery-title">Aerial · Dusk</h2></div><button id="close-gallery" aria-label="Close original reference">✕</button></div><div class="gallery-image"><img id="gallery-image" src="./assets/aerial-dusk.jpeg" alt="Original aerial render"></div><div id="gallery-tabs"></div></dialog>
@@ -94,7 +93,6 @@
     <p class="small-note">Your details go to the Om Shanti N R Construction sales team. No payment is taken here and no price is quoted online.</p>
   </form>
 </dialog>
-<dialog id="notes"><div class="dialog-head"><h2>What this model represents</h2><button id="close-notes" aria-label="Close model notes">✕</button></div><p>This interactive model is derived from your supplied source files and architectural images. It is a visual study, not a measured or sanctioned building model.</p><ul><li><b>Inventory:</b> 342 homes: 184 × 1 BHK, 110 × 2 BHK and 48 × 3 BHK. Building 1 has 154 homes and Building 2 has 188.</li><li><b>Height:</b> the code uses ground plus 16 residential floors, a 6.6 m podium and 3 m floor heights. “16 storeys” has not been confirmed as including or excluding ground.</li><li><b>Refuge:</b> Both towers have refuge floors at 8 and 13, confirmed by Om Shanti N R Construction. The end flat of each wing on those floors is given over to refuge area, which is why floors 8 and 13 carry 18 homes rather than 22.</li><li><b>Areas and numbering:</b> displayed carpet areas and flat identifiers come from the supplied code and have not been checked against sanctioned plans or a sale schedule. No availability is implied.</li><li><b>Interiors:</b> generic furnished layouts are scaled from the source code. Room sizes, door positions, balcony counts and orientation are not verified. Use “Original renders” to compare the six supplied configuration images.</li><li><b>Site:</b> footprints, roads, setbacks, parking and landscaping are approximate. Lighting presets are artistic; they are not a sun or daylight study.</li></ul><p>For an exact model, provide dimensioned floor plans and site layout, plus elevations or an existing CAD/BIM model.</p></dialog>
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="./ui.js"></script>
 <script type="module">import('./app.js').catch(error=>{console.error(error);window.viewerFailure('The 3D viewer could not load. Check your internet connection and reload. You can still view all original renders.');});</script>
