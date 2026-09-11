@@ -173,8 +173,36 @@ class BuildOptimizer:
         if dst.exists():
             shutil.rmtree(dst)
         shutil.copytree(src, dst)
+        self.version_explore(src, dst)
         size = sum(f.stat().st_size for f in dst.rglob('*') if f.is_file())
         print(f"✓ 3D explorer copied to dist ({size/1024/1024:.1f} MB)")
+
+    def version_explore(self, *roots):
+        """Cache-bust the explorer's own modules.
+
+        The viewer is plain ES modules loaded by relative path, so a CDN or
+        browser can serve a new index.html beside a stale app.js — which is
+        exactly how a removed element turned into "3D view unavailable" in
+        production. Stamping every mutable module keeps a deploy atomic.
+        vendor/ and assets/ are deliberately left alone: their contents never
+        change, so they stay cacheable forever.
+        """
+        import re, time
+        version = int(time.time())
+        mutable = ('style.css', 'ui.js', 'app.js', 'model.js', 'flat-model.js', 'sales.js')
+        pattern = re.compile(r"(\./(?:" + "|".join(m.replace('.', r'\.') for m in mutable) + r"))(?:\?v=\d+)?")
+        stamped = 0
+        for root in roots:
+            for name in ('index.html', 'app.js'):
+                f = root / name
+                if not f.exists():
+                    continue
+                text = f.read_text(encoding='utf-8')
+                new_text = pattern.sub(lambda m: f"{m.group(1)}?v={version}", text)
+                if new_text != text:
+                    f.write_text(new_text, encoding='utf-8')
+                    stamped += 1
+        print(f"\u2713 explorer modules cache-busted (v={version}, {stamped} files)")
 
     def copy_favicons(self):
         """Copy favicon, PWA-icon, Safari mask-icon, and manifest files into dist root"""
@@ -194,6 +222,9 @@ class BuildOptimizer:
         htaccess = self.project_dir / '.htaccess'
         if htaccess.exists():
             shutil.copy(htaccess, self.dist_dir / '.htaccess')
+        headers = self.project_dir / '_headers'
+        if headers.exists():
+            shutil.copy(headers, self.dist_dir / '_headers')
             print("✓ .htaccess copied")
 
     BASE_URL = 'https://omshantinrconstruction.com'

@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import{initSales}from'./sales.js';
+import{initSales}from'./sales.js?v=1789162714';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
-import {buildProject,BUILDINGS,summary} from './model.js';
-import {buildFlat,focusRoom,stepFocus,playIn} from './flat-model.js';
+import {buildProject,BUILDINGS,summary} from './model.js?v=1789162714';
+import {buildFlat,focusRoom,stepFocus,playIn} from './flat-model.js?v=1789162714';
 
 const $=id=>document.getElementById(id);
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
