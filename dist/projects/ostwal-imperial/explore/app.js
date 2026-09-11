@@ -156,8 +156,8 @@ function setLighting(mode){
   state.lighting=mode;
   const flatView=state.mode==='flat';
   const presets={
-    day:{bg:0xc3ced0,sky:0xe7f2ff,ground:0x766452,hemi:2.25,sun:3.1,fill:.75,exposure:1.05,glow:0},
-    dusk:{bg:0x48596b,sky:0x9eb6d6,ground:0x574137,hemi:1.3,sun:1.8,fill:.65,exposure:1.05,glow:.8},
+    day:{bg:0xd8d1c3,sky:0xf4efe3,ground:0x766452,hemi:2.25,sun:3.1,fill:.75,exposure:1.05,glow:0},
+    dusk:{bg:0x4c4038,sky:0xc9ac89,ground:0x574137,hemi:1.3,sun:1.8,fill:.65,exposure:1.05,glow:.8},
     night:{bg:0x182c46,sky:0x90b1db,ground:0x332b28,hemi:.75,sun:.65,fill:.4,exposure:1.1,glow:1.5}
   };
   const p=presets[mode];

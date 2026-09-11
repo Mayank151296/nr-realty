@@ -17,18 +17,21 @@
 <link rel="icon" href="/favicon.ico?v=4" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=4">
 <link rel="mask-icon" href="/mask-icon.svg?v=4" color="#C8A96E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./style.css">
 <script type="importmap">{"imports":{"three":"./vendor/three/three.module.js","three/addons/controls/OrbitControls.js":"./vendor/three/addons/controls/OrbitControls.js","three/addons/exporters/GLTFExporter.js":"./vendor/three/addons/exporters/GLTFExporter.js"}}</script>
 </head>
 <body>
-<div class="sitebar">
-  <a class="sb-logo" href="/"><img src="/images/logo.png" alt="Om Shanti N R Construction"></a>
-  <nav class="sb-crumb" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/projects/ostwal-imperial/">Ostwal Imperial</a><span>/</span><b>3D Explorer</b></nav>
-  <a class="sb-cta" id="sitebar-cta" href="#book">Book a site visit</a>
-</div>
 <header>
-  <div class="brand"><span class="monogram">OI</span><div><h1>Ostwal Imperial</h1><p>PALGHAR WEST <span> / </span> 3D EXPLORER</p></div></div>
-  <nav aria-label="Viewer mode"><button id="site-mode" class="active" aria-pressed="true">Site model</button><button id="flat-mode" aria-pressed="false">Apartment</button><button id="references">Original renders</button></nav>
+  <a class="home-link" href="/" aria-label="Om Shanti N R Construction home"><img src="/images/logo.png" alt="Om Shanti N R Construction"></a>
+  <div class="brand">
+    <h1>Ostwal Imperial</h1>
+    <p><a href="/projects/ostwal-imperial/">Project</a><span>/</span>3D Explorer<span>/</span>Palghar West</p>
+  </div>
+  <nav aria-label="Viewer mode"><button id="site-mode" class="active" aria-pressed="true">Site model</button><button id="flat-mode" aria-pressed="false">Apartment</button><button id="references">Renders</button></nav>
+  <button class="cta" id="sitebar-cta">Book a site visit</button>
 </header>
 <main>
 <aside>
