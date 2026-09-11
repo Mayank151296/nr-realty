@@ -33,7 +33,7 @@ GUIDES_3 = {
               "Check the MahaRERA record for each shortlisted project before comparing prices.",
               "Visit on a weekday and a Sunday. Palghar's traffic and market density read very differently on the two."]},
     {"h2": "Where our projects sit",
-     "p": ["Om Shanti N R Construction works on both sides. Ostwal Imperial, where the firm is the land partner, is on Devisha Road in Palghar West. Shree Balaji Pride and Shiv Shrushti Complex are at Vevoor in Palghar East, the latter with occupation certificate received. The Aastha plotted layout is at Tembhode.",
+     "p": ["Om Shanti N R Construction works on both sides. Ostwal Imperial, where three of the firm\u2019s partners are land partners in their individual capacity, is on Devisha Road in Palghar West. Shree Balaji Pride and Shiv Shrushti Complex are at Vevoor in Palghar East, the latter with occupation certificate received. The Aastha plotted layout is at Tembhode.",
            "The firm has completed thirteen residential and commercial projects in the town since 1996, which is the more useful thing to check than any claim about which side is better."]}
   ],
   "faq": [
