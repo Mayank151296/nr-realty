@@ -707,7 +707,7 @@ footer{border-top:1px solid var(--line);padding:80px 0 120px}
 .ex-gate{display:none}
 @media (max-width:900px){.ch{left:18px;right:18px;bottom:110px;max-width:none}.ch h3{font-size:clamp(34px,10vw,52px)}.ch p{font-size:14px}.ch-rail{right:10px;gap:10px}.ch-rail button span{display:none}.ch-end{left:50%;right:auto;width:calc(100% - 36px)}.skip3d{top:12px;right:12px}}
 @media (prefers-reduced-motion:reduce){.story{height:auto}.story .stage{position:relative;top:0;height:min(82vh,760px)}.ch{display:none}.ch-end{display:block;opacity:1;filter:none;transform:translate(-50%,-50%)}.ch-rail,.skip3d{display:none}}
-.nav a{white-space:nowrap}.ft-legal p:last-child{grid-column:1/-1}.ft-nav{display:flex;flex-wrap:wrap;gap:10px 28px;padding:28px 0;border-top:1px solid var(--line);font:400 11px/1.4 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--ink2)}.ft-nav a{transition:color .2s ease}.ft-nav a:hover{color:var(--gold)}
+.nav a{white-space:nowrap}.hdr-l{flex:none;display:flex;align-items:center;gap:16px}.hdr-back{flex:none;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid var(--line);border-radius:999px;color:var(--ink2);transition:color .2s ease,border-color .2s ease,transform .16s cubic-bezier(.23,1,.32,1)}.hdr-back svg{width:14px;height:14px}.hdr-back:active{transform:scale(.97)}.hdr-back:focus-visible{outline:1px solid var(--gold2);outline-offset:3px}@media (hover:hover) and (pointer:fine){.hdr-back:hover{color:var(--gold);border-color:var(--gold)}}.hdr-back span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.nav{gap:26px}.nav-3d{white-space:nowrap}@media (max-width:1439px){.nav{display:none}}.ft-legal p:last-child{grid-column:1/-1}.ft-nav{display:flex;flex-wrap:wrap;gap:10px 28px;padding:28px 0;border-top:1px solid var(--line);font:400 11px/1.4 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--ink2)}.ft-nav a{transition:color .2s ease}.ft-nav a:hover{color:var(--gold)}
 </style>
 </head>
 <body>
@@ -715,10 +715,13 @@ footer{border-top:1px solid var(--line);padding:80px 0 120px}
 
 <header class="hdr" data-header>
   <div class="wrap">
+    <div class="hdr-l">
+    <a class="hdr-back" href="/" title="Om Shanti N R Construction home" aria-label="Back to Om Shanti N R Construction home"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Om Shanti N R</span></a>
     <a class="mark" href="#top" aria-label="Aastha, back to top">
       <svg viewBox="0 0 40 48" aria-hidden="true"><path d="M4 43V23C4 1 36 1 36 23V43M12 43V23C12 12 28 12 28 23V43M20 20V43" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
       <span><b>AASTHA</b><small>TEMBHODE · PALGHAR</small></span>
     </a>
+    </div>
     <nav class="nav" aria-label="Sections">
       <a href="#explore">Site model</a><a href="#story">The enclave</a><a href="#infrastructure">Infrastructure</a><a href="#location">Location</a><a href="#documents">Documents</a>
     </nav>
