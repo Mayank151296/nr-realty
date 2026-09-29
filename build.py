@@ -204,6 +204,20 @@ class BuildOptimizer:
                     stamped += 1
         print(f"\u2713 explorer modules cache-busted (v={version}, {stamped} files)")
 
+    def copy_standalone(self):
+        """Copy hand-built project pages (e.g. the Aastha 3D page) into dist/ as-is."""
+        for meta in self.PROJECT_PAGES.values():
+            if not meta.get('standalone'):
+                continue
+            src = self.project_dir / meta['slug']
+            if not (src / 'index.html').exists():
+                print(f"! standalone page missing: {meta['slug']}"); continue
+            dst = self.dist_dir / meta['slug']
+            if dst.exists():
+                shutil.rmtree(dst)
+            shutil.copytree(src, dst)
+            print(f"\u2713 standalone page copied: /{meta['slug']}/")
+
     def copy_favicons(self):
         """Copy favicon, PWA-icon, Safari mask-icon, and manifest files into dist root"""
         names = ['favicon.ico', 'favicon.png', 'favicon-16.png', 'favicon-32.png',
@@ -240,7 +254,8 @@ class BuildOptimizer:
                  'desc': 'Shiv Shrushti by Om Shanti N R Construction is a MahaRERA-registered residential project in Palghar West, Maharashtra. Configurations, RERA details and brochure.'},
         'aastha': {'slug': 'projects/aastha',
                    'title': 'Aastha | Plotted Development in Palghar | Om Shanti N R Construction',
-                   'desc': 'Aastha by Om Shanti N R Construction is a plotted development in Palghar, Maharashtra. Layout, approvals and project details.'},
+                   'desc': 'Aastha by Om Shanti N R Construction is a plotted development in Palghar, Maharashtra. Layout, approvals and project details.',
+                   'standalone': True},
         'leadership': {'slug': 'leadership',
                        'title': 'Leadership | Om Shanti N R Construction | Palghar Real Estate',
                        'desc': 'Meet the leadership of Om Shanti N R Construction, a Palghar family real estate firm building with trust and compliance since 2005.'},
@@ -291,6 +306,8 @@ class BuildOptimizer:
         version = int(time.time())
         count = 0
         for page, meta in self.PROJECT_PAGES.items():
+            if meta.get('standalone'):
+                continue  # hand-built page lives in projects/<slug>/; see copy_standalone()
             h = src
             # 1) make asset URLs root-relative so they resolve from a sub-path
             h = re.sub(r'((?:src|href)=")(images/|qr/|brochures/)', r'\1/\2', h)
@@ -440,6 +457,7 @@ class BuildOptimizer:
         self.copy_brochures()
         self.copy_favicons()
         self.copy_explore()
+        self.copy_standalone()
         self.copy_config()
         self.generate_project_pages()
         self.build_guides()

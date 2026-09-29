@@ -2444,6 +2444,7 @@ var HASH_PAGE = {'': 'home', '#': 'home', '#/': 'home', '#/leadership': 'leaders
 function pageFromLocation() { return PATH_PAGE[location.pathname] || HASH_PAGE[location.hash] || 'home'; }
 
 function showPage(name, fromHistory) {
+  if (name === 'aastha') { location.href = '/projects/aastha/'; return; }  // standalone 3D page
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
   window.scrollTo({top: 0, behavior: 'smooth'});
