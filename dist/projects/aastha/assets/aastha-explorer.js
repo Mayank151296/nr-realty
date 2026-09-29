@@ -28,7 +28,7 @@ const TYPO = {
    Other plots: buildable estimated at the same ratio of buildable to plot area, pending confirmation. */
 const BUILD_RATIO = 29812/(908.20*10.7639);
 Object.keys(PLOTS).forEach(id=>{const p=PLOTS[id];p.buildSqft=Math.round(p.a*10.7639*BUILD_RATIO/10)*10;p.est=true;});
-PLOTS[13].buildSqft=29812;PLOTS[13].est=false;PLOTS[13].price=55152200;
+PLOTS[13].buildSqft=29812;PLOTS[13].est=false;
 GEO.items.forEach(it=>{ if(it.dims) PLOTS[it.id].dims=it.dims; });
 const fmt=(n,d=0)=>n.toLocaleString("en-IN",{minimumFractionDigits:d,maximumFractionDigits:d});
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -575,7 +575,7 @@ const ICON={
 const crore=n=>"₹"+(n/1e7).toFixed(2)+" Cr";
 function panelHTML(id){
   if(PLOTS[id]){const p=PLOTS[id],sold=p.st==="Sold";
-    const price=p.price?`<div class="pn-price"><div><span>Land price</span><b>₹${fmt(p.price)}</b></div><small>${crore(p.price)} · ≈ ₹${fmt(p.price/(p.a*SQFT))} per sq ft of land · ₹${fmt(p.price/p.buildSqft)} per buildable sq ft</small></div>`:(sold?"":`<div class="pn-price is-req"><div><span>Land price</span><b>On request</b></div></div>`);
+    const price="";
     return `<button class="pn-x" type="button" aria-label="Close plot details" data-x>×</button>
     <p class="pn-k ${sold?"is-sold":""}"><i></i>${sold?"Sold":"Available"} · Aastha, Tembhode</p>
     <h3 class="pn-t">Plot <em>${pad2(id)}</em></h3>
@@ -634,7 +634,7 @@ function deselect(){closePlans();highlightCinemaFloor(null);if(showCinema){showC
 function toggleCompare(id){const i=compare.indexOf(id);if(i>=0)compare.splice(i,1);else{if(compare.length>=3){toast("Compare up to three plots. Remove one first.");return;}compare.push(id);}
   $("#tray").hidden=compare.length===0;$("#trayN").textContent=compare.length;$("#trayList").textContent=compare.map(pad2).join(" · ");renderCompare();if(selected===id)select(id,false);}
 function renderCompare(){const box=$("#cmp");if(compare.length<2){box.classList.remove("on");box.innerHTML="";return;}
-  const rows=[["Plot area",p=>fmt(p.a,2)+" m²",p=>p.a],["Area in sq ft",p=>fmt(p.a*SQFT),p=>p.a],["Approx. size",p=>p.dims[0]+" × "+p.dims[1]+" m",null],["Front road",p=>p.road+(p.corner?" · corner":""),p=>(p.r12?1:0)+(p.corner?1:0)],["Buildable (approx.)",p=>fmt(p.buildSqft)+" sq ft"+(p.est?" *":""),p=>p.buildSqft],["Land price",p=>p.price?"₹"+fmt(p.price):"On request",null],["Status",p=>p.st,null]];
+  const rows=[["Plot area",p=>fmt(p.a,2)+" m²",p=>p.a],["Area in sq ft",p=>fmt(p.a*SQFT),p=>p.a],["Approx. size",p=>p.dims[0]+" × "+p.dims[1]+" m",null],["Front road",p=>p.road+(p.corner?" · corner":""),p=>(p.r12?1:0)+(p.corner?1:0)],["Buildable (approx.)",p=>fmt(p.buildSqft)+" sq ft"+(p.est?" *":""),p=>p.buildSqft],["Status",p=>p.st,null]];
   box.innerHTML=`<div class="cmp-head"><p class="label">Side by side</p><button type="button" class="link" id="cmpClear">Clear comparison</button></div><div class="cmp-scroll"><table><thead><tr><th></th>${compare.map(id=>`<th>Plot <em>${pad2(id)}</em></th>`).join("")}</tr></thead><tbody>${rows.map(([l,f,v])=>{const vals=compare.map(id=>PLOTS[id]);const best=v?Math.max(...vals.map(v)):null;return`<tr><td>${l}</td>${vals.map(p=>`<td class="${v&&v(p)===best?"best":""}">${f(p)}</td>`).join("")}</tr>`;}).join("")}</tbody></table></div>`;
   box.classList.add("on");$("#cmpClear").addEventListener("click",clearCompare);}
 function clearCompare(){compare=[];$("#tray").hidden=true;renderCompare();if(selected)select(selected,false);}
