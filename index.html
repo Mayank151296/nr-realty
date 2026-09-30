@@ -990,6 +990,9 @@ footer{background:var(--bg-mid);border-top:.5px solid var(--border);padding:3.5r
 @media (max-width:768px){.x3d{min-height:360px}.x3d.home{min-height:480px}}
 @media (prefers-reduced-motion:reduce){.x3d-eyebrow i{animation:none}.x3d-img{transition:none}}
 </style>
+<!-- When shown inside danka.agency (?embed=danka), hide the floating WhatsApp button. Normal visits are unchanged. -->
+<script>(function(){try{var q=new URLSearchParams(location.search);if(q.get("embed")==="danka")sessionStorage.setItem("embed","danka");if(sessionStorage.getItem("embed")==="danka")document.documentElement.classList.add("embed-danka")}catch(e){}})();</script>
+<style>.embed-danka .wa-fab{display:none!important}</style>
 </head>
 <body>
 <div id="luxe-preloader" aria-hidden="true">
