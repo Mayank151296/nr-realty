@@ -176,6 +176,17 @@ class BuildOptimizer:
         self.version_explore(src, dst)
         size = sum(f.stat().st_size for f in dst.rglob('*') if f.is_file())
         print(f"✓ 3D explorer copied to dist ({size/1024/1024:.1f} MB)")
+        # The scroll-driven walkaround lives beside the explorer and reuses its
+        # model.js and vendored Three.js by relative path, so it ships with it.
+        wsrc = self.project_dir / 'projects' / 'ostwal-imperial' / 'walk'
+        if wsrc.exists():
+            wdst = self.dist_dir / 'projects' / 'ostwal-imperial' / 'walk'
+            if wdst.exists():
+                shutil.rmtree(wdst)
+            shutil.copytree(wsrc, wdst)
+            self.version_explore(wsrc, wdst)
+            wsize = sum(f.stat().st_size for f in wdst.rglob('*') if f.is_file())
+            print(f"✓ 3D walkaround copied to dist ({wsize/1024/1024:.1f} MB)")
 
     def version_explore(self, *roots):
         """Cache-bust the explorer's own modules.
@@ -357,6 +368,7 @@ class BuildOptimizer:
         urls = [self.BASE_URL + '/'] + [f'{self.BASE_URL}/{m["slug"]}/' for m in self.PROJECT_PAGES.values()]
         urls += getattr(self, 'guide_urls', [])
         urls.append(f'{self.BASE_URL}/projects/ostwal-imperial/explore/')
+        urls.append(f'{self.BASE_URL}/projects/ostwal-imperial/walk/')
         today = __import__('datetime').date.today().isoformat()
         sm = ['<?xml version="1.0" encoding="UTF-8"?>',
               '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
