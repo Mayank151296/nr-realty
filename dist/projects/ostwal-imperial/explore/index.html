@@ -20,7 +20,6 @@
 <style>html{color-scheme:dark}body{margin:0;background:#13110e}[hidden]{display:none!important}</style>
 </head>
 <body>
-<title>Ostwal Imperial 3D</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1702,7 +1701,7 @@ const RealFlat = (function () {
   };
   // Every flat drawing on the typical-floor sheets: measured plan, mirror/rotation, room directions, key-plan rectangles
   let FLATS = null;
-  const flatsReady = fetch('flatinfo.json?v=1793187891').then((r) => r.json()).then((j) => { FLATS = j; if (unitsById.size) renderFinder(); return j; });
+  const flatsReady = fetch('flatinfo.json?v=1793191834').then((r) => r.json()).then((j) => { FLATS = j; if (unitsById.size) renderFinder(); return j; });
   const towerCentre = {};
 
   const unitMatBase = new THREE.MeshBasicMaterial({ color: 0xc9a24a, transparent: true, opacity: 0, depthWrite: false });
@@ -2460,7 +2459,7 @@ const RealFlat = (function () {
     if (p.car) { const t = mins(p.car.s); return (t >= 60 ? Math.floor(t / 60) + ' h ' + String(t % 60).padStart(2, '0') : t + ' min') + ' drive'; }
     return '—';
   }
-  fetch('map.json?v=1793187891').then((r) => r.json()).then((j) => {
+  fetch('map.json?v=1793191834').then((r) => r.json()).then((j) => {
     MAP = j;
     if (!$('card').hidden) $('cNear').innerHTML = nearHTML();
     const st = j.places.find((p) => p.id === 'station');
@@ -2695,7 +2694,7 @@ const RealFlat = (function () {
   const flatStage = document.getElementById('flatStage');
   let homeOpen = false, flat = null, fr = null, fScene = null, fCam = null, fCtl = null, playT = 1, lastT = 0, returnFocus = null;
   let PLANS = null, fEnv = null, camTween = null, fGround = null, homeO = null;
-  const plansReady = () => PLANS ? Promise.resolve(PLANS) : fetch('plans.json?v=1793187891').then((r) => r.json()).then((j) => (PLANS = j));
+  const plansReady = () => PLANS ? Promise.resolve(PLANS) : fetch('plans.json?v=1793191834').then((r) => r.json()).then((j) => (PLANS = j));
   function ensureFlatRenderer() {
     if (fr) return;
     fr = new THREE.WebGLRenderer({ antialias: true });
