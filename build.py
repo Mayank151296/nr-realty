@@ -251,6 +251,10 @@ class BuildOptimizer:
         if headers.exists():
             shutil.copy(headers, self.dist_dir / '_headers')
             print("✓ .htaccess copied")
+        redirects = self.project_dir / '_redirects'
+        if redirects.exists():
+            shutil.copy(redirects, self.dist_dir / '_redirects')
+            print("✓ _redirects copied")
 
     BASE_URL = 'https://omshantinrconstruction.com'
     PROJECT_PAGES = {
