@@ -708,6 +708,107 @@ footer{border-top:1px solid var(--line);padding:80px 0 120px}
 @media (max-width:900px){.ch{left:18px;right:18px;bottom:110px;max-width:none}.ch h3{font-size:clamp(34px,10vw,52px)}.ch p{font-size:14px}.ch-rail{right:10px;gap:10px}.ch-rail button span{display:none}.ch-end{left:50%;right:auto;width:calc(100% - 36px)}.skip3d{top:12px;right:12px}}
 @media (prefers-reduced-motion:reduce){.story{height:auto}.story .stage{position:relative;top:0;height:min(82vh,760px)}.ch{display:none}.ch-end{display:block;opacity:1;filter:none;transform:translate(-50%,-50%)}.ch-rail,.skip3d{display:none}}
 .nav a{white-space:nowrap}.hdr-l{flex:none;display:flex;align-items:center;gap:16px}.hdr-back{flex:none;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid var(--line);border-radius:999px;color:var(--ink2);transition:color .2s ease,border-color .2s ease,transform .16s cubic-bezier(.23,1,.32,1)}.hdr-back svg{width:14px;height:14px}.hdr-back:active{transform:scale(.97)}.hdr-back:focus-visible{outline:1px solid var(--gold2);outline-offset:3px}@media (hover:hover) and (pointer:fine){.hdr-back:hover{color:var(--gold);border-color:var(--gold)}}.hdr-back span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.nav{gap:26px}.nav-3d{white-space:nowrap}@media (max-width:1439px){.nav{display:none}}.ft-legal p:last-child{grid-column:1/-1}.ft-nav{display:flex;flex-wrap:wrap;gap:10px 28px;padding:28px 0;border-top:1px solid var(--line);font:400 11px/1.4 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--ink2)}.ft-nav a{transition:color .2s ease}.ft-nav a:hover{color:var(--gold)}
+
+/* ===== v3 interaction layer: dock, guided tour, walk mode, plot finder ===== */
+.stage.ux .ex-tools .seg,.stage.ux .compass,.stage.ux .filters,.stage.ux .legend,.stage.ux .ex-strip-wrap{display:none}
+.ux-dock{position:absolute;left:50%;bottom:22px;z-index:7;transform:translateX(-50%);display:flex;align-items:center;gap:4px;padding:6px;border:1px solid var(--line);background:rgba(12,11,9,.78);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:999px;box-shadow:0 18px 50px rgba(0,0,0,.45);transition:opacity .5s var(--ease),transform .5s var(--ease)}
+.stage:not(.is-live) .ux-dock{opacity:0;pointer-events:none;transform:translate(-50%,12px)}
+.ux-dock button{all:unset;cursor:pointer;box-sizing:border-box;height:46px;padding:0 18px;border-radius:999px;display:inline-flex;align-items:center;gap:10px;font:400 10.5px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--ink2);transition:background .25s,color .25s}
+.ux-dock button svg{width:18px;height:18px;flex:none}
+.ux-dock button:hover{color:var(--ink);background:rgba(239,231,214,.06)}
+.ux-dock button[aria-pressed=true]{background:var(--gold);color:#0A0907}
+.ux-dock button:focus-visible{outline:1px solid var(--gold2);outline-offset:2px}
+.ux-dock .sep{width:1px;height:26px;background:var(--line);margin:0 4px}
+.ux-dock .lt{min-width:3.6em}
+/* plot finder */
+.ux-sheet{position:absolute;left:var(--gut);top:84px;bottom:100px;z-index:6;width:350px;display:flex;flex-direction:column;background:rgba(14,12,10,.88);border:1px solid var(--line);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.ux-sheet[hidden],.ux-tour[hidden],.ux-walk[hidden],.ux-near[hidden],.ux-end[hidden],.ux-card[hidden]{display:none}
+.ux-sheet header{display:flex;justify-content:space-between;align-items:flex-start;padding:22px 22px 14px}
+.ux-sheet .k{margin:0 0 8px;font:400 10px/1.4 var(--sans);letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
+.ux-sheet h3{margin:0;font:300 30px/1.05 var(--serif);color:var(--ink)}
+.ux-x{all:unset;cursor:pointer;width:34px;height:34px;display:grid;place-items:center;font-size:20px;color:var(--ink2);border:1px solid var(--line)}
+.ux-x:hover{color:var(--ink);border-color:var(--gold3)}
+.ux-fl{display:flex;flex-wrap:wrap;gap:6px;padding:0 22px 12px}
+.ux-fl button,.ux-sort button{all:unset;cursor:pointer;height:30px;padding:0 12px;border:1px solid var(--line);font:400 10px/30px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+.ux-fl button[aria-pressed=true],.ux-sort button[aria-pressed=true]{color:#0A0907;background:var(--gold);border-color:var(--gold)}
+.ux-sort{display:flex;align-items:center;gap:6px;padding:0 22px 14px;font:400 10px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--mute)}
+.ux-sort span{margin-right:4px}
+.ux-list{list-style:none;margin:0;padding:0 12px 14px;overflow:auto;flex:1;border-top:1px solid var(--line2)}
+.ux-list li{margin:0}
+.ux-list button{all:unset;cursor:pointer;box-sizing:border-box;width:100%;display:grid;grid-template-columns:52px 1fr auto;align-items:center;gap:12px;padding:13px 10px;border-bottom:1px solid var(--line2);transition:background .2s}
+.ux-list button:hover,.ux-list button.on{background:rgba(200,169,110,.08)}
+.ux-list b{font:300 30px/1 var(--serif);color:var(--ink)}
+.ux-list .m{display:flex;flex-direction:column;gap:5px}
+.ux-list .a{font:400 14px/1.2 var(--sans);color:var(--ink)}
+.ux-list .a i{font-style:normal;color:var(--ink2);font-size:12px}
+.ux-list .r{font:300 12px/1.2 var(--sans);color:var(--ink2)}
+.ux-list .st{font:400 9px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--gold2);padding:6px 8px;border:1px solid rgba(200,169,110,.35)}
+.ux-list button.sold b,.ux-list button.sold .a{color:var(--mute)}
+.ux-list button.sold .st{color:var(--mute);border-color:var(--line2)}
+.ux-list .none{padding:22px 10px;color:var(--ink2);font-size:14px}
+/* guided tour */
+.ux-tour{position:absolute;inset:0;z-index:6;pointer-events:none}
+.ux-card,.ux-end{position:absolute;left:var(--gut);bottom:100px;width:min(460px,calc(100% - 40px));pointer-events:auto;padding:24px 26px 20px;background:rgba(12,11,9,.82);border:1px solid var(--line);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.ux-card .k,.ux-end .k{margin:0 0 12px;font:400 10px/1.4 var(--sans);letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
+.ux-card h3,.ux-end h3{margin:0 0 10px;font:300 clamp(28px,3vw,40px)/1.04 var(--serif);color:var(--ink)}
+.ux-card h3 em,.ux-end h3 em{font-style:italic;color:var(--gold2)}
+.ux-card p,.ux-end p{margin:0;font:300 15px/1.6 var(--sans);color:var(--ink2)}
+.ux-bar{height:2px;margin:18px 0 14px;background:rgba(200,169,110,.18);overflow:hidden}
+.ux-bar i{display:block;height:100%;background:var(--gold);transform-origin:0 50%;transform:scaleX(0)}
+.ux-ctl{display:flex;align-items:center;gap:8px}
+.ux-ctl button{all:unset;cursor:pointer;width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--line);color:var(--ink2)}
+.ux-ctl button:hover{color:var(--ink);border-color:var(--gold3)}
+.ux-ctl button svg{width:15px;height:15px}
+.ux-ctl #uxPlay .pl{display:none}.ux-ctl #uxPlay.paused .pl{display:block}.ux-ctl #uxPlay.paused .pa{display:none}
+.ux-dots{display:flex;gap:6px;margin-left:auto}
+.ux-dots button{all:unset;cursor:pointer;width:18px;height:18px;display:grid;place-items:center}
+.ux-dots i{width:6px;height:6px;border-radius:50%;background:rgba(239,231,214,.22)}
+.ux-dots button.on i{background:var(--gold)}
+.ux-end .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.ux-end .acts button{all:unset;cursor:pointer;height:44px;padding:0 18px;display:inline-flex;align-items:center;gap:10px;border:1px solid var(--gold);font:400 10.5px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+.ux-end .acts button.solid{background:var(--gold);color:#0A0907}
+.ux-end .acts button:hover{background:var(--gold2);color:#0A0907;border-color:var(--gold2)}
+.stage.touring .tags,.stage.walking .tags{opacity:0}
+/* walk mode */
+.ux-walk{position:absolute;inset:0;z-index:6;pointer-events:none}
+.ux-walk>*{pointer-events:auto}
+.ux-hint{position:absolute;left:50%;bottom:156px;transform:translateX(-50%);padding:10px 16px;background:rgba(10,9,7,.72);border:1px solid var(--line);font:400 10.5px/1.4 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--ink);white-space:nowrap;transition:opacity .8s;pointer-events:none}
+.ux-hint.off{opacity:0}
+.ux-mapw{position:absolute;left:var(--gut);top:84px;padding:8px;background:rgba(10,9,7,.72);border:1px solid var(--line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.stage .ux-mapw canvas{position:static;inset:auto;display:block;width:170px;height:170px;cursor:crosshair}
+.ux-mapw p{margin:8px 0 0;font:400 9px/1.3 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--mute)}
+.ux-wexit{position:absolute;left:var(--gut);top:310px;height:36px;padding:0 14px;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:rgba(10,9,7,.72);font:400 10px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--ink2);cursor:pointer}
+.ux-wexit:hover{color:var(--ink);border-color:var(--gold3)}
+.ux-near{position:absolute;left:50%;bottom:96px;transform:translateX(-50%);display:flex;align-items:center;gap:14px;padding:8px 8px 8px 18px;background:rgba(12,11,9,.84);border:1px solid var(--line);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font:300 14px/1.3 var(--sans);color:var(--ink2);white-space:nowrap}
+.ux-near b{font-weight:400;color:var(--ink)}
+.ux-near i{font-style:normal}.ux-near i.a{color:var(--gold2)}.ux-near i.s{color:var(--mute)}
+.ux-near button{all:unset;cursor:pointer;height:34px;padding:0 14px;background:var(--gold);color:#0A0907;font:400 10px/34px var(--sans);letter-spacing:.2em;text-transform:uppercase}
+.ux-pad{position:absolute;left:22px;bottom:96px;width:124px;height:124px;border-radius:50%;border:1px solid rgba(239,231,214,.25);background:rgba(10,9,7,.35);display:none;touch-action:none}
+.ux-pad i{position:absolute;left:50%;top:50%;width:52px;height:52px;margin:-26px 0 0 -26px;border-radius:50%;background:rgba(230,207,151,.85);box-shadow:0 6px 18px rgba(0,0,0,.4);transition:transform .08s}
+.stage.walking #cv{cursor:grab}
+.stage.walking #cv:active{cursor:grabbing}
+.ux-ping{position:absolute;z-index:6;width:34px;height:34px;margin:-17px 0 0 -17px;border:2px solid var(--gold2);border-radius:50%;pointer-events:none;animation:uxping .9s var(--ease) forwards}
+@keyframes uxping{from{transform:scale(.3);opacity:1}to{transform:scale(1.4);opacity:0}}
+.ex-cta3{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+@media (hover:none),(max-width:900px){.ux-pad{display:block}}
+@media (max-width:900px){
+  .ux-dock{left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));transform:none;justify-content:space-between;gap:0}
+  .stage:not(.is-live) .ux-dock{transform:translateY(12px)}
+  .ux-dock button{flex-direction:column;gap:5px;height:52px;padding:0 6px;flex:1;justify-content:center;font-size:8.5px;letter-spacing:.14em;border-radius:22px}
+  .ux-dock .sep{display:none}
+  .ux-sheet{left:10px;right:10px;width:auto;top:auto;bottom:calc(76px + env(safe-area-inset-bottom));max-height:58%}
+  .ux-sheet h3{font-size:26px}
+  .ux-card,.ux-end{left:10px;right:10px;width:auto;bottom:calc(76px + env(safe-area-inset-bottom));padding:18px 18px 14px}
+  .ux-card p{font-size:14px}
+  .ux-hint{bottom:calc(280px + env(safe-area-inset-bottom));white-space:normal;width:max-content;max-width:calc(100% - 28px);text-align:center}
+  .ux-mapw{left:auto;right:10px;top:64px;padding:6px}.stage .ux-mapw canvas{width:116px;height:116px}.ux-mapw p{display:none}
+  .ux-wexit{left:auto;right:10px;top:200px}
+  .ux-near{bottom:calc(84px + env(safe-area-inset-bottom));font-size:12.5px;padding:6px 6px 6px 12px;max-width:calc(100% - 20px)}
+  .ux-pad{bottom:calc(140px + env(safe-area-inset-bottom))}
+  .stage.ux .tray{bottom:calc(84px + env(safe-area-inset-bottom))}
+}
+@media (prefers-reduced-motion:reduce){.ux-ping{animation:none;display:none}}
+@media (max-height:600px){.ux-card,.ux-end{padding:12px 16px 10px}.ux-card h3,.ux-end h3{font-size:22px;margin-bottom:4px}.ux-card #uxTp,.ux-end p{display:none}.ux-bar{margin:10px 0 8px}.ux-card .k{margin-bottom:6px}}
 </style>
 </head>
 <body>
@@ -766,8 +867,8 @@ footer{border-top:1px solid var(--line);padding:80px 0 120px}
   <div class="wrap ex-head">
     <div><p class="label" data-reveal><i>I</i> The site in 3D</p><h2 data-reveal="2">Walk the land.<br><em>Choose your plot.</em></h2></div>
     <div data-reveal="3">
-      <p>Scroll to walk through the site, from the gate and roads to the gardens and plots. Then explore freely: open any plot to see its size, its buildable area and a concept building sized to fit.</p>
-      <div class="ex-how"><span>Drag to orbit</span><span>Scroll or pinch to zoom</span><span>Tap a plot</span></div>
+      <p>Scroll for a quick look from the gate to the gardens and plots. Then take the guided tour, walk in through the gate at eye level, or find your plot: open any plot to see its size, its buildable area and a concept building sized to fit.</p>
+      <div class="ex-how"><span>Guided tour</span><span>Walk the site</span><span>Find your plot</span></div>
     </div>
   </div>
 
@@ -782,7 +883,7 @@ footer{border-top:1px solid var(--line);padding:80px 0 120px}
       <article class="ch" data-ch="2"><p class="ch-n"><span>03</span> / 05 · Infrastructure</p><h3>9 m and 12 m roads,<br><em>lit after dark.</em></h3><p>4,552 m² of internal RCC roads with street lighting and gutters. Every plot has its own frontage.</p></article>
       <article class="ch" data-ch="3"><p class="ch-n"><span>04</span> / 05 · Open space</p><h3>Three gardens,<br><em>held in common.</em></h3><p>2,397 m² of landscaped open space and a 1,225 m² amenity plot, shared by the owners.</p></article>
       <article class="ch" data-ch="4"><p class="ch-n"><span>05</span> / 05 · The plots</p><h3>908 to 1,319 m².<br><em>Ten still available.</em></h3><p>Each plot suits a G+5 to G+7 building. Plot 13 alone allows about 29,812 sq ft of construction.</p></article>
-      <article class="ch ch-end" data-ch="5"><p class="ch-n"><span class="live" aria-hidden="true"></span> Interactive site model</p><h3>Now, <em>choose yours.</em></h3><p>Orbit the site, open any plot, and see a concept building sized to its buildable area.</p><div class="ch-ctas"><button class="btn solid" type="button" id="enter">Explore freely <i>→</i></button></div></article>
+      <article class="ch ch-end" data-ch="5"><p class="ch-n"><span class="live" aria-hidden="true"></span> Interactive site model</p><h3>Now, <em>choose yours.</em></h3><p>Take the guided tour, walk in through the gate, or open any plot to see a concept building sized to its buildable area.</p><div class="ch-ctas ex-cta3"><button class="btn solid" type="button" data-ux-start="tour">Take the tour <i>→</i></button><button class="btn" type="button" data-ux-start="walk">Walk the site</button><button class="btn" type="button" id="enter">Explore freely</button></div></article>
     </div>
     <nav class="ch-rail" aria-label="Chapters">
       <button type="button" data-go="0.06"><i></i><span>Enclave</span></button><button type="button" data-go="0.27"><i></i><span>Arrival</span></button><button type="button" data-go="0.47"><i></i><span>Roads</span></button><button type="button" data-go="0.67"><i></i><span>Gardens</span></button><button type="button" data-go="0.85"><i></i><span>Plots</span></button><button type="button" data-go="1"><i></i><span>Explore</span></button>
@@ -822,6 +923,51 @@ footer{border-top:1px solid var(--line);padding:80px 0 120px}
     <div class="tray" id="tray" hidden><span>Comparing <b id="trayN">0</b> · <span id="trayList"></span></span><button type="button" id="trayGo">Compare</button><button type="button" id="trayClear">Clear</button></div>
     <div class="toast" id="toast" role="status"></div>
 
+    <div class="ux-dock" id="uxDock" role="toolbar" aria-label="Explore the site">
+      <button type="button" data-ux="tour" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10 8.5v7l5.5-3.5z" fill="currentColor"/></svg><span>Tour</span></button>
+      <button type="button" data-ux="walk" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="13.5" cy="4.5" r="2" fill="currentColor"/><path d="M10.5 21.5l2.2-6.2 2.6 2.6v3.6M7.5 12l3.4-3.8 3.3 1.6 2.6 3.2M12.7 15.3l-1.4-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Walk</span></button>
+      <button type="button" data-ux="plots" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Plots</span></button>
+      <span class="sep" aria-hidden="true"></span>
+      <button type="button" data-ux="view" aria-label="Switch between aerial and plan view"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2.5 8 12 13l9.5-5zM2.5 12.5 12 17.5l9.5-5M2.5 16.5 12 21.5l9.5-5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg><span id="uxViewL" class="lt">Plan</span></button>
+      <button type="button" data-ux="time" aria-label="Change the light: model, day or night"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M12 2.5V5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span id="uxTimeL" class="lt">Model</span></button>
+    </div>
+    <aside class="ux-sheet" id="uxPlots" aria-label="Find a plot" hidden>
+      <header><div><p class="k">Find your plot</p><h3 id="uxCount">All 13 plots</h3></div><button class="ux-x" type="button" data-close aria-label="Close">×</button></header>
+      <div class="ux-fl" role="group" aria-label="Filter plots">
+        <button type="button" data-uf="avail" aria-pressed="false">Available</button>
+        <button type="button" data-uf="r12" aria-pressed="false">12 m road</button>
+        <button type="button" data-uf="corner" aria-pressed="false">Corner</button>
+        <button type="button" data-uf="big" aria-pressed="false">Over 1,200 m²</button>
+        <button type="button" data-uf="small" aria-pressed="false">Under 1,000 m²</button>
+      </div>
+      <div class="ux-sort" role="group" aria-label="Sort plots"><span>Sort</span><button type="button" data-us="no" aria-pressed="true">Plot no.</button><button type="button" data-us="size" aria-pressed="false">Largest first</button></div>
+      <ol class="ux-list" id="uxList"></ol>
+    </aside>
+    <div class="ux-tour" id="uxTour" hidden>
+      <div class="ux-card" id="uxTourCard" aria-live="polite">
+        <p class="k" id="uxTk"></p><h3 id="uxTh"></h3><p id="uxTp"></p>
+        <div class="ux-bar"><i id="uxBar"></i></div>
+        <div class="ux-ctl">
+          <button type="button" id="uxPrev" aria-label="Previous stop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
+          <button type="button" id="uxPlay" aria-label="Pause tour"><svg class="pa" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" stroke="currentColor" stroke-width="2"/></svg><svg class="pl" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z" fill="currentColor"/></svg></button>
+          <button type="button" id="uxNext" aria-label="Next stop"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>
+          <div class="ux-dots" id="uxDots"></div>
+          <button type="button" id="uxTourX" aria-label="End the tour"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.6"/></svg></button>
+        </div>
+      </div>
+      <div class="ux-end" id="uxTourEnd" hidden>
+        <p class="k">End of the tour</p><h3>Now, <em>choose yours.</em></h3><p>See every plot with its size, road and status, or walk in through the gate yourself.</p>
+        <div class="acts"><button type="button" class="solid" data-then="plots">Find a plot <i>→</i></button><button type="button" data-then="walk">Walk the site</button><button type="button" data-then="close">Explore freely</button></div>
+      </div>
+    </div>
+    <div class="ux-walk" id="uxWalk" hidden>
+      <div class="ux-hint" id="uxHint"></div>
+      <div class="ux-mapw"><canvas id="uxMap" width="170" height="170" aria-label="Map of the site. Click a spot to walk there."></canvas><p>Click the map to go there</p></div>
+      <button type="button" class="ux-wexit" id="uxWalkX">× Exit walk</button>
+      <div class="ux-pad" id="uxPad" aria-hidden="true"><i></i></div>
+      <div class="ux-near" id="uxNear" hidden></div>
+    </div>
+
     <div class="ex-strip-wrap"><p>Jump to a plot</p><div class="ex-strip" id="strip" role="group" aria-label="Plots"></div></div>
 
     <div class="viewer-loading" id="viewerLoading"><span>Preparing the site model…</span><div class="fb"><p>The 3D model needs WebGL, which this browser doesn't offer. You can still see the architect's layout and every plot figure below.</p><a class="btn" href="#documents">View the plotting layout <i>→</i></a></div></div>
@@ -829,7 +975,7 @@ footer{border-top:1px solid var(--line);padding:80px 0 120px}
   </div>
   <div class="wrap">
     <div class="cmp" id="cmp"></div>
-    <div class="ex-foot"><span>Buildable area for plot 13 is as advised by the developer; other plots are estimated at the same ratio until confirmed. Approvals apply. Plot shapes are traced from the layout. Buildings, trees, the gate and the surroundings are illustrative.</span><span>Availability as supplied, 22 September 2026.</span></div>
+    <div class="ex-foot"><span>Buildable area for plot 13 is as advised by the developer; other plots are estimated at the same ratio until confirmed. Approvals apply. Plot shapes are traced from the layout. Concept buildings and the gate design are illustrative. Surrounding buildings, roads and trees are modelled from public map data (© OpenStreetMap contributors, © Overture Maps Foundation), with estimated building heights.</span><span>Availability as supplied, 22 September 2026.</span></div>
   </div>
 </section>
 
@@ -998,8 +1144,9 @@ footer{border-top:1px solid var(--line);padding:80px 0 120px}
 <script src="assets/three/OrbitControls.js"></script>
 <script src="assets/three/BufferGeometryUtils.js"></script>
 <script src="assets/three/post.js?v=1790701272"></script>
-<script src="assets/aastha-context.js?v=1793540000"></script>
-<script src="assets/aastha-explorer.js?v=1793540000"></script>
+<script src="assets/aastha-context.js?v=1793560000"></script>
+<script src="assets/aastha-explorer.js?v=1793560000"></script>
+<script src="assets/aastha-ux.js?v=1793560000"></script>
 <script>
 (function(){const fab=document.getElementById('fab3d'),st=document.getElementById('stage'),hero=document.querySelector('.hero');let inEx=false,pastHero=false;
 if(!('IntersectionObserver' in window))return;
