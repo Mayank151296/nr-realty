@@ -133,7 +133,7 @@ function build(){
   const nomW=c=>c.w>10?12:c.w>7?9:6; GEO.centre.forEach(c=>{c.W=nomW(c);c.ext=c.w<6;});
   const ends=GEO.centre.flatMap(c=>[c.pts[0],c.pts[c.pts.length-1]]);
   const isJoint=p=>ends.filter(q=>Math.hypot(q[0]-p[0],q[1]-p[1])<4).length>1;
-  GEO.centre.forEach(c=>{const W=c.W,n=c.pts.length;
+  GEO.centre.forEach(c=>{if(c.ext&&CTX)return;const W=c.W,n=c.pts.length;
     for(let i=0;i<n-1;i++){let a=c.pts[i].slice(),b=c.pts[i+1].slice();const L0=Math.hypot(b[0]-a[0],b[1]-a[1]),ux=(b[0]-a[0])/L0,uz=(b[1]-a[1])/L0;
       if(i===0&&!isJoint(a)){a=[a[0]-ux*W/2,a[1]-uz*W/2];} if(i===n-2&&!isJoint(b)){b=[b[0]+ux*W/2,b[1]+uz*W/2];}
       const L=Math.hypot(b[0]-a[0],b[1]-a[1]);const seg=new THREE.Mesh(new THREE.PlaneGeometry(L,W),c.ext?M.hw:M.road);seg.rotation.set(-Math.PI/2,0,Math.atan2(-uz,ux));seg.position.set((a[0]+b[0])/2,.15,(a[1]+b[1])/2);bake(seg);
@@ -174,7 +174,7 @@ function build(){
   const ring0=wallRing();const dRing=(p)=>{let d=1e9;for(let i=0;i<ring0.length;i++){const a=ring0[i],b=ring0[(i+1)%ring0.length];const t=Math.max(0,Math.min(1,((p[0]-a[0])*(b[0]-a[0])+(p[1]-a[1])*(b[1]-a[1]))/((b[0]-a[0])**2+(b[1]-a[1])**2)));d=Math.min(d,Math.hypot(p[0]-a[0]-(b[0]-a[0])*t,p[1]-a[1]-(b[1]-a[1])*t));}return d;};
   let best={d:1e9};GEO.centre.filter(c=>c.w>9).forEach(c=>{[[c.pts[0],c.pts[1]],[c.pts[c.pts.length-1],c.pts[c.pts.length-2]]].forEach(([e,n])=>{const d=dRing(e);if(d<best.d)best={d,e,n};});});
   const dl=Math.hypot(best.e[0]-best.n[0],best.e[1]-best.n[1]);gateDir=[(best.e[0]-best.n[0])/dl,(best.e[1]-best.n[1])/dl];gatePos=[best.e[0]+gateDir[0]*best.d,best.e[1]+gateDir[1]*best.d];
-  compoundWall(ring0,gatePos); innerFence(GEO.fence[1]);
+  if(CTX)realWall();else compoundWall(ring0,gatePos); innerFence(GEO.fence[1]);
   context();
   flushBake();
   tag("9 m road",-40,2,-42,true); tag("12 m road",66,2,-46,true); tag("9 m road",-50,2,10,true); tag("Main gate",gatePos[0],10.5,gatePos[1]);
@@ -282,7 +282,102 @@ function innerFence(ring){
   const pg=new THREE.CylinderGeometry(.08,.08,1.3,5);for(let i=0;i<ring.length;i++){const a=ring[i],b=ring[(i+1)%ring.length];const L=Math.hypot(b[0]-a[0],b[1]-a[1]);const n=Math.max(1,Math.round(L/4));
     for(let k=0;k<n;k++){const t=k/n;const p=new THREE.Mesh(pg,M.pole);p.position.set(a[0]+(b[0]-a[0])*t,.65,a[1]+(b[1]-a[1])*t);bake(p);}}
 }
-function context(){
+/* ---------- real surroundings: the same public map data as the photoreal film (Overture building footprints,
+   OpenStreetMap roads, tree positions read from satellite canopy). Buildings are extruded to estimated heights. ---------- */
+const CTX=window.AASTHA_CTX||null;
+function _pairs(a,from){const p=[];for(let i=from;i<a.length-1;i+=2)p.push([a[i],a[i+1]]);return p;}
+function _inPoly(p,poly){let c=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if(((a[1]>p[1])!==(b[1]>p[1]))&&(p[0]<(b[0]-a[0])*(p[1]-a[1])/(b[1]-a[1])+a[0]))c=!c;}return c;}
+function _offset(pts,d){const n=pts.length,o=[];for(let i=0;i<n;i++){const a=pts[Math.max(0,i-1)],b=pts[Math.min(n-1,i+1)];let dx=b[0]-a[0],dz=b[1]-a[1];const l=Math.hypot(dx,dz)||1;dx/=l;dz/=l;let m=1;
+  if(i>0&&i<n-1){const p=pts[i],q=pts[i-1];let ex=p[0]-q[0],ez=p[1]-q[1];const le=Math.hypot(ex,ez)||1;m=1/Math.max(.55,(-dz)*(-ez/le)+dx*(ex/le));}
+  o.push([pts[i][0]-dz*d*m,pts[i][1]+dx*d*m]);}return o;}
+function ribbonGeo(list){const pos=[],nor=[];
+  list.forEach(({pts,w,y})=>{if(pts.length<2)return;const L=_offset(pts,w/2),R=_offset(pts,-w/2);
+    for(let i=0;i<pts.length-1;i++){const a=L[i],b=R[i],c=L[i+1],d=R[i+1];pos.push(a[0],y,a[1],b[0],y,b[1],c[0],y,c[1],c[0],y,c[1],b[0],y,b[1],d[0],y,d[1]);for(let k=0;k<6;k++)nor.push(0,1,0);}});
+  const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));g.setAttribute("normal",new THREE.Float32BufferAttribute(nor,3));return g;}
+function dashes(pts,period,len){const out=[];let acc=period*.5;for(let i=0;i<pts.length-1;i++){const a=pts[i],b=pts[i+1];const L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<.01)continue;const ux=(b[0]-a[0])/L,uz=(b[1]-a[1])/L;
+  let t=acc;while(t<L){const t1=Math.min(L,t+len);out.push([[a[0]+ux*t,a[1]+uz*t],[a[0]+ux*t1,a[1]+uz*t1]]);t+=period;}acc=t-L;}return out;}
+const CM={};
+function winTextures(){const N=8,S=64;const a=document.createElement("canvas"),b=document.createElement("canvas");a.width=a.height=b.width=b.height=N*S;
+  const x=a.getContext("2d"),y=b.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,N*S,N*S);y.fillStyle="#000";y.fillRect(0,0,N*S,N*S);
+  for(let i=0;i<N;i++)for(let j=0;j<N;j++){const X=i*S,Y=j*S;
+    x.fillStyle="rgba(150,140,125,.55)";x.fillRect(X,Y+S*.86,S,S*.14);                                  // floor slab band
+    x.fillStyle="#3b3f44";x.fillRect(X+S*.28,Y+S*.3,S*.44,S*.42);x.fillStyle="#6f6a60";x.fillRect(X+S*.24,Y+S*.72,S*.52,S*.05);
+    if(rnd()<.38){const w=rnd()<.7?"#ffcf8a":"#fff1d6";y.fillStyle=w;y.fillRect(X+S*.28,Y+S*.3,S*.44,S*.42);}}
+  const ta=new THREE.CanvasTexture(a),tb=new THREE.CanvasTexture(b);[ta,tb].forEach(t=>{t.wrapS=t.wrapT=THREE.RepeatWrapping;t.anisotropy=4;});ta.encoding=tb.encoding=THREE.sRGBEncoding;return [ta,tb];}
+function realBuildings(B,maxR){
+  const wp=[],wn=[],wu=[],wc=[],rp=[],rn=[],rc=[];
+  const PALB=[[.95,.93,.88],[.97,.96,.93],[.94,.87,.83],[.95,.91,.79],[.88,.88,.86],[.92,.9,.85],[.9,.84,.78]];
+  B.forEach(b=>{const h=b[0],rid=b[1],pts=_pairs(b,2);if(pts.length<3)return;
+    const cx=pts.reduce((s,p)=>s+p[0],0)/pts.length,cz=pts.reduce((s,p)=>s+p[1],0)/pts.length;if(Math.hypot(cx,cz)>maxR)return;
+    const col=PALB[rid%PALB.length],uo=(rid*0.37)%1,vo=((rid*7)%8)/8;let ua=0;
+    for(let i=0;i<pts.length;i++){const a=pts[i],c=pts[(i+1)%pts.length];const L=Math.hypot(c[0]-a[0],c[1]-a[1]);if(L<.05)continue;
+      let nx=-(c[1]-a[1])/L,nz=(c[0]-a[0])/L;const m=[(a[0]+c[0])/2+nx*.25,(a[1]+c[1])/2+nz*.25];let flip=_inPoly(m,pts);if(flip){nx=-nx;nz=-nz;}
+      const u0=uo+ua/25.6,u1=uo+(ua+L)/25.6,v1=vo+h/24.8;ua+=L;
+      const A0=[a[0],0,a[1],u0,vo],C0=[c[0],0,c[1],u1,vo],C1=[c[0],h,c[1],u1,v1],A1=[a[0],h,a[1],u0,v1];
+      const tris=flip?[A0,C1,C0,A0,A1,C1]:[A0,C0,C1,A0,C1,A1];
+      tris.forEach(v=>{wp.push(v[0],v[1],v[2]);wn.push(nx,0,nz);wu.push(v[3],v[4]);wc.push(...col);});}
+    const tri=THREE.ShapeUtils.triangulateShape(pts.map(p=>new THREE.Vector2(p[0],p[1])),[]);
+    tri.forEach(([i,j,k])=>{let P=pts[i],Q=pts[j],R=pts[k];if((Q[1]-P[1])*(R[0]-P[0])-(Q[0]-P[0])*(R[1]-P[1])<0){const t=Q;Q=R;R=t;}
+      [P,Q,R].forEach(p=>{rp.push(p[0],h,p[1]);rn.push(0,1,0);rc.push(col[0]*.86,col[1]*.86,col[2]*.86);});});
+    // parapet ring on the roof edge
+  });
+  const gw=new THREE.BufferGeometry();gw.setAttribute("position",new THREE.Float32BufferAttribute(wp,3));gw.setAttribute("normal",new THREE.Float32BufferAttribute(wn,3));gw.setAttribute("uv",new THREE.Float32BufferAttribute(wu,2));gw.setAttribute("color",new THREE.Float32BufferAttribute(wc,3));
+  const gr=new THREE.BufferGeometry();gr.setAttribute("position",new THREE.Float32BufferAttribute(rp,3));gr.setAttribute("normal",new THREE.Float32BufferAttribute(rn,3));gr.setAttribute("color",new THREE.Float32BufferAttribute(rc,3));
+  const [map,glow]=winTextures();
+  CM.wall=new THREE.MeshStandardMaterial({vertexColors:true,map,emissiveMap:glow,emissive:0xffc074,emissiveIntensity:0,roughness:.88});
+  CM.roof=new THREE.MeshStandardMaterial({vertexColors:true,roughness:.95});
+  const mw=new THREE.Mesh(gw,CM.wall),mr=new THREE.Mesh(gr,CM.roof);[mw,mr].forEach(m=>{m.castShadow=true;m.receiveShadow=true;m.matrixAutoUpdate=false;scene.add(m);});
+}
+function realTrees(T,maxR){const ph=isPhone();const pts=T.filter((t,i)=>Math.hypot(t[0],t[1])<maxR&&(!ph||i%3===0));const n=pts.length;
+  const crown=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1,1),new THREE.MeshStandardMaterial({color:0xffffff,roughness:1,flatShading:true}),n);
+  const trunk=new THREE.InstancedMesh(new THREE.CylinderGeometry(.14,.24,1,5),M.trunk,n);
+  const m=new THREE.Matrix4(),q=new THREE.Quaternion(),up=new THREE.Vector3(0,1,0),col=new THREE.Color();CM.crown=crown.material;
+  pts.forEach((t,i)=>{const s=t[2]*(.85+rnd()*.35),h=5.2*s+1.6,r=2.5*s+.9;
+    m.compose(new THREE.Vector3(t[0],h*.36,t[1]),new THREE.Quaternion(),new THREE.Vector3(1,h*.72,1));trunk.setMatrixAt(i,m);
+    q.setFromAxisAngle(up,rnd()*6.283);m.compose(new THREE.Vector3(t[0],h*.74,t[1]),q,new THREE.Vector3(r,r*(.72+rnd()*.18),r));crown.setMatrixAt(i,m);
+    col.setRGB(.2+rnd()*.07,.29+rnd()*.08,.12+rnd()*.05);crown.setColorAt(i,col);});
+  crown.castShadow=true;crown.receiveShadow=true;scene.add(crown,trunk);}
+function realWall(){
+  const hw=7,H=1.9,T=.3,G=CTX.gate,e=G.e,nrm=G.out,C=G.c;gatePos=C.slice();gateDir=nrm.slice();
+  const P=_pairs(CTX.wall,0);
+  for(let i=0;i<P.length-1;i++){const a=P[i],b=P[i+1];const L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<.2)continue;const ang=Math.atan2(-(b[1]-a[1]),b[0]-a[0]);const n=Math.ceil(L/2.5);
+    for(let k=0;k<n;k++){const t0=k/n,t1=(k+1)/n,len=L/n;const mx=a[0]+(b[0]-a[0])*(t0+t1)/2,mz=a[1]+(b[1]-a[1])*(t0+t1)/2;
+      const w=new THREE.Mesh(new THREE.BoxGeometry(len+.05,H,T),M.wall);w.position.set(mx,H/2,mz);w.rotation.y=ang;w.castShadow=true;w.receiveShadow=true;bake(w);
+      const cp=new THREE.Mesh(new THREE.BoxGeometry(len+.05,.12,T+.14),M.coping);cp.position.set(mx,H+.06,mz);cp.rotation.y=ang;bake(cp);
+      if(k%4===0){const pl=new THREE.Mesh(new THREE.BoxGeometry(.5,H+.35,.5),M.wall);pl.position.set(a[0]+(b[0]-a[0])*t0,(H+.35)/2,a[1]+(b[1]-a[1])*t0);pl.rotation.y=ang;pl.castShadow=true;bake(pl);}}}
+  buildGate(C,e,nrm,hw);
+  // wing walls along the gate line, out to where they meet the compound wall
+  const ang=Math.atan2(-e[1],e[0]);
+  [-1,1].forEach(sd=>{const W=G.wing[String(sd)]||0,u0=hw+6.2;if(W<=u0)return;const len=W-u0+.25,u=sd*(u0+len/2);
+    const w=new THREE.Mesh(new THREE.BoxGeometry(len,H,.5),M.wall);w.position.set(C[0]+e[0]*u,H/2,C[1]+e[1]*u);w.rotation.y=ang;w.castShadow=true;bake(w);
+    const cp=new THREE.Mesh(new THREE.BoxGeometry(len,.12,.64),M.coping);cp.position.set(C[0]+e[0]*u,H+.06,C[1]+e[1]*u);cp.rotation.y=ang;bake(cp);});
+}
+function realContext(){
+  const ph=isPhone(),R=ph?560:820;
+  const near=(pts)=>pts.some(p=>Math.hypot(p[0],p[1])<R+80);
+  // roads: highway carriageways and arterials darker, lanes lighter
+  CM.lane=new THREE.MeshStandardMaterial({color:0x8f8b80,roughness:.97,side:THREE.DoubleSide});
+  const major=[],minor=[];
+  CTX.r.forEach(r=>{const pts=_pairs(r,2);if(!near(pts))return;(r[1]<=1?major:minor).push({pts,w:r[0],y:r[1]<=1?.07:.04+.004*r[1]});});
+  const hwM=M.hw.clone();hwM.side=THREE.DoubleSide;CM.hw=hwM;
+  [[major,hwM],[minor,CM.lane]].forEach(([L,mat])=>{const m=new THREE.Mesh(ribbonGeo(L),mat);m.receiveShadow=true;scene.add(m);});
+  // the exterior road: one public road down the east side, past the gate and along the south
+  const ext=_pairs(CTX.ext,1),gc=CTX.gate.c,go=CTX.gate.out;
+  const em=new THREE.Mesh(ribbonGeo([{pts:ext,w:CTX.ext[0],y:.165},{pts:[[gc[0]-go[0]*.5,gc[1]-go[1]*.5],[gc[0]+go[0]*11,gc[1]+go[1]*11]],w:16,y:.16}]),hwM);em.receiveShadow=true;scene.add(em);
+  // lane markings on the highway
+  const marks=[];CTX.hw.forEach(h=>{const pts=_pairs(h,0);if(!near(pts))return;dashes(pts,12,3.5).forEach(s=>marks.push({pts:s,w:.16,y:.085}));
+    [_offset(pts,3.95),_offset(pts,-3.95)].forEach(o=>marks.push({pts:o,w:.14,y:.085}));});
+  const mm=new THREE.Mesh(ribbonGeo(marks),new THREE.MeshBasicMaterial({color:0xe9e4d6,side:THREE.DoubleSide}));CM.marks=mm.material;scene.add(mm);
+  realBuildings(CTX.b,R);realTrees(CTX.t,R);
+  // highway label near the junction by the gate
+  let best=null;CTX.hw.forEach(h=>{_pairs(h,0).forEach((p,i,a)=>{const d=Math.hypot(p[0]-gc[0],p[1]-gc[1]);if(!best||d<best.d)best={d,p,a,i};});});
+  if(best){const a=best.a,i=Math.min(best.i,a.length-2);const dx=a[i+1][0]-a[i][0],dz=a[i+1][1]-a[i][1],l=Math.hypot(dx,dz)||1;tag("Manor–Mahim State Highway",best.p[0]+dx/l*90,4,best.p[1]+dz/l*90);}
+}
+function ctxMood(k){if(!CM.wall)return;const T={gallery:[0x4a4741,.5,0x6a6559,0x2d3a24,.8],daylight:[0xffffff,0,0xffffff,0xffffff,1],night:[0x3d3a35,1.5,0x3a372f,0x1f2a1a,.55]}[k]||[0xffffff,0,0xffffff,0xffffff,1];
+  CM.wall.color.setHex(T[0]);CM.wall.emissiveIntensity=T[1];CM.roof.color.setHex(T[2]);if(CM.crown)CM.crown.color.setHex(T[3]);if(CM.lane)CM.lane.color.copy(new THREE.Color(0x8f8b80).multiplyScalar(T[4]));if(CM.marks)CM.marks.color.copy(new THREE.Color(0xe9e4d6).multiplyScalar(T[4]));
+  if(CM.hw)CM.hw.color.copy(M.hw.color);}
+
+function context(){if(CTX){realContext();return;}
   // link road straight out of the gate to the state highway, which runs across it 130 m out
   const [gx,gz]=gatePos,[dx,dz]=gateDir;const D=130;const hx=gx+dx*D,hz=gz+dz*D;const rot=Math.atan2(-dz,dx);
   const hw=new THREE.Mesh(new THREE.PlaneGeometry(18,1400),M.hw);hw.rotation.set(-Math.PI/2,0,rot);hw.position.set(hx,.06,hz);hw.receiveShadow=true;bake(hw);
@@ -776,7 +871,7 @@ function setTime(k){const t=MOODS[k]||MOODS.gallery;mood=k;PAL=t.pal;document.qu
   M.coping.emissive.setHex(0xc8a96e);M.coping.emissiveIntensity=t.coping;
   scene.traverse(o=>{const m=o.material;if(m&&m.isMeshStandardMaterial)m.envMapIntensity=(m===M.bGlass||m===BM.rail)?t.env*3.5:t.env;});
   scene.traverse(o=>{if(o.isInstancedMesh&&o.userData.belt)o.visible=!!t.gmap;});
-  repaintAll();stage.dataset.time=k;}
+  repaintAll();if(CTX)ctxMood(k);stage.dataset.time=k;}
 document.querySelectorAll("[data-time]").forEach(b=>b.addEventListener("click",()=>setTime(b.dataset.time)));
 
 /* ================= activation (prevents the model from trapping page scroll) ================= */

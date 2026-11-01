@@ -12,7 +12,7 @@
 <meta property="og:title" content="Aastha, Tembhode | 13 Residential Plots in Palghar | 3D Site Model">
 <meta property="og:description" content="Aastha, Tembhode: a gated enclave of 13 residential plots, 908 to 1,319 m², beside the Manor–Mahim State Highway, Palghar. Walk the site in 3D, see each plot and a concept building sized to it.">
 <meta property="og:url" content="https://omshantinrconstruction.com/projects/aastha/">
-<meta property="og:image" content="https://omshantinrconstruction.com/projects/aastha/assets/aastha-og.jpg">
+<meta property="og:image" content="https://omshantinrconstruction.com/projects/aastha/assets/aastha-og-render.jpg">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.ico?v=4" sizes="any">
@@ -76,7 +76,7 @@ h2 em,h1 em{font-style:italic;color:var(--gold2)}
 .hdr .btn{height:46px;padding:0 22px;font-size:11px}
 @media (max-width:1080px){.nav{display:none}}
 @media (max-width:560px){.hdr .wrap{height:72px}}
-@media (max-width:760px){.hdr .btn{display:none}}
+@media (max-width:760px){.hdr .btn{display:none}.vision-side{align-items:flex-start}.vision small{text-align:left}}
 @media (max-width:1180px){.nav{gap:26px}}
 
 /* ---------- Hero ---------- */
@@ -160,6 +160,7 @@ h2 em,h1 em{font-style:italic;color:var(--gold2)}
 .vision .cap{position:absolute;left:0;right:0;bottom:clamp(40px,7vw,96px);z-index:2}
 .vision .cap .wrap{display:flex;justify-content:space-between;align-items:end;gap:40px;flex-wrap:wrap}
 .vision h2{font-size:clamp(44px,6vw,96px);max-width:900px}
+.vision-side{display:flex;flex-direction:column;align-items:flex-end;gap:20px}
 .vision small{font:400 10px/1.4 var(--sans);letter-spacing:.24em;text-transform:uppercase;color:rgba(239,231,214,.6);max-width:280px;text-align:right}
 
 /* ---------- Infrastructure ---------- */
@@ -220,7 +221,7 @@ h2 em,h1 em{font-style:italic;color:var(--gold2)}
 
 /* ---------- Enquire ---------- */
 .enq{position:relative;overflow:hidden;border-top:1px solid var(--line)}
-.enq .bgimg{position:absolute;inset:0;background:url(assets/aastha-night.webp) center/cover;opacity:.18;filter:blur(2px)}
+.enq .bgimg{position:absolute;inset:0;background:url(assets/aastha-night-aerial.webp) center/cover;opacity:.18;filter:blur(2px)}
 .enq .bgimg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--bg),rgba(10,9,7,.6) 40%,var(--bg))}
 .enq .wrap{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(40px,7vw,120px)}
 .enq h2{font-size:clamp(54px,7.4vw,124px)}
@@ -747,7 +748,7 @@ footer{border-top:1px solid var(--line);padding:80px 0 120px}
       <div class="hero-side" data-reveal="3">
         <p>A gated enclave of residential plots from 908 to 1,319 m², set on the Manor–Mahim State Highway. The roads are laid and the plots are drawn. What you build here is up to you.</p>
         <div class="ctas"><a class="btn solid" href="#explore" data-open-3d="">Explore the site in 3D <i>→</i></a><a class="link" href="#enquire">Book a private viewing</a></div>
-        <a class="hero-3d" href="#explore" data-open-3d=""><span class="th"><img src="assets/aastha-aerial.webp" alt=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5Zm0 0v10m0 0 9-5m-9 5-9-5m9 5v10" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></span><span><b>Interactive site model</b><small>Fly through the gate · pick a plot</small></span><span class="go" aria-hidden="true">→</span></a>
+        <a class="hero-3d" href="#explore" data-open-3d=""><span class="th"><img src="assets/aastha-aerial-render.webp" alt=""><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5Zm0 0v10m0 0 9-5m-9 5-9-5m9 5v10" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></span><span><b>Interactive site model</b><small>Fly through the gate · pick a plot</small></span><span class="go" aria-hidden="true">→</span></a>
       </div>
     </div>
   </div>
@@ -864,18 +865,18 @@ footer{border-top:1px solid var(--line);padding:80px 0 120px}
 
 
 <section class="vision" aria-label="The enclave as envisioned">
-  <img src="assets/aastha-aerial.webp" alt="Aerial visualisation of Aastha: walled plots along internal roads, with open green spaces and a gated entrance off the highway" data-parallax=".1" loading="lazy">
+  <img src="assets/aastha-aerial-render.webp" alt="Rendered aerial view of Aastha at golden hour: the walled plots, internal roads, open spaces and main gate, in the real neighbourhood beside the Manor–Mahim State Highway" data-parallax=".1" loading="lazy">
   <div class="cap"><div class="wrap">
     <h2 data-reveal>A private enclave,<br><em>seen from above.</em></h2>
-    <small data-reveal="2">Architectural landscape visualisation. It is not a site photograph.</small>
+    <div class="vision-side" data-reveal="2"><a class="btn" href="aerial/">Fly around it · 360° <i>→</i></a><small>Rendered from the approved layout, in its real surroundings. Not a site photograph.</small></div>
   </div></div>
 </section>
 
 <section class="sec" id="infrastructure">
   <div class="wrap infra">
     <figure class="infra-img" data-reveal style="margin:0">
-      <img src="assets/aastha-night.webp" alt="Evening view along Aastha's internal road, with street lights and a planted median" data-parallax=".05" loading="lazy">
-      <figcaption>Site film · evening sequence</figcaption>
+      <img src="assets/aastha-gate-night.webp" alt="Rendered night view of Aastha's main gate at the end of the 12 m road, with the street lights on" data-parallax=".05" loading="lazy">
+      <figcaption>Rendered view · the main gate at night</figcaption>
     </figure>
     <div>
       <p class="label" data-reveal><i style="font:italic 400 17px/1 var(--serif);letter-spacing:0;color:var(--gold3);text-transform:none;margin-right:14px">III</i>Infrastructure</p>
@@ -984,7 +985,7 @@ footer{border-top:1px solid var(--line);padding:80px 0 120px}
     <div class="ft-top"><div class="ft-word">AASTHA</div><div class="ft-by">Owned and developed by<b>Aastha Developers</b>Tembhode, Palghar</div></div>
     <nav class="ft-nav" aria-label="Site"><a href="/">omshantinrconstruction.com</a><a href="/#projects">Projects</a><a href="/leadership/">Leadership</a><a href="/channel-partners/">Channel partners</a><a href="/guides/">Guides</a></nav>
     <div class="ft-legal">
-      <p>Aastha is a plotted layout at Tembhode, Palghar, developed by Aastha Developers. The masterplan is traced from the T.I.L.R. plotting layout by Vastu Shilp Associates and is indicative. Areas and road widths are the layout figures. Buildable areas are approximate and subject to approvals. The aerial image is an architectural visualisation. The site film was created from site drone footage and includes visualised elements.</p>
+      <p>Aastha is a plotted layout at Tembhode, Palghar, developed by Aastha Developers. The masterplan is traced from the T.I.L.R. plotting layout by Vastu Shilp Associates and is indicative. Areas and road widths are the layout figures. Buildable areas are approximate and subject to approvals. The aerial, night and 360° views and the 3D site model are rendered visualisations of the layout in its surroundings. Neighbouring buildings, roads and trees are modelled from public map data (© OpenStreetMap contributors, © Overture Maps Foundation), and building heights are estimated. The site film was created from site drone footage and includes visualised elements.</p>
       <p>The land at Aastha is owned and developed by <strong>Aastha Developers</strong>. Aastha Developers is a separate firm, whose partnership includes certain partners of Om Shanti N R Construction along with other partners. This project is showcased here solely to reflect the experience of those partners. Om Shanti N R Construction has no role, involvement, responsibility or association with the ownership, development, marketing, sale or execution of the Aastha project.</p>
       <p>All information is indicative and subject to change, and nothing on this page is an offer. *Availability as of 22 September 2026. Please verify the approved layout and title documents before booking.</p>
     </div>
@@ -998,7 +999,8 @@ footer{border-top:1px solid var(--line);padding:80px 0 120px}
 <script src="assets/three/OrbitControls.js"></script>
 <script src="assets/three/BufferGeometryUtils.js"></script>
 <script src="assets/three/post.js?v=1790701272"></script>
-<script src="assets/aastha-explorer.js?v=1790704316"></script>
+<script src="assets/aastha-context.js?v=1793540000"></script>
+<script src="assets/aastha-explorer.js?v=1793540000"></script>
 <script>
 (function(){const fab=document.getElementById('fab3d'),st=document.getElementById('stage'),hero=document.querySelector('.hero');let inEx=false,pastHero=false;
 if(!('IntersectionObserver' in window))return;
