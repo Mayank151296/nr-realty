@@ -101,7 +101,7 @@ FOOT = """
   <p><strong style="color:var(--text-secondary)">Om Shanti N R Construction</strong> &middot; Plot No. 13, Jay Gurudev Bunglow, Vajali Pada, Devisha Road, Palghar West, Maharashtra 401404<br>
   <a href="tel:+918262885023">+91 82628 85023</a> &middot; <a href="mailto:info@omshantinrconstruction.com">info@omshantinrconstruction.com</a></p>
   <p style="margin-top:1rem;font-size:11.5px;line-height:1.7">This guide is general information about buying property in Palghar, not legal or investment advice. Verify every MahaRERA registration on the official portal and take independent legal advice before you buy.</p>
-  <p style="margin-top:1rem"><a href="{base}/">Home</a> &middot; <a href="{base}/#projects">Projects</a> &middot; <a href="{base}/guides/">Guides</a> &middot; <a href="{base}/channel-partners/">Channel Partners</a></p>
+  <p style="margin-top:1rem"><a href="{base}/">Home</a> &middot; <a href="{base}/#projects">Projects</a> &middot; <a href="{base}/guides/">Guides</a> &middot; <a href="{base}/channel-partners/">Channel Partners</a> &middot; <span class="danka-credit">Designed by <a href="https://danka.agency" target="_blank" rel="noopener">Danka</a></span></p>
 </footer>
 </body>
 </html>
