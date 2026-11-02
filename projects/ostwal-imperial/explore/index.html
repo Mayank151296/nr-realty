@@ -1634,6 +1634,8 @@ const RealFlat = (function () {
   // precision at every zoom. A logarithmic depth buffer was dropped — with MSAA it bleeds hidden interior walls
   // through the façade as thin dashes along their edges.
   const LITE = /[?&]lite/.test(location.search);     // test/preview mode: no shadows or MSAA
+  // phones and small tablets get the lighter path: 2048 shadows, no relief maps, a smaller forest
+  const PHONE = /[?&]phone/.test(location.search) || (window.matchMedia('(pointer: coarse)').matches && Math.min(screen.width, screen.height) < 820);
   const renderer = new THREE.WebGLRenderer({ antialias: !LITE, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.outputEncoding = THREE.sRGBEncoding;
@@ -1658,24 +1660,43 @@ const RealFlat = (function () {
   controls.minDistance = 25;
   controls.maxDistance = 1400;
 
-  const hemi = new THREE.HemisphereLight(0xdfe8f2, 0x6b6553, 0.85);
+  const hemi = new THREE.HemisphereLight(0xd6e3f0, 0x5d5545, 0.2);
   scene.add(hemi);
-  const sun = new THREE.DirectionalLight(0xfff1dc, 2.4);
+  const sun = new THREE.DirectionalLight(0xffeedd, 1.2);
   sun.position.set(160, 260, 120);
   sun.castShadow = true;
-  sun.shadow.mapSize.set(2048, 2048);
+  sun.shadow.mapSize.set(PHONE ? 2048 : 4096, PHONE ? 2048 : 4096);
   Object.assign(sun.shadow.camera, { left: -200, right: 200, top: 200, bottom: -200, near: 10, far: 900 });
-  sun.shadow.bias = -0.0002;
-  sun.shadow.normalBias = 0.06;
+  sun.shadow.bias = -0.00015;
+  sun.shadow.normalBias = PHONE ? 0.06 : 0.04;
   sun.target.position.set(-12, 0, 18);
   scene.add(sun, sun.target);
 
   const PRESETS = {
-    day:   { bg: 0xbcd3e6, fog: 0xc9d8e2, hemi: 0.85, sun: 2.4, sunCol: 0xfff1dc, sunPos: [160, 260, 120], exp: 1.0, glow: 0 },
-    dusk:  { bg: 0xe4b48c, fog: 0xd9b495, hemi: 0.55, sun: 1.6, sunCol: 0xffb071, sunPos: [-260, 90, 60], exp: 0.95, glow: 0.6 },
-    night: { bg: 0x0b1322, fog: 0x0e1726, hemi: 0.1, sun: 0.08, sunCol: 0x9fb4d8, sunPos: [-120, 240, -80], exp: 1.1, glow: 1 }
+    day:   { bg: 0xb4cde2, fog: 0xc4d3de, hemi: 0.2, sun: 1.2, sunCol: 0xffeedd, sunPos: [160, 260, 120], exp: 1.0, glow: 0, env: 1 },
+    dusk:  { bg: 0xe0ad86, fog: 0xd4ae90, hemi: 0.18, sun: 0.95, sunCol: 0xffad6a, sunPos: [-260, 90, 60], exp: 1.05, glow: 0.6, env: 0.75 },
+    night: { bg: 0x0b1322, fog: 0x0e1726, hemi: 0.1, sun: 0.08, sunCol: 0x9fb4d8, sunPos: [-120, 240, -80], exp: 1.1, glow: 1, env: 0.12 }
   };
-  scene.fog = new THREE.Fog(PRESETS.day.fog, 900, 6000);
+  scene.fog = new THREE.Fog(PRESETS.day.fog, 300, 3600);      // aerial perspective: the town softens into haze
+  // sky dome: deeper blue overhead, hazy at the horizon, a soft glow round the sun (follows the time-of-day colour)
+  const skyU = { zen: { value: new THREE.Color() }, hor: { value: new THREE.Color() }, sunDir: { value: new THREE.Vector3(0, 1, 0) }, sunCol: { value: new THREE.Color() }, sunK: { value: 0 } };
+  const skyDome = new THREE.Mesh(new THREE.SphereGeometry(8000, 32, 16), new THREE.ShaderMaterial({
+    uniforms: skyU, side: THREE.BackSide, depthWrite: false, fog: false, toneMapped: false,
+    vertexShader: 'varying vec3 vD; void main() { vD = position; vec4 p = projectionMatrix * modelViewMatrix * vec4(position, 1.0); gl_Position = p.xyww; gl_Position.z *= 0.99999; }',
+    fragmentShader: 'uniform vec3 zen, hor, sunDir, sunCol; uniform float sunK; varying vec3 vD; void main() { vec3 d = normalize(vD); float h = clamp(d.y, 0.0, 1.0);' +
+      ' vec3 c = mix(hor, zen, pow(h, 0.5)); float s = max(dot(d, sunDir), 0.0); c += sunCol * sunK * (0.35 * pow(s, 900.0) + 0.10 * pow(s, 12.0)); gl_FragColor = vec4(c, 1.0); }'
+  }));
+  skyDome.name = 'sky'; skyDome.renderOrder = -10; skyDome.frustumCulled = false;
+  const skyTmp = new THREE.Color();
+  skyDome.onBeforeRender = (r, sc, cam) => {
+    skyDome.position.copy(cam.position); skyDome.updateMatrixWorld();
+    const bg = sc.background && sc.background.isColor ? sc.background : skyTmp.set(0xb4cde2);
+    skyU.zen.value.copy(bg).multiply(skyTmp.setRGB(0.80, 0.88, 1.0));
+    skyU.hor.value.copy(bg).lerp(sc.fog ? sc.fog.color : bg, 0.5).lerp(skyTmp.setRGB(1, 1, 1), 0.12);
+    skyU.sunDir.value.copy(sun.position).sub(sun.target.position).normalize();
+    skyU.sunCol.value.copy(sun.color); skyU.sunK.value = Math.min(1, sun.intensity / 1.2) * (skyU.sunDir.value.y > -0.05 ? 1 : 0);
+  };
+  scene.add(skyDome);
 
   const GLOW = { OIW_curtain: [0xffc27a, 1.6], OIW_lamp: [0xffe0b0, 3.5], OIW_soffit: [0xffd29a, 2.4], OIW_led: [0xffc27a, 2.2],
                  OIW_lobby_glow: [0xffd08a, 1.6], OIW_headlight: [0xfff3e0, 3], OIW_taillight: [0xff2a10, 2],
@@ -1716,7 +1737,33 @@ const RealFlat = (function () {
     OIW_herring: ['concrete_pavers_02', 2.0, 0.7, 0.4], OIW_plaza: ['concrete_pavers_02', 3, 0.6, 0.4], OIW_lawn: ['leafy_grass', 3, 0.8, 0.85],
     OIW_ground: ['leafy_grass', 6, 0.7, 0.5], OIW_deck: ['marble_01', 1.6, 0.6, 0.6],
   };
+  // per material: [relief strength, macro variation, roughness detail]
+  const TRI_FX = {
+    OIW_stucco: [0.55, 0.07, 0.5], OIW_panel: [0.5, 0.06, 0.5], OIW_trim: [0.35, 0.04, 0.4], OIW_ornament: [0.4, 0.04, 0.4],
+    OIW_loggia_ceil: [0.3, 0.04, 0.3], OIW_ctx_wall: [0.4, 0.0, 0.3], OIW_stone: [0.6, 0.05, 0.7], OIW_plinth: [0.6, 0.06, 0.7],
+    OIW_kerb: [0.7, 0.08, 0.5], OIW_roof: [0.8, 0.14, 0], OIW_asphalt: [0.7, 0.12, 0.6], OIW_pavers: [0.9, 0.10, 0.6],
+    OIW_herring: [0.9, 0.10, 0.6], OIW_plaza: [0.8, 0.10, 0.6], OIW_lawn: [0.8, 0.16, 0], OIW_ground: [0.6, 0.0, 0],   // no roughness scan for concrete / grass
+    OIW_deck: [0.4, 0.05, 0.8],
+  };
   const triTex = {};
+  const triAux = {};
+  function triAuxTexture(name, kind) {            // n = normal (linear), r = roughness (linear, mean measured)
+    const key = name + '/' + kind;
+    if (triAux[key]) return triAux[key];
+    const t = new THREE.TextureLoader().load('tex/' + name + '/' + kind + '.jpg', (tt) => {
+      if (kind !== 'r') return;
+      try {
+        const c = document.createElement('canvas'); c.width = c.height = 16;
+        const g = c.getContext('2d'); g.drawImage(tt.image, 0, 0, 16, 16);
+        const d = g.getImageData(0, 0, 16, 16).data; let sum = 0;
+        for (let i = 0; i < d.length; i += 4) sum += d[i + 1] / 255;
+        t.userData.avg.value = Math.max(0.05, sum / 256);
+      } catch (e) {}
+    });
+    t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 8;
+    t.userData.avg = { value: 0.5 };
+    return (triAux[key] = t);
+  }
   function triTexture(name) {
     if (triTex[name]) return triTex[name];
     const t = new THREE.TextureLoader().load('tex/' + name + '/d.jpg', (tt) => {
@@ -1732,24 +1779,74 @@ const RealFlat = (function () {
     t.userData.avg = { value: 0.35 };
     return (triTex[name] = t);
   }
+  // value noise for large-scale variation (weathering, patchy grass, uneven paving)
+  const TRI_NOISE = `
+    float triH(vec3 p) { p = fract(p * 0.3183099 + 0.1); p *= 17.0; return fract(p.x * p.y * p.z * (p.x + p.y + p.z)); }
+    float triN(vec3 x) { vec3 i = floor(x), f = fract(x); f = f * f * (3.0 - 2.0 * f);
+      return mix(mix(mix(triH(i), triH(i + vec3(1, 0, 0)), f.x), mix(triH(i + vec3(0, 1, 0)), triH(i + vec3(1, 1, 0)), f.x), f.y),
+                 mix(mix(triH(i + vec3(0, 0, 1)), triH(i + vec3(1, 0, 1)), f.x), mix(triH(i + vec3(0, 1, 1)), triH(i + vec3(1, 1, 1)), f.x), f.y), f.z); }
+    float triF(vec3 p) { return 0.5 * triN(p) + 0.3 * triN(p * 2.03 + 11.0) + 0.2 * triN(p * 4.01 + 23.0); }`;
   function triplanar(m, spec) {
     const [name, tile, amt, colorMix] = spec;
+    const fx = TRI_FX[m.name] || [0, 0, 0];
+    const relief = PHONE ? 0 : fx[0], macro = fx[1], rough = PHONE ? 0 : fx[2];
+    const ground = m.name === 'OIW_ground', lawn = m.name === 'OIW_lawn';
     const tex = triTexture(name);
+    const nTex = relief ? triAuxTexture(name, 'n') : null, rTex = rough ? triAuxTexture(name, 'r') : null;
     m.onBeforeCompile = (sh) => {
       sh.uniforms.triMap = { value: tex }; sh.uniforms.triScale = { value: 1 / tile };
       sh.uniforms.triAmt = { value: amt }; sh.uniforms.triColor = { value: colorMix }; sh.uniforms.triAvg = tex.userData.avg;
+      sh.uniforms.triMacro = { value: macro };
+      if (nTex) { sh.uniforms.triNrm = { value: nTex }; sh.uniforms.triRelief = { value: relief }; }
+      if (rTex) { sh.uniforms.triRgh = { value: rTex }; sh.uniforms.triRAvg = rTex.userData.avg; sh.uniforms.triRAmt = { value: rough }; }
+      const defs = (nTex ? '#define TRI_NRM\n' : '') + (rTex ? '#define TRI_RGH\n' : '') + (ground ? '#define TRI_GROUND\n' : '') + (lawn ? '#define TRI_LAWN\n' : '');
       sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vTriPos; varying vec3 vTriNrm;')
         .replace('#include <fog_vertex>', '#include <fog_vertex>\nvTriPos = (modelMatrix * vec4(transformed, 1.0)).xyz; vTriNrm = normalize(mat3(modelMatrix) * objectNormal);');
-      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vTriPos; varying vec3 vTriNrm; uniform sampler2D triMap; uniform float triScale, triAmt, triColor, triAvg;')
+      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\n' + defs +
+          'varying vec3 vTriPos; varying vec3 vTriNrm; uniform sampler2D triMap; uniform float triScale, triAmt, triColor, triAvg, triMacro;\n' +
+          '#ifdef TRI_NRM\nuniform sampler2D triNrm; uniform float triRelief;\n#endif\n#ifdef TRI_RGH\nuniform sampler2D triRgh; uniform float triRAvg, triRAmt;\n#endif\n' + TRI_NOISE)
         .replace('#include <map_fragment>', `#include <map_fragment>
-          vec3 bw = pow(abs(normalize(vTriNrm)), vec3(4.0)); bw /= (bw.x + bw.y + bw.z);
-          vec3 tc = texture2D(triMap, vTriPos.zy * triScale).rgb * bw.x + texture2D(triMap, vTriPos.xz * triScale).rgb * bw.y + texture2D(triMap, vTriPos.xy * triScale).rgb * bw.z;
+          vec3 triWN = normalize(vTriNrm);
+          vec3 bw = pow(abs(triWN), vec3(4.0)); bw /= (bw.x + bw.y + bw.z);
+          vec2 triUX = vTriPos.zy * triScale, triUY = vTriPos.xz * triScale, triUZ = vTriPos.xy * triScale;
+          vec3 tc = texture2D(triMap, triUX).rgb * bw.x + texture2D(triMap, triUY).rgb * bw.y + texture2D(triMap, triUZ).rgb * bw.z;
           tc = pow(tc, vec3(2.2));
           float lum = dot(tc, vec3(0.299, 0.587, 0.114));
           vec3 detail = diffuseColor.rgb * mix(1.0, lum / triAvg, triAmt);
-          diffuseColor.rgb = mix(detail, tc, triColor);`);
+          diffuseColor.rgb = mix(detail, tc, triColor);
+          // large-scale variation: no wall, road or lawn is one even colour in daylight
+          float triM = triF(vTriPos * 0.045) - 0.5;
+          diffuseColor.rgb *= 1.0 + triMacro * 2.0 * triM;
+          #ifdef TRI_LAWN
+            float triDry = smoothstep(0.52, 0.78, triF(vTriPos * 0.11 + 7.0));
+            diffuseColor.rgb = mix(diffuseColor.rgb, diffuseColor.rgb * vec3(1.45, 1.2, 0.75), triDry * 0.55);
+          #endif
+          #ifdef TRI_GROUND
+            // open ground round the town: patches of green scrub, dry earth and dust, at two scales
+            float g1 = triF(vTriPos * 0.012), g2 = triF(vTriPos * 0.05 + 31.0);
+            vec3 scrub = vec3(0.06, 0.08, 0.03) * (lum / triAvg), earth = vec3(0.20, 0.14, 0.09), dust = vec3(0.30, 0.26, 0.20);
+            vec3 gc = mix(earth, scrub, smoothstep(0.38, 0.62, g1));
+            gc = mix(gc, dust, smoothstep(0.62, 0.82, g2) * 0.6);
+            gc = mix(gc, scrub * 0.8, smoothstep(0.58, 0.8, triF(vTriPos * 0.2 + 5.0)) * 0.5);
+            diffuseColor.rgb = mix(diffuseColor.rgb, gc * mix(1.0, lum / triAvg, 0.5), 0.85);
+          #endif`)
+        .replace('#include <roughnessmap_fragment>', `#include <roughnessmap_fragment>
+          #ifdef TRI_RGH
+            float triR = texture2D(triRgh, triUX).g * bw.x + texture2D(triRgh, triUY).g * bw.y + texture2D(triRgh, triUZ).g * bw.z;
+            roughnessFactor = clamp(roughnessFactor * mix(1.0, triR / triRAvg, triRAmt), 0.05, 1.0);
+          #endif`)
+        .replace('#include <normal_fragment_maps>', `#include <normal_fragment_maps>
+          #ifdef TRI_NRM
+          {   // world-space relief from the scanned normal maps, whiteout (UDN) blend per projection
+            vec3 nx = texture2D(triNrm, triUX).xyz * 2.0 - 1.0, ny = texture2D(triNrm, triUY).xyz * 2.0 - 1.0, nz = texture2D(triNrm, triUZ).xyz * 2.0 - 1.0;
+            nx.xy *= triRelief; ny.xy *= triRelief; nz.xy *= triRelief;
+            nx = vec3(nx.xy + triWN.zy, triWN.x); ny = vec3(ny.xy + triWN.xz, triWN.y); nz = vec3(nz.xy + triWN.xy, triWN.z);
+            vec3 wN = normalize(nx.zyx * bw.x + ny.xzy * bw.y + nz.xyz * bw.z);
+            normal = normalize((viewMatrix * vec4(wN, 0.0)).xyz) * faceDirection;
+          }
+          #endif`);
     };
-    m.customProgramCacheKey = () => 'tri_' + name + tile + amt + colorMix;
+    m.customProgramCacheKey = () => 'tri2_' + name + tile + amt + colorMix + relief + macro + rough + m.name;
     m.needsUpdate = true;
   }
   // HDR sky for reflections (glass, iron, polished stone); shipped base64 like the model
@@ -1765,6 +1862,8 @@ const RealFlat = (function () {
     return env;
   }
   const ENV = {};
+  const envMats = [];
+  function setEnvK(k) { envMats.forEach((m) => { m.envMapIntensity = m.userData.envBase * k; }); }
   function applyEnv(v) {
     const key = v === 'day' ? 'sky_day' : 'sky_dusk';
     const set = () => { scene.environment = ENV[key]; };
@@ -1809,6 +1908,9 @@ const RealFlat = (function () {
           m.polygonOffset = true; m.polygonOffsetFactor = 4; m.polygonOffsetUnits = 4;
         }
         if (m && TRI[m.name] && !m.userData.tri) { m.userData.tri = 1; triplanar(m, TRI[m.name]); }
+        if (m && m.aoMap && !m.userData.ao) { m.userData.ao = 1; m.aoMapIntensity = 1.0; m.aoMap.anisotropy = 4; }
+        if (m && m.isMeshStandardMaterial && !m.userData.envk && !/glass|iron|gold|chrome|alu|water|car_/.test(m.name)) { m.userData.envk = 1; m.envMapIntensity *= 0.4; }
+        if (m && m.isMeshStandardMaterial && m.userData.envBase == null) { m.userData.envBase = m.envMapIntensity; envMats.push(m); }
       });
     });
     // glTF nodes keep their Blender names on the parent; tower floors are the named nodes themselves
@@ -1821,6 +1923,7 @@ const RealFlat = (function () {
       if (!b.isEmpty()) { towerCentre[t] = b.getCenter(new THREE.Vector3()); towerTop[t] = new THREE.Vector3(towerCentre[t].x, b.max.y + 2, towerCentre[t].z); }
     });
     root.traverse((o) => { if (o.isMesh && o.material && o.material.name === 'OIW_ctx_wall') tintContext(o); });
+    plantSite();
     applyTOD('day');
     indexUnits();
     const hc = /#compare=([^#]+)/.exec(location.hash);
@@ -1880,6 +1983,7 @@ const RealFlat = (function () {
     sun.intensity = p.sun; sun.color.set(p.sunCol); sun.position.set(...p.sunPos);
     renderer.toneMappingExposure = p.exp;
     applyEnv(v);
+    setEnvK(p.env);
     if (typeof ctxU !== 'undefined') ctxU.uNight.value = p.glow;
     glowMats.forEach((m) => {
       const g = GLOW[m.name];
@@ -3052,6 +3156,7 @@ const RealFlat = (function () {
     sun.intensity = el > 0 ? day.sun * (0.35 + 0.65 * k) : 0.05;
     sun.color.set(day.sunCol).lerp(new THREE.Color(dusk.sunCol), low * 0.9);
     hemi.intensity = night.hemi + (day.hemi - night.hemi) * clamp((el + 6 * D2R) / (30 * D2R), 0, 1);
+    setEnvK(night.env + (day.env - night.env) * clamp((el + 6 * D2R) / (30 * D2R), 0, 1));
     const glowK = clamp(1 - (el + 2 * D2R) / (10 * D2R), 0, 1);
     glowMats.forEach((m) => { const g = GLOW[m.name]; m.emissive = new THREE.Color(g[0]); m.emissiveIntensity = g[1] * Math.max(glowK, g[2] || 0); });
     ctxU.uNight.value = glowK;
@@ -3305,9 +3410,201 @@ const RealFlat = (function () {
   $('tourEnd').addEventListener('click', tourEnd);
   $('tourInside').addEventListener('click', () => { const s = TOUR[tourI]; tourEnd(); if (s && s.inside) s.inside(); });
 
+  // ── planting: shade trees, hedges and flower beds, instanced on the film scene's layout ──
+  // oi_veg.json is in Blender's frame (x east, y north, z up); glTF/three: x, z → y, -y → z
+  function crownGeo(blobs, detail, seed) {
+    const parts = []; let r = seed;
+    const rnd = () => { r = (r * 16807) % 2147483647; return r / 2147483647; };
+    blobs.forEach(([x, y, z, rad]) => {
+      const g = new THREE.IcosahedronGeometry(rad, detail);
+      const p = g.attributes.position, nrm = [];
+      for (let i = 0; i < p.count; i++) {         // lumpy silhouette, normals pointing out from the crown centre (soft foliage light)
+        const vx = p.getX(i), vy = p.getY(i), vz = p.getZ(i), k = 0.82 + 0.3 * rnd();
+        p.setXYZ(i, vx * k + x, vy * k * 0.9 + y, vz * k + z);
+      }
+      g.deleteAttribute('normal'); g.deleteAttribute('uv');
+      parts.push(g);
+    });
+    const g = THREE.BufferGeometryUtils.mergeBufferGeometries(parts.map((q) => q.index ? q.toNonIndexed() : q));
+    const p = g.attributes.position, n = new Float32Array(p.count * 3);
+    let cy = 0; blobs.forEach((b) => { cy += b[1]; }); cy /= blobs.length;
+    for (let i = 0; i < p.count; i++) {
+      const v = new THREE.Vector3(p.getX(i), (p.getY(i) - cy) * 1.25, p.getZ(i)).normalize();
+      n[i * 3] = v.x; n[i * 3 + 1] = v.y; n[i * 3 + 2] = v.z;
+    }
+    g.setAttribute('normal', new THREE.BufferAttribute(n, 3));
+    return g;
+  }
+  function withColour(g, c) {
+    const col = new Float32Array(g.attributes.position.count * 3), cc = new THREE.Color(c).convertSRGBToLinear();
+    for (let i = 0; i < col.length; i += 3) { col[i] = cc.r; col[i + 1] = cc.g; col[i + 2] = cc.b; }
+    g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    return g;
+  }
+  // crown volumes: [x, y, z, r] blobs; 0 broad rain-tree / gulmohar, 1 rounder neem / mango, 2 distant crown
+  function crownBlobs(kind) {
+    let r = 97 + kind * 31; const rnd = () => { r = (r * 16807) % 2147483647; return r / 2147483647; };
+    if (kind === 2) return [[0, 5.0, 0, 3.0], [0.9, 4.6, -0.6, 2.2]];
+    const blobs = [], n = kind ? 9 : 11, spread = kind ? 1.7 : 2.6, top = kind ? 5.6 : 5.0;
+    blobs.push([0, top + (kind ? 0.9 : 0.4), 0, kind ? 2.3 : 2.2]);
+    for (let i = 0; i < n; i++) {
+      const a = i / n * 6.283 + rnd() * 0.5, d = spread * (0.6 + 0.5 * rnd());
+      blobs.push([Math.cos(a) * d, top + (rnd() - 0.4) * (kind ? 1.6 : 0.9), Math.sin(a) * d, (kind ? 1.4 : 1.5) + rnd() * 0.7]);
+    }
+    return blobs;
+  }
+  function trunkGeo(kind) {
+    const trunkH = kind === 1 ? 3.6 : 3.2;
+    const trunk = new THREE.CylinderGeometry(0.15, 0.27, trunkH, kind === 2 ? 5 : 7, 1, true).toNonIndexed(); trunk.translate(0, trunkH / 2, 0);
+    trunk.deleteAttribute('uv');
+    const parts = [withColour(trunk, 0x4a3a2c)];
+    if (kind !== 2) {   // limbs reaching into the crown
+      [[0.9, 0.5], [-0.8, -0.6], [0.1, -1.0]].forEach(([dx, dz]) => {
+        const l = new THREE.CylinderGeometry(0.06, 0.12, 2.4, 5, 1, true).toNonIndexed(); l.deleteAttribute('uv');
+        l.rotateZ(-dx * 0.5); l.rotateX(dz * 0.5); l.translate(dx * 0.6, trunkH + 0.8, dz * 0.6);
+        parts.push(withColour(l, 0x4a3a2c));
+      });
+    }
+    return THREE.BufferGeometryUtils.mergeBufferGeometries(parts);
+  }
+  function treeGeo(kind) {      // single-mesh tree (trunk + lumpy crown): distant trees
+    return THREE.BufferGeometryUtils.mergeBufferGeometries([trunkGeo(kind), withColour(crownGeo(crownBlobs(kind), 1, 11 + kind * 5), 0xffffff)]);
+  }
+  // near trees: crowns of alpha-tested leaf-cluster cards scattered through the crown volume; normals point out
+  // from the crown centre so the whole crown shades as one soft mass, as real foliage does
+  function cardCrownGeo(kind, nCards, size) {
+    const blobs = crownBlobs(kind);
+    let r = 7 + kind * 13; const rnd = () => { r = (r * 16807) % 2147483647; return r / 2147483647; };
+    let cy = 0; blobs.forEach((bb) => { cy += bb[1]; }); cy /= blobs.length;
+    const wsum = blobs.reduce((t, bb) => t + bb[3] ** 3, 0);
+    const P = [], N = [], U = [], I = [];
+    const c = new THREE.Vector3(), n = new THREE.Vector3(), t = new THREE.Vector3(), bt = new THREE.Vector3(), v = new THREE.Vector3();
+    for (let i = 0; i < nCards; i++) {
+      let w = rnd() * wsum, bb = blobs[0];
+      for (const q of blobs) { w -= q[3] ** 3; if (w <= 0) { bb = q; break; } }
+      const rr = bb[3] * Math.cbrt(rnd()) * 0.85;
+      n.set(rnd() * 2 - 1, rnd() * 2 - 1, rnd() * 2 - 1).normalize();
+      c.set(bb[0], bb[1], bb[2]).addScaledVector(n, rr);
+      n.set(rnd() * 2 - 1, rnd() * 1.6 - 0.3, rnd() * 2 - 1).normalize();          // card facing: mostly sideways/up
+      t.set(0, 1, 0); if (Math.abs(n.y) > 0.9) t.set(1, 0, 0);
+      t.cross(n).normalize(); bt.crossVectors(n, t);
+      const ang = rnd() * 6.283, ca = Math.cos(ang), sa = Math.sin(ang), h = size * (0.75 + 0.5 * rnd()) / 2;
+      const base = P.length / 3;
+      [[-1, -1, 0, 0], [1, -1, 1, 0], [1, 1, 1, 1], [-1, 1, 0, 1]].forEach(([a, b2, u, vv]) => {
+        const x = a * ca - b2 * sa, y = a * sa + b2 * ca;
+        v.copy(c).addScaledVector(t, x * h).addScaledVector(bt, y * h);
+        P.push(v.x, v.y, v.z); U.push(u, vv);
+        const nn = new THREE.Vector3(v.x, (v.y - cy) * 1.3, v.z).normalize();
+        N.push(nn.x, nn.y, nn.z);
+      });
+      I.push(base, base + 1, base + 2, base, base + 2, base + 3);
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3));
+    g.setAttribute('normal', new THREE.Float32BufferAttribute(N, 3));
+    g.setAttribute('uv', new THREE.Float32BufferAttribute(U, 2));
+    g.setIndex(I);
+    return g;
+  }
+  let leafMatC = null;
+  function leafMat() {
+    if (leafMatC) return leafMatC;
+    const tex = new THREE.TextureLoader().load('tex/leaf_cluster.png');
+    tex.encoding = THREE.sRGBEncoding; tex.anisotropy = 4;
+    const m = new THREE.MeshStandardMaterial({ map: tex, alphaTest: 0.42, side: THREE.DoubleSide, roughness: 0.82, metalness: 0, envMapIntensity: 0.5, alphaToCoverage: !LITE });
+    m.onBeforeCompile = (sh) => {
+      sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying float vCrown;')
+        .replace('#include <fog_vertex>', '#include <fog_vertex>\nvCrown = clamp((transformed.y - 3.0) / 4.6, 0.0, 1.0);');
+      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying float vCrown;')
+        .replace('#include <map_fragment>', '#include <map_fragment>\ndiffuseColor.rgb *= 0.5 + 0.75 * vCrown;')
+        // keep the crown-centred normal on both faces of a card (DoubleSide would flip it on the back face)
+        .replace('#include <normal_fragment_begin>', '#include <normal_fragment_begin>\nnormal = normalize(vNormal); geometryNormal = normal;');
+    };
+    m.customProgramCacheKey = () => 'leafcard1';
+    m.userData.envBase = m.envMapIntensity; envMats.push(m);
+    return (leafMatC = m);
+  }
+  const vegU = { uSun: { value: 0 } };
+  function foliageMat() {
+    const m = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.92, metalness: 0, envMapIntensity: 0.5 });
+    m.onBeforeCompile = (sh) => {
+      sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vFP; varying float vLeaf; varying float vCrown;')
+        .replace('#include <fog_vertex>', `#include <fog_vertex>
+          vec4 fp = modelMatrix * vec4(transformed, 1.0);
+          #ifdef USE_INSTANCING
+            fp = modelMatrix * instanceMatrix * vec4(transformed, 1.0);
+          #endif
+          vFP = fp.xyz; vLeaf = step(0.5, color.g); vCrown = transformed.y < 1.6 ? 0.45 + 0.35 * transformed.y : clamp((transformed.y - 3.4) / 4.2, 0.0, 1.0);`);
+      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vFP; varying float vLeaf; varying float vCrown;\n' + TRI_NOISE)
+        .replace('#include <color_fragment>', `#include <color_fragment>
+          if (vLeaf > 0.5) {
+            // leaf clumps: light and dark masses, darker hollows deeper in the crown
+            float lc = triF(vFP * 1.7), lc2 = triN(vFP * 5.0);
+            vec3 leaf = vec3(0.045, 0.066, 0.026) * (0.5 + 1.0 * lc) * (0.75 + 0.5 * lc2);
+            diffuseColor.rgb = leaf * diffuseColor.rgb * 2.0 * (0.5 + 0.7 * vCrown);   // the crown shades its own underside
+          }`);
+    };
+    m.customProgramCacheKey = () => 'foliage1';
+    m.userData.envBase = m.envMapIntensity; envMats.push(m);
+    return m;
+  }
+  const vegNodes = [];
+  function plantSite() {
+    fetch('oi_veg.json?v=1').then((r) => r.json()).then((V) => {
+      const fm = foliageMat(), lm = leafMat(), q = new THREE.Quaternion(), e = new THREE.Euler(), sc = new THREE.Vector3(), ps = new THREE.Vector3();
+      const bark = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, envMapIntensity: 0.4 });
+      bark.userData.envBase = 0.4; envMats.push(bark);
+      const tint = [0xffffff, 0xd8f0c0, 0xf0ffd8, 0xc0d0a8, 0xe8dca8, 0xa8c098, 0xffffff, 0xd0e8b8];
+      let seed = 3; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+      // parts: [[geometry, material, tinted]]; every part shares the instance transforms
+      function place(parts, list, s0, hmul, shadow, ctx, colors, name) {
+        if (!list.length) return [];
+        const Ms = [], Cs = [];
+        list.forEach(([x, y, z, s]) => {
+          const k = s * s0 * (0.85 + 0.3 * rnd());
+          ps.set(x, z, -y); e.set(0, rnd() * 6.283, 0); q.setFromEuler(e); sc.set(k * (0.85 + 0.3 * rnd()), k * hmul * (0.85 + 0.3 * rnd()), k * (0.85 + 0.3 * rnd()));
+          Ms.push(new THREE.Matrix4().compose(ps, q, sc)); Cs.push(new THREE.Color(colors[Math.floor(rnd() * colors.length)]));
+        });
+        return parts.map(([geo, mat, tinted], k) => {
+          const im = new THREE.InstancedMesh(geo, mat, list.length);
+          Ms.forEach((m, i) => im.setMatrixAt(i, m));
+          if (tinted) Cs.forEach((c, i) => im.setColorAt(i, c));
+          im.instanceMatrix.needsUpdate = true; if (im.instanceColor) im.instanceColor.needsUpdate = true;
+          im.castShadow = shadow; im.receiveShadow = true; im.name = name + (k ? '_' + k : '');
+          im.frustumCulled = false;
+          scene.add(im);
+          if (ctx) ctxNodes.push(im);
+          vegNodes.push(im);
+          return im;
+        });
+      }
+      const T0 = [[trunkGeo(0), bark, false], [cardCrownGeo(0, PHONE ? 30 : 46, 2.5), lm, true]];
+      const T1 = [[trunkGeo(1), bark, false], [cardCrownGeo(1, PHONE ? 26 : 38, 2.3), lm, true]];
+      // compound shade trees + jacaranda in the garden
+      place(T0, V.tree.filter((p, i) => i % 3 !== 1), 1.25, 1.0, true, false, tint, 'veg_trees');
+      place(T1, V.tree.filter((p, i) => i % 3 === 1), 1.2, 1.0, true, false, tint, 'veg_trees_b');
+      // neighbourhood: near trees are leaf-card trees that cast shadows, distant ones lighter meshes; phones keep a smaller radius
+      const nearA = [], nearB = [], far = [], R1 = PHONE ? 220 : 450, R2 = PHONE ? 520 : 900;
+      V.ctx.forEach((p, i) => { const d = Math.hypot(p[0] + 12, p[1] + 18); if (d < R1) (i % 3 === 1 ? nearB : nearA).push(p); else if (d < R2) far.push(p); });
+      place(T0, nearA, 1.0, 1.0, true, true, tint, 'veg_ctx_near');
+      place(T1, nearB, 0.95, 1.0, true, true, tint, 'veg_ctx_near_b');
+      place([[treeGeo(2), fm, true]], far, 1.0, 1.0, false, true, tint, 'veg_ctx_far');
+      // clipped hedges and the flower beds round the garden rings
+      const shrub = withColour(crownGeo([[0, 0.45, 0, 0.62], [0.45, 0.4, 0.2, 0.45], [-0.4, 0.42, -0.2, 0.48]], 1, 5), 0xffffff);
+      place([[shrub, fm, true]], V.hedge, 1.25, 0.9, true, false, [0xf0ffe0, 0xd8f0c8, 0xe8ffd0], 'veg_hedge');
+      const bloom = withColour(crownGeo([[0, 0.22, 0, 0.3]], 1, 9), 0x80ff80);
+      const fl = new THREE.MeshStandardMaterial({ vertexColors: false, roughness: 0.8, envMapIntensity: 0.5 });
+      fl.userData.envBase = 0.5; envMats.push(fl);
+      const pal = [0xd8344a, 0xf2b81c, 0xe86fa0, 0xf4f0e6, 0xe8642c, 0x9b3fb8].map((h) => new THREE.Color(h).multiplyScalar(0.8).getHex());
+      place([[bloom, fl, true]], V.flower, 1.0, 0.8, false, false, pal, 'veg_flowers');
+      if (!$('ctx').checked) ctxNodes.forEach((o) => { o.visible = false; });
+      if (typeof sunOn !== 'undefined' && sunOn) applySun(); else applyTOD(tod);
+    }).catch((e) => console.warn('planting', e));
+  }
+
   // ── neighbourhood: every OSM block gets its own paint colour, windows by floor, lit windows at night ──
   const ctxU = { uNight: { value: 0 } };
-  const PAINT = [0xf1e7d0, 0xe9dcc0, 0xf3efe6, 0xdfe6e3, 0xefd9c8, 0xe6e0f0, 0xf4e8b8, 0xd9dcd4, 0xf0e4dc, 0xe3d6bd];
+  const PAINT = [0xe0d4ba, 0xd6c8a9, 0xe2ddd2, 0xcfd3c8, 0xdcc5b2, 0xd9cfc4, 0xe3d39f, 0xc5c8bf, 0xdccfc5, 0xcfc1a6, 0xbfc0b8, 0xd8c9a0, 0xe6dccb, 0xd3c7b4];
   function tintContext(mesh) {
     const g = mesh.geometry, pos = g.attributes.position, idx = g.index;
     const n = pos.count, parent = new Int32Array(n);
@@ -3324,7 +3621,7 @@ const RealFlat = (function () {
     const col = new Float32Array(n * 3), cc = new THREE.Color();
     for (let i = 0; i < n; i++) {
       const r = find(i); let h = (r * 2654435761) >>> 0; cc.set(PAINT[h % PAINT.length]);
-      const v = 0.92 + ((h >>> 8) % 100) / 100 * 0.1;
+      cc.convertSRGBToLinear(); const v = 0.82 + ((h >>> 8) % 100) / 100 * 0.18;
       col[i * 3] = cc.r * v; col[i * 3 + 1] = cc.g * v; col[i * 3 + 2] = cc.b * v;
     }
     g.setAttribute('btint', new THREE.BufferAttribute(col, 3));
@@ -3333,7 +3630,7 @@ const RealFlat = (function () {
       sh.uniforms.uNight = ctxU.uNight;
       sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nattribute vec3 btint; varying vec3 vBT; varying vec3 vWP; varying vec3 vWN;')
         .replace('#include <fog_vertex>', '#include <fog_vertex>\nvBT = btint; vWP = (modelMatrix * vec4(transformed, 1.0)).xyz; vWN = normalize(mat3(modelMatrix) * objectNormal);');
-      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vBT; varying vec3 vWP; varying vec3 vWN; uniform float uNight; float hh(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }')
+      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vBT; varying vec3 vWP; varying vec3 vWN; uniform float uNight; float hh(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }\n' + TRI_NOISE)
         .replace('#include <map_fragment>', `#include <map_fragment>
           diffuseColor.rgb = vBT;
           vec3 wn = normalize(vWN); float winLit = 0.0;
@@ -3351,6 +3648,18 @@ const RealFlat = (function () {
             diffuseColor.rgb *= 1.0 - 0.25 * ledge;
           } else if (abs(wn.y) < 0.5) {
             diffuseColor.rgb *= 0.86;           // ground floor: shutters / shopfronts read darker
+          }
+          if (abs(wn.y) < 0.5) {
+            // monsoon weathering: dark streaks running down from ledges and the parapet, grime at the foot of the wall
+            float hc2 = dot(vWP.xz, normalize(vec2(-wn.z, wn.x)));
+            float streak = triN(vec3(hc2 * 0.45, vWP.y * 0.05, 3.0)) * triN(vec3(hc2 * 0.17, 1.0, vWP.y * 0.02));
+            float age = hh(floor(vBT.rg * 97.0));
+            diffuseColor.rgb *= 1.0 - (0.12 + 0.22 * age) * smoothstep(0.28, 0.65, streak);
+            diffuseColor.rgb *= mix(0.72, 1.0, smoothstep(0.0, 1.6, vWP.y));
+          } else if (wn.y > 0.5) {
+            // flat terrace roofs: grey waterproofing, tar patches and water stains
+            float rn = triF(vWP * 0.35);
+            diffuseColor.rgb = mix(vec3(0.24, 0.23, 0.215), vec3(0.15, 0.145, 0.14), smoothstep(0.42, 0.8, rn) * 0.7) * (0.8 + 0.35 * hh(floor(vBT.gb * 113.0)));
           }`)
         .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\ntotalEmissiveRadiance += winLit * vec3(1.0, 0.72, 0.38) * 1.6;');
     };
