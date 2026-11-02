@@ -3773,15 +3773,20 @@ const RealFlat = (function () {
   // Photo view: at each stop of the guided walk, a 360° photo of the room rendered in Cycles from the same spot
   // (pano/<plan>/NN.jpg; mirror-image homes show it mirrored). Moving between stops shows the live 3D, and the photo
   // fades in again on arrival. Looking around works the same way in both.
-  let PANOS = null, photoOn = true, photoWant = null;
+  // The photos were taken in one home per plan (near floor 8); each has a mask of where it sees out (NN_m.jpg). Near
+  // the horizon those pixels are left to the live 3D behind it, which shows the view from this home's own floor, and
+  // the camera steps to the photo's spot so the openings line up.
+  let PANOS = null, photoOn = true, photoWant = null, photoOfs = null;
   const panoTex = {};
-  fetch('pano/index.json?v=1').then((r) => (r.ok ? r.json() : null)).then((j) => { PANOS = j; }).catch(() => {});
-  const photoU = { map: { value: null }, op: { value: 0 }, flip: { value: 0 } };
+  fetch('pano/index.json?v=3').then((r) => (r.ok ? r.json() : null)).then((j) => { PANOS = j; }).catch(() => {});
+  const photoU = { map: { value: null }, mk: { value: null }, hasMk: { value: 0 }, op: { value: 0 }, flip: { value: 0 } };
   const photoSphere = new THREE.Mesh(new THREE.SphereGeometry(20, 64, 32), new THREE.ShaderMaterial({
     uniforms: photoU, side: THREE.BackSide, depthTest: false, depthWrite: false, transparent: true, toneMapped: false,
     vertexShader: 'varying vec3 vD; void main() { vD = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
-    fragmentShader: 'uniform sampler2D map; uniform float op, flip; varying vec3 vD; void main() { vec3 d = normalize(vD); if (flip > 0.5) d.x = -d.x;' +
-      ' vec2 uv = vec2(atan(d.z, d.x) * 0.1591549 + 0.5, asin(clamp(d.y, -1.0, 1.0)) * 0.3183099 + 0.5); gl_FragColor = vec4(texture2D(map, uv).rgb, op); }'
+    fragmentShader: 'uniform sampler2D map, mk; uniform float op, flip, hasMk; varying vec3 vD; void main() { vec3 d = normalize(vD); if (flip > 0.5) d.x = -d.x;' +
+      ' vec2 uv = vec2(atan(d.z, d.x) * 0.1591549 + 0.5, asin(clamp(d.y, -1.0, 1.0)) * 0.3183099 + 0.5);' +
+      ' float m = hasMk > 0.5 ? texture2D(mk, uv).r : 0.0; m *= 1.0 - smoothstep(0.45, 0.65, abs(d.y));' +
+      ' gl_FragColor = vec4(texture2D(map, uv).rgb, op * (1.0 - m)); }'
   }));
   photoSphere.renderOrder = 50; photoSphere.frustumCulled = false; photoSphere.visible = false;
   const photoTag = document.createElement('div'); photoTag.className = 'photo-tag'; photoTag.textContent = '360° PHOTO VIEW · drag to look around';
@@ -3789,13 +3794,16 @@ const RealFlat = (function () {
     const key = homeO && homeO.userData && homeO.userData.u ? unitInfo(homeO).plan : null;    // the plan this home is built from
     return (PANOS && key && PANOS[key]) ? { key, set: PANOS[key] } : null;
   }
-  function photoLoad(url) {
+  function photoLoad(ps, p) {
+    const v = '?v=' + (ps.set.v || 1), url = 'pano/' + ps.key + '/' + p.file + v;
     if (panoTex[url]) return panoTex[url];
-    const e = panoTex[url] = { ready: false, tex: null };
-    new THREE.TextureLoader().load(url, (t) => {
-      t.generateMipmaps = false; t.minFilter = THREE.LinearFilter; t.magFilter = THREE.LinearFilter; t.wrapS = THREE.RepeatWrapping;
-      e.tex = t; e.ready = true;
-    });
+    const e = panoTex[url] = { ready: false, tex: null, mtex: null, p };
+    let left = p.m ? 2 : 1;
+    const done = () => { if (--left === 0) e.ready = true; };
+    const prep = (t) => { t.generateMipmaps = false; t.minFilter = THREE.LinearFilter; t.magFilter = THREE.LinearFilter; t.wrapS = THREE.RepeatWrapping; return t; };
+    const L = new THREE.TextureLoader();
+    L.load(url, (t) => { e.tex = prep(t); done(); });
+    if (p.m) L.load('pano/' + ps.key + '/' + p.m + v, (t) => { e.mtex = prep(t); done(); }, undefined, () => done());   // no mask: the photo alone
     return e;
   }
   function photoOff() {
@@ -3808,24 +3816,29 @@ const RealFlat = (function () {
     $('wPhoto').hidden = !ps;
     if (!photoSphere.parent) fScene.add(photoSphere);
     if (!photoTag.parentNode && flatStage) flatStage.appendChild(photoTag);
-    let want = null;
+    let e = null;
     if (ps && photoOn && !W.intro && !W.go && !W.free && W.nav.tour[W.stop]) {
       const T = W.nav.tour[W.stop];
       if (Math.hypot(W.pos.x - T.x, W.pos.z - T.z) < 0.25) {
         const room = W.nav.rooms[T.room].name, p = ps.set.stops.find((q) => q.room === room);
-        if (p) want = 'pano/' + ps.key + '/' + p.file + '?v=' + (ps.set.v || 1);
+        if (p) e = photoLoad(ps, p);
         // fetch the next stop's photo while this one is on screen
         const N = W.nav.tour[W.stop + 1];
-        if (N) { const pn = ps.set.stops.find((q) => q.room === W.nav.rooms[N.room].name); if (pn) photoLoad('pano/' + ps.key + '/' + pn.file + '?v=' + (ps.set.v || 1)); }
+        if (N) { const pn = ps.set.stops.find((q) => q.room === W.nav.rooms[N.room].name); if (pn) photoLoad(ps, pn); }
       }
     }
-    const e = want ? photoLoad(want) : null;
-    if (e && e.ready && photoU.map.value !== e.tex && photoU.op.value < 0.03) photoU.map.value = e.tex;
+    if (e && e.ready && photoU.map.value !== e.tex && photoU.op.value < 0.03) {
+      photoU.map.value = e.tex; photoU.mk.value = e.mtex; photoU.hasMk.value = e.mtex ? 1 : 0;
+      photoOfs = e.p.dx != null ? [(flat.mirror ? -1 : 1) * e.p.dx, e.p.dz] : null;
+    }
     const target = (e && e.ready && photoU.map.value === e.tex) ? 1 : 0;
     photoU.op.value += (target - photoU.op.value) * Math.min(1, dt * (target ? 5 : 12));
     if (Math.abs(target - photoU.op.value) < 0.004) photoU.op.value = target;
     photoU.flip.value = flat.mirror ? 1 : 0;
     photoSphere.visible = photoU.op.value > 0.003;
+    // stand where the photo was taken (a little further into the room than the stop), so the live view behind its
+    // windows lines up; eased with the fade
+    if (photoOfs && photoU.op.value > 0) { fCam.position.x += photoOfs[0] * photoU.op.value; fCam.position.z += photoOfs[1] * photoU.op.value; }
     photoSphere.position.copy(fCam.position);
     photoTag.classList.toggle('on', photoU.op.value > 0.6);
   }
