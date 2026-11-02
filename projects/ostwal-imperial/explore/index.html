@@ -17,7 +17,10 @@
 <link rel="icon" href="/favicon.ico?v=4" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=4">
 <link rel="mask-icon" href="/mask-icon.svg?v=4" color="#C8A96E">
-<style>html{color-scheme:dark}body{margin:0;background:#13110e}[hidden]{display:none!important}</style>
+<style>html{color-scheme:dark}body{margin:0;background:#13110e}[hidden]{display:none!important}.wb.wphoto[aria-pressed="true"]{color:#1b1712;background:#d8b25a}
+.photo-tag{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:6;background:rgba(20,18,16,.72);color:#f3e7c9;font:500 11.5px/1.2 Jost,system-ui,sans-serif;letter-spacing:.05em;padding:6px 11px;border-radius:999px;pointer-events:none;opacity:0;transition:opacity .4s}
+.photo-tag.on{opacity:1}
+</style>
 </head>
 <body>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -576,6 +579,7 @@ body::after { height: calc(env(safe-area-inset-top, 0px) + 96px); background: li
       <button type="button" class="wb" id="wPrev" aria-label="Previous room"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5 7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <div class="wnow" aria-live="polite"><b id="wName">—</b><span id="wSub">—</span></div>
       <button type="button" class="wb" id="wNext" aria-label="Next room"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 4.5 13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button type="button" class="wb wphoto" id="wPhoto" aria-pressed="true" hidden aria-label="Photo view: a rendered 360° photo of each room" title="Photo view"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 6.5h3l1.4-2h4.2l1.4 2h3v9h-13z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="10" cy="10.8" r="2.7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button>
       <button type="button" class="wb wplay" id="wPlay" aria-pressed="false" aria-label="Play the guided walk"><svg viewBox="0 0 20 20" aria-hidden="true"><path class="pl" d="M7 4.8v10.4L15.2 10Z" fill="currentColor"/><path class="pa" d="M6.5 5h2.6v10H6.5zM10.9 5h2.6v10h-2.6z" fill="currentColor"/></svg></button>
     </div>
     <div class="wmap" id="wMap" hidden><svg id="wMapSvg" role="img" aria-label="Plan of the home: where you are and which way you face. Tap a room to go there."></svg></div>
@@ -684,6 +688,8 @@ body::after { height: calc(env(safe-area-inset-top, 0px) + 96px); background: li
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/DRACOLoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/RGBELoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/utils/BufferGeometryUtils.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/geometries/RoundedBoxGeometry.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/lights/RectAreaLightUniformsLib.js"></script>
 <script>
 /* RealFlat — builds one home from its measured plan (plans.json, traced from the developer's floor-plan
    sheets): drawn walls, real openings (windows, ventilators, entrance, internal doors, glazed sliders),
@@ -716,13 +722,14 @@ const RealFlat = (function () {
     laminate:{ t: 'laminate_floor_02', tile: 2.0, rough: 0.45, color: 0xffffff, env: 0.6, n: 0.5 },
     antiskid:{ t: 'anti_skid_tiles', tile: 0.9, rough: 0.7, color: 0xf2f2f2, env: 0.4, n: 0.8 },
     terrazzo:{ t: 'terrazzo_tiles', tile: 1.4, rough: 0.5, color: 0xffffff, env: 0.5, n: 0.5 },
-    paint:   { t: 'beige_wall_001', tile: 1.6, rough: 0.92, color: 0xfbf7f0, env: 0.3, n: 0.4 },
+    paint:   { t: 'beige_wall_001', tile: 1.6, rough: 0.9, color: 0xd4ccbf, env: 0.3, n: 0.22, nomap: true },
     bathtile:{ t: 'long_white_tiles', tile: 0.9, rough: 0.18, color: 0xffffff, env: 0.9, n: 0.6, noRough: true },
     granite: { t: 'slab_tiles', tile: 1.2, rough: 0.16, color: 0xffffff, env: 1.0, n: 0.3 },
     wood:    { t: 'dark_wood', tile: 1.2, rough: 0.4, color: 0xffffff, env: 0.6, n: 0.4 },
     oak:     { t: 'oak_wood_planks', tile: 1.4, rough: 0.5, color: 0xffffff, env: 0.5, n: 0.4, noRough: true },
     sofa:    { t: 'leather_white', tile: 0.9, rough: 0.9, color: 0xd9cfc1, env: 0.3, n: 0.8 },
-    jacquard:{ t: 'quatrefoil_jacquard_fabric', tile: 0.7, rough: 0.95, color: 0xd8c4b0, env: 0.2, n: 0.7, noRough: true },
+    jacquard:{ t: 'quatrefoil_jacquard_fabric', tile: 0.7, rough: 0.95, color: 0x6e5328, env: 0.2, n: 0.7, noRough: true, gray: true },
+    jacqteal:{ t: 'quatrefoil_jacquard_fabric', tile: 0.7, rough: 0.95, color: 0x2a3b39, env: 0.2, n: 0.7, noRough: true, gray: true },
     taupe:   { t: 'leather_white', tile: 0.7, rough: 0.92, color: 0x8c7f72, env: 0.25, n: 0.9 },
     rugwool: { t: 'leather_white', tile: 0.35, rough: 1.0, color: 0x9a9184, env: 0.1, n: 1.2 },
     duvet:   { t: 'leather_white', tile: 0.8, rough: 0.95, color: 0xefe9df, env: 0.2, n: 0.8 },
@@ -734,7 +741,7 @@ const RealFlat = (function () {
     const s = SPEC[id];
     const m = new THREE.MeshStandardMaterial({
       color: s.color, roughness: s.rough, metalness: 0,
-      map: tx(s.t, 'd', true), normalMap: tx(s.t, 'n', false), envMapIntensity: s.env,
+      map: s.nomap ? null : tx(s.t, 'd', true), normalMap: tx(s.t, 'n', false), envMapIntensity: s.env,
     });
     m.normalScale.set(s.n, s.n);
     if (!s.noRough) { m.roughnessMap = tx(s.t, 'r', false); }
@@ -745,6 +752,12 @@ const RealFlat = (function () {
             diffuseColor.rgb *= mix(0.74, 1.0, smoothstep(0.0, 0.0035, gd)); }`);
       };
       m.customProgramCacheKey = () => 'grout' + s.grout;
+    }
+    if (s.gray) {   // weave pattern only (its own dye is a strong red): the fabric takes the colour given here
+      m.onBeforeCompile = (sh) => {
+        sh.fragmentShader = sh.fragmentShader.replace('#include <map_fragment>', '#include <map_fragment>\n  diffuseColor.rgb = diffuse * clamp(dot(sampledDiffuseColor.rgb, vec3(0.299, 0.587, 0.114)) / 0.09, 0.35, 1.5);');
+      };
+      m.customProgramCacheKey = () => 'grayweave';
     }
     m.name = id;
     return (M[id] = m);
@@ -790,9 +803,23 @@ const RealFlat = (function () {
     }
     return g;
   }
+  let ROUND = 0;
+  function roundGeo(w, h, d, tile) {
+    const r = Math.min(0.03, Math.min(w, h, d) * 0.3);
+    if (r < 0.004 || !THREE.RoundedBoxGeometry) return boxGeo(w, h, d, tile);
+    const g = new THREE.RoundedBoxGeometry(w, h, d, 2, r);
+    const p = g.attributes.position, n = g.attributes.normal, uv = g.attributes.uv;
+    for (let i = 0; i < p.count; i++) {     // UVs in metres / tile, as boxGeo
+      const ax = Math.abs(n.getX(i)), ay = Math.abs(n.getY(i)), az = Math.abs(n.getZ(i));
+      if (ax >= ay && ax >= az) uv.setXY(i, p.getZ(i) / tile, p.getY(i) / tile);
+      else if (ay >= az) uv.setXY(i, p.getX(i) / tile, p.getZ(i) / tile);
+      else uv.setXY(i, p.getX(i) / tile, p.getY(i) / tile);
+    }
+    return g;
+  }
   function box(parent, m, w, h, d, x, y, z, ry, tile) {
     const s = SPEC[m.name];
-    const mesh = new THREE.Mesh(boxGeo(w, h, d, tile || (s ? s.tile : 1)), m);
+    const mesh = new THREE.Mesh(ROUND > 0 ? roundGeo(w, h, d, tile || (s ? s.tile : 1)) : boxGeo(w, h, d, tile || (s ? s.tile : 1)), m);
     mesh.position.set(x, y, z);
     if (ry) mesh.rotation.y = ry;
     mesh.castShadow = true; mesh.receiveShadow = true;
@@ -823,7 +850,7 @@ const RealFlat = (function () {
       box(g, s, 0.18, 0.2, d, -w / 2 + 0.09, 0.52, d / 2); box(g, s, 0.18, 0.2, d, w / 2 - 0.09, 0.52, d / 2);
       const n = Math.max(2, Math.round((w - 0.36) / 0.7));
       for (let i = 0; i < n; i++) box(g, mat('sofa'), (w - 0.4) / n - 0.03, 0.14, d - 0.28, -w / 2 + 0.2 + (i + 0.5) * (w - 0.4) / n, 0.49, d / 2 + 0.08);
-      for (let i = 0; i < n; i++) box(g, mat('jacquard'), 0.42, 0.36, 0.12, -w / 2 + 0.2 + (i + 0.5) * (w - 0.4) / n, 0.72, 0.28);
+      for (let i = 0; i < n; i++) box(g, mat(i % 2 ? 'jacqteal' : 'jacquard'), 0.42, 0.36, 0.12, -w / 2 + 0.2 + (i + 0.5) * (w - 0.4) / n, 0.72, 0.28);
       return g;
     },
     tvUnit(w) {
@@ -965,6 +992,9 @@ const RealFlat = (function () {
     shelves(w) { const g = new THREE.Group(); for (let i = 0; i < 5; i++) box(g, mat('oak'), w, 0.025, 0.45, 0, 0.3 + i * 0.42, 0.225); box(g, mat('oak'), 0.025, 2.0, 0.45, -w / 2, 1.0, 0.225); box(g, mat('oak'), 0.025, 2.0, 0.45, w / 2, 1.0, 0.225); return g; },
   };
 
+  // furniture gets softly rounded edges: light catches them, as it does on real upholstery and joinery
+  Object.keys(F).forEach((k) => { const f = F[k]; F[k] = function () { ROUND++; try { const g = f.apply(this, arguments); if (g && g.isObject3D) g.userData.ftype = k; return g; } finally { ROUND--; } }; });
+
   /** Drop specks the tracer left behind (lettering, hatching): wall pieces under 0.6 ft that touch no real wall. */
   function cleanWalls(walls) {
     const big = walls.filter((w) => Math.max(w[2], w[3]) >= 0.6), e = 0.15;
@@ -1074,7 +1104,7 @@ const RealFlat = (function () {
         const leaf = new THREE.Group();
         box(leaf, o.type === 'entry' ? mat('wood') : M.lacquer, leafW, 2.05, 0.04, leafW / 2, 1.025, 0);
         box(leaf, M.steel, 0.12, 0.02, 0.03, leafW - 0.1, 1.0, into * 0.03);
-        const ang = (o.type === 'entry' ? 1.15 : 1.35);
+        const ang = (o.type === 'entry' ? 1.3 : 1.5);     // open leaves stand nearly back against the wall
         zone(alongX, s0, s0 + leafW + 0.08, hingeAcross, hingeAcross + into * (leafW + 0.08));
         if (alongX) { leaf.position.set(s0 + 0.02, 0, hingeAcross); leaf.rotation.y = -into * ang; }
         else { leaf.position.set(hingeAcross, 0, s0 + 0.02); leaf.rotation.y = -Math.PI / 2 + into * ang; }
@@ -1377,7 +1407,7 @@ const RealFlat = (function () {
     });
     const span = Math.max(bx1 - bx0, bz1 - bz0);
     const nav = buildNav(rooms, navOpen, plan.walls.map(([x, y, w, d]) => [X(x), Z(y), X(x + w), Z(y + d)]), placedFP, !!(opts && opts.mirror));
-    return { root, rooms, span, front: plan.front, mirror: !!(opts && opts.mirror), upper, H, HU, nav };
+    return { root, rooms, span, front: plan.front, mirror: !!(opts && opts.mirror), upper, H, HU, nav, opens: navOpen, sill: SILL, head: HEAD };
   }
 
   /* ── navigation for the walk-through ──
@@ -3689,6 +3719,117 @@ const RealFlat = (function () {
   const camQuat = (yaw, pitch) => new THREE.Quaternion().setFromEuler(_eul.set(pitch, yaw, 0, 'YXZ'));
   const walkFov = () => { const w = flatStage.clientWidth, h = flatStage.clientHeight; return w < h ? 80 : 68; };
   let tipT = 0;
+  // Walk-through light. The dollhouse view is lit by a high sun with no ceiling; standing inside, that sun came
+  // through the ceiling. Inside: ceilings and upper walls cast shadow, the sun comes low through the home's main
+  // windows and lays patches on the floor, every outside window and door glows with soft daylight, and the floor
+  // bounces warm light back up.
+  let wLights = null;
+  function walkLights(on) {
+    if (!fScene || !flat) return;
+    const key = fScene.children.find((o) => o.isDirectionalLight), hemiL = fScene.children.find((o) => o.isHemisphereLight);
+    if (!key || !hemiL) return;
+    if (on) {
+      if (wLights) return;
+      wLights = { kp: key.position.clone(), ki: key.intensity, kc: key.color.clone(), hi: hemiL.intensity, hs: hemiL.color.clone(), hg: hemiL.groundColor.clone(), rects: [] };
+      flat.upper.traverse((m) => { if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; } });
+      // glass, nets and frosted panes let the sun through (a shadow map ignores transparency)
+      flat.root.traverse((m) => { if (m.isMesh && m.material && m.material.transparent) m.castShadow = false; });
+      // the studio sky that lights the dollhouse is far brighter than the inside of a room: indoors, reflections and
+      // fill come mostly from the room itself, so the sun patches and window light carry the picture
+      wLights.mats = new Map();
+      flat.root.traverse((m) => { if (m.isMesh && m.material && !m.material.transparent && m.material.envMapIntensity != null && !wLights.mats.has(m.material)) { wLights.mats.set(m.material, m.material.envMapIntensity); m.material.envMapIntensity *= 0.3; } });
+      // daylight comes in where an indoor room meets the outside: windows, and doors out to a balcony
+      const sx = flat.mirror ? -1 : 1, kindOf = Object.fromEntries(flat.rooms.map((r) => [r.name, r.kind]));
+      const outdoor = (n) => !n || kindOf[n] === 'balcony' || kindOf[n] === 'wdb';
+      const lit = (flat.opens || []).filter((o) => (o.type === 'window' || o.type === 'slider') && outdoor(o.to) !== outdoor(o.room))
+        .map((o) => Object.assign({ into: outdoor(o.room) ? o.out : -o.out }, o))
+        .sort((a, b) => (b.type === 'slider') - (a.type === 'slider') || (b.s1 - b.s0) - (a.s1 - a.s0));
+      // the sun stands outside the main opening (the living room's door to its balcony), 30° up and a little to one side
+      const m0 = lit[0], out = m0 ? (m0.alongX ? new THREE.Vector3(0, 0, -m0.into) : new THREE.Vector3(-m0.into * sx, 0, 0)) : frontDir(flat.front, flat.mirror);
+      const side = new THREE.Vector3(-out.z, 0, out.x);
+      key.position.copy(out).multiplyScalar(8).addScaledVector(side, 3.2).add(new THREE.Vector3(0, 5.0, 0));
+      key.intensity = 3.0; key.color.set(0xffe6c8);
+      hemiL.intensity = PHONE ? 0.6 : 0.2; hemiL.color.set(0xf2efe8); hemiL.groundColor.set(0x8f7d66);
+      if (!PHONE && THREE.RectAreaLightUniformsLib) {
+        if (!walkLights.ready) { THREE.RectAreaLightUniformsLib.init(); walkLights.ready = true; }
+        lit.slice(0, 8).forEach((o) => {
+          const len = o.s1 - o.s0, mid = (o.s0 + o.s1) / 2, c = o.line + o.out * o.t / 2;
+          const y0 = o.type === 'slider' ? 0.05 : flat.sill, y1 = flat.head;
+          const L = new THREE.RectAreaLight(0xeef2fa, o.type === 'slider' ? 1.8 : 1.5, len, y1 - y0);
+          const px = (o.alongX ? mid : c) * sx, pz = o.alongX ? c : mid;
+          L.position.set(px, (y0 + y1) / 2, pz);
+          L.lookAt(px + (o.alongX ? 0 : o.into * sx), (y0 + y1) / 2, pz + (o.alongX ? o.into : 0));
+          fScene.add(L); wLights.rects.push(L);
+        });
+      }
+    } else if (wLights) {
+      key.position.copy(wLights.kp); key.intensity = wLights.ki; key.color.copy(wLights.kc);
+      hemiL.intensity = wLights.hi; hemiL.color.copy(wLights.hs); hemiL.groundColor.copy(wLights.hg);
+      wLights.rects.forEach((L) => fScene.remove(L));
+      wLights.mats.forEach((v, m) => { m.envMapIntensity = v; });
+      wLights = null;
+    }
+  }
+  // Photo view: at each stop of the guided walk, a 360° photo of the room rendered in Cycles from the same spot
+  // (pano/<plan>/NN.jpg; mirror-image homes show it mirrored). Moving between stops shows the live 3D, and the photo
+  // fades in again on arrival. Looking around works the same way in both.
+  let PANOS = null, photoOn = true, photoWant = null;
+  const panoTex = {};
+  fetch('pano/index.json?v=1').then((r) => (r.ok ? r.json() : null)).then((j) => { PANOS = j; }).catch(() => {});
+  const photoU = { map: { value: null }, op: { value: 0 }, flip: { value: 0 } };
+  const photoSphere = new THREE.Mesh(new THREE.SphereGeometry(20, 64, 32), new THREE.ShaderMaterial({
+    uniforms: photoU, side: THREE.BackSide, depthTest: false, depthWrite: false, transparent: true, toneMapped: false,
+    vertexShader: 'varying vec3 vD; void main() { vD = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+    fragmentShader: 'uniform sampler2D map; uniform float op, flip; varying vec3 vD; void main() { vec3 d = normalize(vD); if (flip > 0.5) d.x = -d.x;' +
+      ' vec2 uv = vec2(atan(d.z, d.x) * 0.1591549 + 0.5, asin(clamp(d.y, -1.0, 1.0)) * 0.3183099 + 0.5); gl_FragColor = vec4(texture2D(map, uv).rgb, op); }'
+  }));
+  photoSphere.renderOrder = 50; photoSphere.frustumCulled = false; photoSphere.visible = false;
+  const photoTag = document.createElement('div'); photoTag.className = 'photo-tag'; photoTag.textContent = '360° PHOTO VIEW · drag to look around';
+  function photoSet() {
+    const key = homeO && homeO.userData && homeO.userData.u ? unitInfo(homeO).plan : null;    // the plan this home is built from
+    return (PANOS && key && PANOS[key]) ? { key, set: PANOS[key] } : null;
+  }
+  function photoLoad(url) {
+    if (panoTex[url]) return panoTex[url];
+    const e = panoTex[url] = { ready: false, tex: null };
+    new THREE.TextureLoader().load(url, (t) => {
+      t.generateMipmaps = false; t.minFilter = THREE.LinearFilter; t.magFilter = THREE.LinearFilter; t.wrapS = THREE.RepeatWrapping;
+      e.tex = t; e.ready = true;
+    });
+    return e;
+  }
+  function photoOff() {
+    photoU.op.value = 0; photoSphere.visible = false; photoWant = null; photoTag.classList.remove('on');
+    if (photoSphere.parent) photoSphere.parent.remove(photoSphere);
+  }
+  function photoTick(dt) {
+    const W = walk; if (!W || !flat || !fScene) return;
+    const ps = photoSet();
+    $('wPhoto').hidden = !ps;
+    if (!photoSphere.parent) fScene.add(photoSphere);
+    if (!photoTag.parentNode && flatStage) flatStage.appendChild(photoTag);
+    let want = null;
+    if (ps && photoOn && !W.intro && !W.go && !W.free && W.nav.tour[W.stop]) {
+      const T = W.nav.tour[W.stop];
+      if (Math.hypot(W.pos.x - T.x, W.pos.z - T.z) < 0.25) {
+        const room = W.nav.rooms[T.room].name, p = ps.set.stops.find((q) => q.room === room);
+        if (p) want = 'pano/' + ps.key + '/' + p.file + '?v=' + (ps.set.v || 1);
+        // fetch the next stop's photo while this one is on screen
+        const N = W.nav.tour[W.stop + 1];
+        if (N) { const pn = ps.set.stops.find((q) => q.room === W.nav.rooms[N.room].name); if (pn) photoLoad('pano/' + ps.key + '/' + pn.file + '?v=' + (ps.set.v || 1)); }
+      }
+    }
+    const e = want ? photoLoad(want) : null;
+    if (e && e.ready && photoU.map.value !== e.tex && photoU.op.value < 0.03) photoU.map.value = e.tex;
+    const target = (e && e.ready && photoU.map.value === e.tex) ? 1 : 0;
+    photoU.op.value += (target - photoU.op.value) * Math.min(1, dt * (target ? 5 : 12));
+    if (Math.abs(target - photoU.op.value) < 0.004) photoU.op.value = target;
+    photoU.flip.value = flat.mirror ? 1 : 0;
+    photoSphere.visible = photoU.op.value > 0.003;
+    photoSphere.position.copy(fCam.position);
+    photoTag.classList.toggle('on', photoU.op.value > 0.6);
+  }
+  $('wPhoto').addEventListener('click', () => { photoOn = !photoOn; $('wPhoto').setAttribute('aria-pressed', String(photoOn)); });
   function setWalk(on) {
     if (on && !walk) {
       if (!flat || !flat.nav) return;
@@ -3701,7 +3842,7 @@ const RealFlat = (function () {
       flat.rooms.forEach((r) => { if (r.label) r.label.visible = false; });
       if (measure) setMeasure(false);
       fCtl.enabled = false; camTween = null;
-      buildDiscs(); buildWalkMap(); showPano(true);
+      buildDiscs(); buildWalkMap(); showPano(true); walkLights(true);
       flatStage.parentElement.classList.add('walking');
       $('wBar').hidden = false; $('wMap').hidden = false; $('hFree').hidden = false; $('hMeasure').hidden = true;
       const t = $('walkTip');
@@ -3713,7 +3854,7 @@ const RealFlat = (function () {
       const W = walk; walk = null;
       W.discs.forEach((d) => fScene.remove(d));
       if (walkRing) walkRing.visible = false;
-      showPano(false);
+      showPano(false); walkLights(false); photoOff();
       if (flat) {
         flat.upper.visible = false;
         flat.rooms.forEach((r) => { if (r.label) r.label.visible = true; });
@@ -4122,6 +4263,7 @@ const RealFlat = (function () {
     if (homeOpen && fr) {
       if (reveal) updateReveal(now);
       if (walk) updateWalk(Math.min(0.12, raw) * (window.__oiTime || 1), now0);
+      if (walk) photoTick(Math.min(0.1, raw));
       else {
         if (camTween) {
           const k = Math.min(1, (now0 - camTween.start) / camTween.ms), e = 1 - Math.pow(1 - k, 3);

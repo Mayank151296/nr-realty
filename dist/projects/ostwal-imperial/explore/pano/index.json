@@ -1,0 +1,350 @@
+{
+ "b1-1bhk": {
+  "v": 1,
+  "unit": "A-802",
+  "stops": [
+   {
+    "room": "Living",
+    "file": "01.jpg",
+    "x": 3.174,
+    "z": -0.945
+   },
+   {
+    "room": "Kitchen",
+    "file": "03.jpg",
+    "x": 0.301,
+    "z": -0.026
+   },
+   {
+    "room": "Bedroom",
+    "file": "05.jpg",
+    "x": -2.374,
+    "z": -0.028
+   }
+  ]
+ },
+ "b1-2bhk-a": {
+  "v": 1,
+  "unit": "A-801",
+  "stops": [
+   {
+    "room": "Living",
+    "file": "01.jpg",
+    "x": -3.717,
+    "z": -0.17
+   },
+   {
+    "room": "Dining",
+    "file": "03.jpg",
+    "x": -0.928,
+    "z": -0.313
+   },
+   {
+    "room": "Kitchen",
+    "file": "04.jpg",
+    "x": -0.676,
+    "z": 1.975
+   },
+   {
+    "room": "Bedroom 2",
+    "file": "06.jpg",
+    "x": -2.206,
+    "z": -2.689
+   },
+   {
+    "room": "Bedroom 1",
+    "file": "07.jpg",
+    "x": 2.686,
+    "z": 0.827
+   }
+  ]
+ },
+ "b1-2bhk-end-b3": {
+  "v": 1,
+  "unit": "B-803",
+  "stops": [
+   {
+    "room": "Living",
+    "file": "01.jpg",
+    "x": -0.75,
+    "z": 2.619
+   },
+   {
+    "room": "Dining",
+    "file": "03.jpg",
+    "x": -1.131,
+    "z": 0.915
+   },
+   {
+    "room": "Kitchen",
+    "file": "04.jpg",
+    "x": -2.924,
+    "z": 0.492
+   },
+   {
+    "room": "Bedroom 1",
+    "file": "07.jpg",
+    "x": 2.137,
+    "z": -2.514
+   },
+   {
+    "room": "Bedroom 2",
+    "file": "09.jpg",
+    "x": 2.099,
+    "z": -0.689
+   }
+  ]
+ },
+ "b1-2bhk-end-b4": {
+  "v": 1,
+  "unit": "B-804",
+  "stops": [
+   {
+    "room": "Living",
+    "file": "01.jpg",
+    "x": -0.714,
+    "z": -2.622
+   },
+   {
+    "room": "Dining",
+    "file": "03.jpg",
+    "x": -1.145,
+    "z": -0.84
+   },
+   {
+    "room": "Kitchen",
+    "file": "04.jpg",
+    "x": -2.917,
+    "z": -0.541
+   },
+   {
+    "room": "Bedroom 1",
+    "file": "07.jpg",
+    "x": 2.082,
+    "z": 2.616
+   },
+   {
+    "room": "Bedroom 2",
+    "file": "09.jpg",
+    "x": 2.118,
+    "z": 0.687
+   }
+  ]
+ },
+ "b1-2bhk-end-l": {
+  "v": 1,
+  "unit": "A-803",
+  "stops": [
+   {
+    "room": "Living",
+    "file": "01.jpg",
+    "x": 0.42,
+    "z": -3.72
+   },
+   {
+    "room": "Dining",
+    "file": "03.jpg",
+    "x": 0.502,
+    "z": -0.916
+   },
+   {
+    "room": "Kitchen",
+    "file": "04.jpg",
+    "x": 2.786,
+    "z": -2.353
+   },
+   {
+    "room": "Bedroom 1",
+    "file": "06.jpg",
+    "x": -0.661,
+    "z": 2.721
+   },
+   {
+    "room": "Bedroom 2",
+    "file": "08.jpg",
+    "x": -2.043,
+    "z": 0.696
+   }
+  ]
+ },
+ "b1-2bhk-end-u": {
+  "v": 1,
+  "unit": "A-804",
+  "stops": [
+   {
+    "room": "Living",
+    "file": "01.jpg",
+    "x": 0.404,
+    "z": 3.78
+   },
+   {
+    "room": "Dining",
+    "file": "03.jpg",
+    "x": 0.493,
+    "z": 0.94
+   },
+   {
+    "room": "Kitchen",
+    "file": "04.jpg",
+    "x": 2.873,
+    "z": 2.384
+   },
+   {
+    "room": "Bedroom 1",
+    "file": "06.jpg",
+    "x": -0.594,
+    "z": -2.673
+   },
+   {
+    "room": "Bedroom 2",
+    "file": "08.jpg",
+    "x": -1.992,
+    "z": -0.68
+   }
+  ]
+ },
+ "b1-3bhk": {
+  "v": 1,
+  "unit": "A-705",
+  "stops": [
+   {
+    "room": "Living",
+    "file": "01.jpg",
+    "x": -1.884,
+    "z": 0.895
+   },
+   {
+    "room": "Dining",
+    "file": "03.jpg",
+    "x": 1.105,
+    "z": 1.207
+   },
+   {
+    "room": "Kitchen",
+    "file": "04.jpg",
+    "x": -0.115,
+    "z": 3.441
+   },
+   {
+    "room": "Bedroom 1",
+    "file": "06.jpg",
+    "x": -4.274,
+    "z": -1.683
+   },
+   {
+    "room": "Bedroom 2",
+    "file": "09.jpg",
+    "x": 2.683,
+    "z": -2.582
+   },
+   {
+    "room": "Bedroom 3",
+    "file": "10.jpg",
+    "x": 4.793,
+    "z": -1.021
+   }
+  ]
+ },
+ "b2-1bhk": {
+  "v": 1,
+  "unit": "II-A-802",
+  "stops": [
+   {
+    "room": "Living",
+    "file": "00.jpg",
+    "x": -3.417,
+    "z": -1.572
+   },
+   {
+    "room": "Kitchen",
+    "file": "02.jpg",
+    "x": 0.092,
+    "z": 0.837
+   },
+   {
+    "room": "Bedroom",
+    "file": "04.jpg",
+    "x": 2.35,
+    "z": -0.136
+   }
+  ]
+ },
+ "b2-2bhk": {
+  "v": 1,
+  "unit": "II-B-801",
+  "stops": [
+   {
+    "room": "Living",
+    "file": "00.jpg",
+    "x": 4.876,
+    "z": -1.606
+   },
+   {
+    "room": "Dining",
+    "file": "02.jpg",
+    "x": 2.213,
+    "z": -2.333
+   },
+   {
+    "room": "Kitchen",
+    "file": "04.jpg",
+    "x": 1.268,
+    "z": 0.875
+   },
+   {
+    "room": "Bedroom 1",
+    "file": "06.jpg",
+    "x": -3.886,
+    "z": -0.13
+   },
+   {
+    "room": "Bedroom 2",
+    "file": "07.jpg",
+    "x": -0.616,
+    "z": 1.062
+   }
+  ]
+ },
+ "b2-3bhk-ref": {
+  "v": 1,
+  "unit": "II-A-803",
+  "stops": [
+   {
+    "room": "Living",
+    "file": "00.jpg",
+    "x": 2.462,
+    "z": -1.379
+   },
+   {
+    "room": "Dining",
+    "file": "02.jpg",
+    "x": -0.201,
+    "z": -2.333
+   },
+   {
+    "room": "Kitchen",
+    "file": "04.jpg",
+    "x": -1.146,
+    "z": 0.875
+   },
+   {
+    "room": "Bedroom 1",
+    "file": "06.jpg",
+    "x": -6.299,
+    "z": -0.13
+   },
+   {
+    "room": "Bedroom 2",
+    "file": "07.jpg",
+    "x": -3.029,
+    "z": 1.062
+   },
+   {
+    "room": "Bedroom 3",
+    "file": "10.jpg",
+    "x": 4.527,
+    "z": -2.01
+   }
+  ]
+ }
+}
