@@ -1,7 +1,10 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta charset="utf-8">
+<link rel="preload" href="model-4999cdb362.glb" as="fetch" crossorigin>
+<link rel="preload" href="hdr/sky_day.hdr" as="fetch" crossorigin>
+<link rel="preload" href="vendor/three147.js?v=1" as="script"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Explore Ostwal Imperial in 3D | Palghar West | Om Shanti N R Construction</title>
 <meta name="description" content="Walk both Ostwal Imperial towers floor by floor. Open any of the 330 homes to see its RERA carpet area and which way it faces, step inside a 3D walk-through, see the view from its windows, and book a site visit. MahaRERA P99000049283, Devisha Road, Palghar West.">
 <link rel="canonical" href="https://omshantinrconstruction.com/projects/ostwal-imperial/explore/">
@@ -682,14 +685,7 @@ body::after { height: calc(env(safe-area-inset-top, 0px) + 96px); background: li
 
 <div class="loading" id="loading"><div><div class="bar"><i id="barFill"></i></div><span id="loadMsg">Loading model</span></div></div>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/DRACOLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/RGBELoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/utils/BufferGeometryUtils.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/geometries/RoundedBoxGeometry.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/lights/RectAreaLightUniformsLib.js"></script>
+<script src="vendor/three147.js?v=1"></script>
 <script>
 /* RealFlat — builds one home from its measured plan (plans.json, traced from the developer's floor-plan
    sheets): drawn walls, real openings (windows, ventilators, entrance, internal doors, glazed sliders),
@@ -1673,6 +1669,16 @@ const RealFlat = (function () {
   renderer.toneMappingExposure = 1.0;
   renderer.shadowMap.enabled = !LITE;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.autoUpdate = false;      // the scene is still: shadows are redrawn only when it changes (see PERF)
+  renderer.shadowMap.needsUpdate = true;
+  // Soft shadow edges take 16 shadow-map reads per pixel. While the view is moving, a light's shadow.radius is set
+  // to 0 and the edges are read with 4 (bilinear, one texel soft); the moment it stops, the full soft filter is back.
+  (function () {
+    const C = THREE.ShaderChunk, k = 'shadowmap_pars_fragment', src = C[k];
+    const i = src.indexOf('SHADOWMAP_TYPE_PCF_SOFT )'), j = i < 0 ? -1 : src.indexOf('shadow = (', i);
+    if (j > 0) C[k] = src.slice(0, j) + 'if ( shadowRadius < 0.5 ) shadow = mix( mix( texture2DCompare( shadowMap, uv, shadowCoord.z ), texture2DCompare( shadowMap, uv + vec2( dx, 0.0 ), shadowCoord.z ), f.x ), ' +
+      'mix( texture2DCompare( shadowMap, uv + vec2( 0.0, dy ), shadowCoord.z ), texture2DCompare( shadowMap, uv + texelSize, shadowCoord.z ), f.x ), f.y ); else ' + src.slice(j);
+  })();
   stage.appendChild(renderer.domElement);
 
   const scene = new THREE.Scene();
@@ -1790,7 +1796,7 @@ const RealFlat = (function () {
         t.userData.avg.value = Math.max(0.05, sum / 256);
       } catch (e) {}
     });
-    t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 8;
+    t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = /[?&]xaniso/.test(location.search) ? 1 : 8;
     t.userData.avg = { value: 0.5 };
     return (triAux[key] = t);
   }
@@ -1816,6 +1822,24 @@ const RealFlat = (function () {
       return mix(mix(mix(triH(i), triH(i + vec3(1, 0, 0)), f.x), mix(triH(i + vec3(0, 1, 0)), triH(i + vec3(1, 1, 0)), f.x), f.y),
                  mix(mix(triH(i + vec3(0, 0, 1)), triH(i + vec3(1, 0, 1)), f.x), mix(triH(i + vec3(0, 1, 1)), triH(i + vec3(1, 1, 1)), f.x), f.y), f.z); }
     float triF(vec3 p) { return 0.5 * triN(p) + 0.3 * triN(p * 2.03 + 11.0) + 0.2 * triN(p * 4.01 + 23.0); }`;
+  // Triplanar sampling, made cheap: a wall faces one axis, so only projections with real weight are fetched (all
+  // three only along edges and curves). Texture gradients are taken before branching, so filtering is unchanged.
+  const TRI_FAST = `
+    #define TRI_EPS 0.002
+    #if __VERSION__ >= 300
+      #define TRI_TEX(T, uv, gx, gy) textureGrad(T, uv, gx, gy)
+    #else
+      #define TRI_TEX(T, uv, gx, gy) texture2D(T, uv)
+    #endif
+    #define TRI_GRADS vec4 triGX = vec4(dFdx(triUX), dFdy(triUX)), triGY = vec4(dFdx(triUY), dFdy(triUY)), triGZ = vec4(dFdx(triUZ), dFdy(triUZ));
+    #define TRI_SAMPLE(T, CH) triS4(T, bw, triUX, triUY, triUZ, triGX, triGY, triGZ).CH
+    vec4 triS4(sampler2D T, vec3 bw, vec2 ux, vec2 uy, vec2 uz, vec4 gx, vec4 gy, vec4 gz) {
+      vec4 r = vec4(0.0);
+      if (bw.x > TRI_EPS) r += TRI_TEX(T, ux, gx.xy, gx.zw) * bw.x;
+      if (bw.y > TRI_EPS) r += TRI_TEX(T, uy, gy.xy, gy.zw) * bw.y;
+      if (bw.z > TRI_EPS) r += TRI_TEX(T, uz, gz.xy, gz.zw) * bw.z;
+      return r;
+    }`;
   function triplanar(m, spec) {
     const [name, tile, amt, colorMix] = spec;
     const fx = TRI_FX[m.name] || [0, 0, 0];
@@ -1829,23 +1853,35 @@ const RealFlat = (function () {
       sh.uniforms.triMacro = { value: macro };
       if (nTex) { sh.uniforms.triNrm = { value: nTex }; sh.uniforms.triRelief = { value: relief }; }
       if (rTex) { sh.uniforms.triRgh = { value: rTex }; sh.uniforms.triRAvg = rTex.userData.avg; sh.uniforms.triRAmt = { value: rough }; }
-      const defs = (nTex ? '#define TRI_NRM\n' : '') + (rTex ? '#define TRI_RGH\n' : '') + (ground ? '#define TRI_GROUND\n' : '') + (lawn ? '#define TRI_LAWN\n' : '');
+      const DBG = window.__oiDbg || (window.__oiDbg = new URLSearchParams(location.search));     // profiling switches (x...)
+      const defs = (nTex && !DBG.has('xnrm') ? '#define TRI_NRM\n' : '') + (rTex && !DBG.has('xrgh') ? '#define TRI_RGH\n' : '') + (ground ? '#define TRI_GROUND\n' : '') + (lawn ? '#define TRI_LAWN\n' : '') +
+        (DBG.has('xnoise') ? '#define TRI_XNOISE\n' : '') + (DBG.has('xtri') ? '#define TRI_XTRI\n' : '');
       sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vTriPos; varying vec3 vTriNrm;')
         .replace('#include <fog_vertex>', '#include <fog_vertex>\nvTriPos = (modelMatrix * vec4(transformed, 1.0)).xyz; vTriNrm = normalize(mat3(modelMatrix) * objectNormal);');
       sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\n' + defs +
           'varying vec3 vTriPos; varying vec3 vTriNrm; uniform sampler2D triMap; uniform float triScale, triAmt, triColor, triAvg, triMacro;\n' +
-          '#ifdef TRI_NRM\nuniform sampler2D triNrm; uniform float triRelief;\n#endif\n#ifdef TRI_RGH\nuniform sampler2D triRgh; uniform float triRAvg, triRAmt;\n#endif\n' + TRI_NOISE)
+          '#ifdef TRI_NRM\nuniform sampler2D triNrm; uniform float triRelief;\n#endif\n#ifdef TRI_RGH\nuniform sampler2D triRgh; uniform float triRAvg, triRAmt;\n#endif\n' + TRI_NOISE + TRI_FAST)
         .replace('#include <map_fragment>', `#include <map_fragment>
           vec3 triWN = normalize(vTriNrm);
           vec3 bw = pow(abs(triWN), vec3(4.0)); bw /= (bw.x + bw.y + bw.z);
           vec2 triUX = vTriPos.zy * triScale, triUY = vTriPos.xz * triScale, triUZ = vTriPos.xy * triScale;
-          vec3 tc = texture2D(triMap, triUX).rgb * bw.x + texture2D(triMap, triUY).rgb * bw.y + texture2D(triMap, triUZ).rgb * bw.z;
+          TRI_GRADS
+          #ifdef TRI_XTRI
+          vec3 tc = vec3(0.5);
+          #else
+          vec3 tc = TRI_SAMPLE(triMap, rgb);
+          #endif
+          float triNear = 1.0 - smoothstep(170.0, 280.0, length(vTriPos - cameraPosition));   // relief detail: sub-pixel beyond this
           tc = pow(tc, vec3(2.2));
           float lum = dot(tc, vec3(0.299, 0.587, 0.114));
           vec3 detail = diffuseColor.rgb * mix(1.0, lum / triAvg, triAmt);
           diffuseColor.rgb = mix(detail, tc, triColor);
           // large-scale variation: no wall, road or lawn is one even colour in daylight
+          #ifdef TRI_XNOISE
+          float triM = 0.0;
+          #else
           float triM = triF(vTriPos * 0.045) - 0.5;
+          #endif
           diffuseColor.rgb *= 1.0 + triMacro * 2.0 * triM;
           #ifdef TRI_LAWN
             float triDry = smoothstep(0.52, 0.78, triF(vTriPos * 0.11 + 7.0));
@@ -1862,21 +1898,23 @@ const RealFlat = (function () {
           #endif`)
         .replace('#include <roughnessmap_fragment>', `#include <roughnessmap_fragment>
           #ifdef TRI_RGH
-            float triR = texture2D(triRgh, triUX).g * bw.x + texture2D(triRgh, triUY).g * bw.y + texture2D(triRgh, triUZ).g * bw.z;
-            roughnessFactor = clamp(roughnessFactor * mix(1.0, triR / triRAvg, triRAmt), 0.05, 1.0);
+          if (triNear > 0.0) {
+            float triR = TRI_SAMPLE(triRgh, g);
+            roughnessFactor = clamp(roughnessFactor * mix(1.0, triR / triRAvg, triRAmt * triNear), 0.05, 1.0);
+          }
           #endif`)
         .replace('#include <normal_fragment_maps>', `#include <normal_fragment_maps>
           #ifdef TRI_NRM
-          {   // world-space relief from the scanned normal maps, whiteout (UDN) blend per projection
-            vec3 nx = texture2D(triNrm, triUX).xyz * 2.0 - 1.0, ny = texture2D(triNrm, triUY).xyz * 2.0 - 1.0, nz = texture2D(triNrm, triUZ).xyz * 2.0 - 1.0;
-            nx.xy *= triRelief; ny.xy *= triRelief; nz.xy *= triRelief;
-            nx = vec3(nx.xy + triWN.zy, triWN.x); ny = vec3(ny.xy + triWN.xz, triWN.y); nz = vec3(nz.xy + triWN.xy, triWN.z);
-            vec3 wN = normalize(nx.zyx * bw.x + ny.xzy * bw.y + nz.xyz * bw.z);
-            normal = normalize((viewMatrix * vec4(wN, 0.0)).xyz) * faceDirection;
+          if (triNear > 0.0) {   // world-space relief from the scanned normal maps, whiteout (UDN) blend per projection
+            float rl = triRelief * triNear; vec3 wN = vec3(0.0);
+            if (bw.x > TRI_EPS) { vec3 nx = TRI_TEX(triNrm, triUX, triGX.xy, triGX.zw).xyz * 2.0 - 1.0; nx.xy *= rl; nx = vec3(nx.xy + triWN.zy, triWN.x); wN += nx.zyx * bw.x; }
+            if (bw.y > TRI_EPS) { vec3 ny = TRI_TEX(triNrm, triUY, triGY.xy, triGY.zw).xyz * 2.0 - 1.0; ny.xy *= rl; ny = vec3(ny.xy + triWN.xz, triWN.y); wN += ny.xzy * bw.y; }
+            if (bw.z > TRI_EPS) { vec3 nz = TRI_TEX(triNrm, triUZ, triGZ.xy, triGZ.zw).xyz * 2.0 - 1.0; nz.xy *= rl; nz = vec3(nz.xy + triWN.xy, triWN.z); wN += nz.xyz * bw.z; }
+            normal = normalize((viewMatrix * vec4(normalize(wN), 0.0)).xyz) * faceDirection;
           }
           #endif`);
     };
-    m.customProgramCacheKey = () => 'tri2_' + name + tile + amt + colorMix + relief + macro + rough + m.name;
+    m.customProgramCacheKey = () => 'tri3_' + name + tile + amt + colorMix + relief + macro + rough + m.name;
     m.needsUpdate = true;
   }
   // HDR sky for reflections (glass, iron, polished stone); shipped base64 like the model
@@ -2829,6 +2867,11 @@ const RealFlat = (function () {
   let homeOpen = false, flat = null, fr = null, fScene = null, fCam = null, fCtl = null, playT = 1, lastT = 0, returnFocus = null;
   let PLANS = null, fEnv = null, camTween = null, fGround = null, homeO = null;
   const plansReady = () => PLANS ? Promise.resolve(PLANS) : fetch('plans.json?v=1793191834').then((r) => r.json()).then((j) => (PLANS = j));
+  function loadRAL() {        // RectAreaLight tables (300 KB): only the walk-through's window light needs them
+    if (window.THREE.RectAreaLightUniformsLib || loadRAL.s) return;
+    loadRAL.s = document.createElement('script'); loadRAL.s.src = 'vendor/three147-ral.js?v=1'; loadRAL.s.async = true;
+    document.head.appendChild(loadRAL.s);
+  }
   function ensureFlatRenderer() {
     if (fr) return;
     fr = new THREE.WebGLRenderer({ antialias: true });
@@ -2838,6 +2881,8 @@ const RealFlat = (function () {
     fr.toneMappingExposure = 1.05;
     fr.shadowMap.enabled = true;
     fr.shadowMap.type = THREE.PCFSoftShadowMap;
+    fr.shadowMap.autoUpdate = false; fr.shadowMap.needsUpdate = true;
+    loadRAL();
     flatStage.appendChild(fr.domElement);
     fScene = new THREE.Scene();
     fScene.background = new THREE.Color(0x15120f);
@@ -4270,6 +4315,55 @@ const RealFlat = (function () {
   }
   window.addEventListener('resize', () => { resize(); sizeFlat(); if (FLATS && unitsById.size) renderSheet(); if (mode === 'location' && mapBuilt) applyVB(); });
   resize();
+  // ── keeping it snappy ──
+  // Both views are redrawn only when something on screen can have changed: the camera moved, an animation runs,
+  // the visitor touched something, or a periodic check (twice a second) to pick up anything that loaded. Shadows
+  // are redrawn with the scene, not with the camera. If a device still can't hold a smooth frame rate while the
+  // view moves, the moving frames drop a step in resolution, and a full-resolution frame is drawn as soon as it
+  // settles — stills are always full quality.
+  const PERF = { wake: 0, shadow: 0, op: 0, full: Math.min(window.devicePixelRatio || 1, 2), min: PHONE ? 1 : 1.5, m: {}, f: {} };
+  const wakeUp = (ms, shadows) => { const t = performance.now(); PERF.wake = Math.max(PERF.wake, t + ms); if (shadows) PERF.shadow = Math.max(PERF.shadow, t + ms); };
+  ['pointerdown', 'keydown', 'click', 'input', 'change', 'touchstart'].forEach((e) => window.addEventListener(e, () => wakeUp(1500, true), { capture: true, passive: true }));
+  ['pointermove', 'wheel', 'touchmove'].forEach((e) => window.addEventListener(e, () => wakeUp(450, false), { capture: true, passive: true }));
+  window.addEventListener('resize', () => wakeUp(800, true));
+  document.addEventListener('visibilitychange', () => wakeUp(800, true));
+  function perfFrame(r, cam, st, anim, sceneAnim, lights) {
+    const t = performance.now();
+    cam.updateMatrixWorld();
+    const e = cam.matrixWorld.elements, pm = cam.projectionMatrix.elements;
+    let moved = !st.mw;
+    if (st.mw) {
+      for (let i = 0; i < 16; i++) if (Math.abs(e[i] - st.mw[i]) > 1e-5) { moved = true; break; }
+      if (!moved && (pm[0] !== st.p0 || pm[5] !== st.p5)) moved = true;
+    } else st.mw = new Float64Array(16);
+    st.mw.set(e); st.p0 = pm[0]; st.p5 = pm[5];
+    const motion = moved || anim;
+    if (motion) st.lastMove = t;
+    if (st.move == null) st.move = PERF.full;
+    const pr = r.getPixelRatio(), atFull = Math.abs(pr - PERF.full) < 0.01;
+    const settle = (!atFull || st.fast) && t - st.lastMove > 260;
+    const beat = !st.last || t - st.last > 500;
+    if (!(motion || settle || beat || t < PERF.wake)) return false;
+    // moving: quick shadow edges; settled: the full soft filter (and full resolution)
+    const fast = motion && !settle;
+    if (fast !== !!st.fast && lights) { lights.forEach((L) => { if (L && L.shadow) L.shadow.radius = fast ? 0 : 1; }); }
+    st.fast = fast;
+    if (settle && !atFull) r.setPixelRatio(PERF.full);
+    else if (motion) {
+      if (Math.abs(pr - st.move) > 0.01) r.setPixelRatio(st.move);
+      // frame pacing over continuous movement: below ~48 fps, the moving frames step down (never below PERF.min)
+      if (st.last && t - st.last < 150) {
+        st.ema = st.ema ? st.ema * 0.9 + (t - st.last) * 0.1 : t - st.last; st.n = (st.n || 0) + 1;
+        if (st.n > 24 && st.ema > 21 && st.move > PERF.min + 0.01) { st.move = Math.max(PERF.min, +(st.move - 0.25).toFixed(2)); r.setPixelRatio(st.move); st.n = 0; st.ema = 0; }
+      }
+    }
+    if (!motion) { st.n = 0; st.ema = 0; }
+    r.shadowMap.needsUpdate = !!(sceneAnim || t < PERF.shadow || beat);
+    st.last = t;
+    return true;
+  }
+  function perfOp() { const v = photoU.op.value, c = Math.abs(v - PERF.op) > 1e-4; PERF.op = v; return c; }
+  if (/[?&]debug/.test(location.search)) window.__oiPerf = PERF;
   renderer.setAnimationLoop((now0) => {
     const now = anow(now0);      // debug hook: slow the building animations down
     const raw = (now0 - (lastT || now0)) / 1000, dt = Math.min(0.05, raw); lastT = now0;
@@ -4285,7 +4379,7 @@ const RealFlat = (function () {
         }
         fCtl.update(); updateFlatCompass();
       }
-      fr.render(fScene, fCam);
+      if (perfFrame(fr, fCam, PERF.f, !!(reveal || camTween || (walk && (walk.go || walk.turn || walk.intro)) || perfOp()), !!reveal, fScene.children.filter((o) => o.isDirectionalLight))) fr.render(fScene, fCam);
       return;
     }
     if (intro) {
@@ -4303,7 +4397,7 @@ const RealFlat = (function () {
     updateCompass(); updateTags();
     const nr = bv ? 0.08 : Math.min(25, Math.max(0.8, camera.position.distanceTo(controls.target) * 0.03));
     if (Math.abs(nr - camera.near) > 0.02 * camera.near) { camera.near = nr; camera.updateProjectionMatrix(); }
-    renderer.render(scene, camera);
+    if (perfFrame(renderer, camera, PERF.m, !!(intro || flight || lifts.size || tlOn), !!(lifts.size || tlOn), [sun])) renderer.render(scene, camera);
   });
 })();
 </script>

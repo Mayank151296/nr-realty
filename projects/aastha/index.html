@@ -835,8 +835,8 @@ footer{border-top:1px solid var(--line);padding:80px 0 120px}
 
 <main id="top">
 <section class="hero" aria-label="Aastha, Tembhode">
-  <video data-film autoplay muted loop playsinline preload="auto" poster="assets/aastha-film-poster.webp" aria-hidden="true">
-    <source src="assets/aastha-film.mp4" type="video/mp4">
+  <video data-film muted loop playsinline preload="none" poster="assets/aastha-film-poster.webp" aria-hidden="true">
+    <source data-src="assets/aastha-film.mp4" type="video/mp4">
   </video>
   <div class="film-note"><span>Site film · day to evening</span><button type="button" data-sound aria-pressed="false"><span>Pause film</span></button></div>
   <div class="hero-inner">
@@ -1140,13 +1140,39 @@ footer{border-top:1px solid var(--line);padding:80px 0 120px}
 <nav class="mbar" aria-label="Quick actions"><a href="#explore" data-open-3d=""><span class="live" aria-hidden="true" style="margin-right:12px"></span>3D site model</a><a href="#enquire">Book viewing</a></nav>
 <a class="fab3d" href="#explore" data-open-3d="" id="fab3d"><span class="live" aria-hidden="true"></span>Explore in 3D</a>
 <script src="assets/aastha-page.js?v=1790701272"></script>
-<script src="assets/three/three.min.js"></script>
-<script src="assets/three/OrbitControls.js"></script>
-<script src="assets/three/BufferGeometryUtils.js"></script>
-<script src="assets/three/post.js?v=1790701272"></script>
-<script src="assets/aastha-context.js?v=1793560000"></script>
-<script src="assets/aastha-explorer.js?v=1793560000"></script>
-<script src="assets/aastha-ux.js?v=1793560000"></script>
+<script>
+/* Keep the page quick: the hero film and the 3D site model load once the page itself is up (the poster and the
+   section are already there), or straight away if the visitor heads for the model. */
+(function () {
+  var LIBS = ["assets/three/three.min.js", "assets/three/OrbitControls.js", "assets/three/BufferGeometryUtils.js", "assets/three/post.js?v=1790701272", "assets/aastha-context.js?v=1793560000", "assets/aastha-explorer.js?v=1793560000", "assets/aastha-ux.js?v=1793560000"], started = false, pending = null;
+  function load3d() {
+    if (started) return; started = true; var i = 0;
+    (function next() {
+      if (i >= LIBS.length) { if (pending !== null && window.AASTHA_EXPLORER) window.AASTHA_EXPLORER.open(pending || undefined); return; }
+      var sc = document.createElement('script'); sc.src = LIBS[i++]; sc.async = false; sc.onload = next; sc.onerror = next; document.body.appendChild(sc);
+    })();
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('[data-open-3d]');
+    if (!a || window.AASTHA_EXPLORER) return;
+    e.preventDefault(); pending = a.getAttribute('data-open-3d') || ''; load3d();
+    var ex = document.getElementById('explore'); if (ex) ex.scrollIntoView();
+  }, true);
+  var st = document.getElementById('stage');
+  if ('IntersectionObserver' in window && st) new IntersectionObserver(function (es, o) { for (var k = 0; k < es.length; k++) if (es[k].isIntersecting) { o.disconnect(); load3d(); return; } }, { rootMargin: '150px 0px' }).observe(st);
+  function film() {
+    var v = document.querySelector('[data-film]'), src = v && v.querySelector('source[data-src]');
+    if (!src || src.src || (navigator.connection && navigator.connection.saveData)) return;
+    src.src = src.getAttribute('data-src'); v.preload = 'auto'; v.load();
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+  }
+  function settled() {     // after the hero has finished animating in
+    setTimeout(film, 250);
+    setTimeout(function () { (window.requestIdleCallback || function (f) { setTimeout(f, 200); })(load3d, { timeout: 2500 }); }, 1800);
+  }
+  if (document.readyState === 'complete') settled(); else window.addEventListener('load', function () { setTimeout(settled, 400); });
+})();
+</script>
 <script>
 (function(){const fab=document.getElementById('fab3d'),st=document.getElementById('stage'),hero=document.querySelector('.hero');let inEx=false,pastHero=false;
 if(!('IntersectionObserver' in window))return;
